@@ -1,0 +1,10 @@
+# migrations, seeds
+/migrations
+/seeds
+
+# Environment
+.env
+
+# Example
+jwtRS256.key
+jwtRS256.key.pub

@@ -1,0 +1,36 @@
+table:
+  name: User
+  schema: public
+array_relationships:
+  - name: profiles
+    using:
+      foreign_key_constraint_on:
+        column: userId
+        table:
+          name: Profile
+          schema: public
+select_permissions:
+  - role: USER
+    permission:
+      columns:
+        - email
+        - nickname
+        - password
+        - createdAt
+        - deletedAt
+        - updatedAt
+        - role
+        - id
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+      allow_aggregations: true
+    comment: ""
+  - role: anonymous
+    permission:
+      columns:
+        - email
+        - nickname
+      filter: {}
+      allow_aggregations: true
+    comment: ""

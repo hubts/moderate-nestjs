@@ -1,0 +1,63 @@
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+    provider   = "postgresql"
+    url        = env("DATABASE_URL")
+    extensions = [pgcrypto, uuid_ossp(map: "uuid-ossp", schema: "public")]
+}
+
+model Cache {
+    key       String   @id
+    value     String
+    ttl       Int
+    expiredAt DateTime @db.Timestamptz(6)
+}
+
+model ConsoleLog {
+    id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    idx       Int      @default(autoincrement())
+    createdAt DateTime @default(now()) @db.Timestamptz(6)
+    message   String
+    context   String
+    level     String
+    trace     String?
+}
+
+model ErrorLog {
+    id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    idx       Int      @default(autoincrement())
+    createdAt DateTime @default(now()) @db.Timestamptz(6)
+    message   String
+    context   String
+    trace     String?
+}
+
+model User {
+    id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    createdAt DateTime  @default(now()) @db.Timestamptz(6)
+    updatedAt DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
+    deletedAt DateTime? @db.Timestamptz(6)
+    email     String    @unique @db.VarChar
+    password  String    @db.VarChar
+    role      Role      @default(USER)
+    nickname  String    @unique @db.VarChar
+    Profile   Profile?
+}
+
+model Profile {
+    id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    createdAt DateTime  @default(now()) @db.Timestamptz(6)
+    updatedAt DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
+    deletedAt DateTime? @db.Timestamptz(6)
+    mobile    String    @unique @db.VarChar
+    userId    String    @unique @db.Uuid
+    user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+    USER
+    ADMIN
+}
