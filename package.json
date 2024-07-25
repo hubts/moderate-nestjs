@@ -1,6 +1,6 @@
 {
     "name": "moderate-nestjs",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "REST API Backend using NestJS, Prisma, PostgreSQL, and Docker",
     "author": "hubts",
     "private": true,
@@ -27,7 +27,7 @@
         "test:e2e": "jest --config ./test/jest-e2e.json",
         "git": "./script/skyrocket.sh",
         "deploy": "./script/run.sh",
-        "prisma:sync": "prisma generate",
+        "prisma:sync": "prisma generate && prisma db push",
         "prisma:push": "prisma db push",
         "prisma:pull": "prisma db pull",
         "prisma:migrate": "prisma migrate dev --name",
