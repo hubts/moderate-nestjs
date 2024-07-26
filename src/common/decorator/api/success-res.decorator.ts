@@ -17,7 +17,7 @@ interface SuccessResOptions {
  */
 export const SuccessRes = (
     message: string,
-    genericDataType: Type | null,
+    genericDataType?: Type | null,
     options?: SuccessResOptions
 ) => {
     return applyDecorators(

@@ -9,7 +9,12 @@ export const SuccessCode = "1000";
 export const SuccessName = RESPONSE_CODE[SuccessCode];
 
 // Type of failure response code and name
-type ExcludeCodeLiteral<T, U extends string> = T extends U ? never : T; // Help type
-type ExcludeNameLiteral<T, U extends string> = T extends U ? never : T; // Help type
-export type FailureCode = ExcludeCodeLiteral<ResponseCode, typeof SuccessCode>;
-export type FailureName = ExcludeNameLiteral<ResponseName, typeof SuccessName>;
+type ExcludeStringLiteral<T, U extends string> = T extends U ? never : T; // Help type
+export type FailureCode = ExcludeStringLiteral<
+    ResponseCode,
+    typeof SuccessCode
+>;
+export type FailureName = ExcludeStringLiteral<
+    ResponseName,
+    typeof SuccessName
+>;
