@@ -1,14 +1,14 @@
 {
-    "name": "nestjs-prisma-hasura-postgres-backend",
-    "version": "0.0.14",
-    "description": "Full Backend in NestJS with Prisma, Hasura, and Postgres",
+    "name": "moderate-nestjs",
+    "version": "0.0.6",
+    "description": "REST API Backend using NestJS, Prisma, PostgreSQL, and Docker",
     "author": "hubts",
     "private": true,
     "license": "MIT",
     "main": "index.js",
     "repository": {
         "type": "git",
-        "url": "https://github.com/hubts/nestjs-prisma-hasura-postgres-backend.git"
+        "url": "https://github.com/hubts/moderate-nestjs.git"
     },
     "scripts": {
         "prepare": "husky install",
@@ -27,9 +27,7 @@
         "test:e2e": "jest --config ./test/jest-e2e.json",
         "git": "./script/skyrocket.sh",
         "deploy": "./script/run.sh",
-        "hasura:export": "cd hasura && ./script/metadata-export.sh",
-        "hasura:apply": "cd hasura && ./script/metadata-apply.sh",
-        "prisma:sync": "prisma generate",
+        "prisma:sync": "prisma generate && prisma db push",
         "prisma:push": "prisma db push",
         "prisma:pull": "prisma db pull",
         "prisma:migrate": "prisma migrate dev --name",

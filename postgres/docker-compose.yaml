@@ -1,17 +1,17 @@
 version: "3.6"
 services:
-    database:
-        image: postgres:13 # Postgres version (13 recommended in this time)
-        container_name: ${CONTAINER_NAME} # Name of container deployed
-        restart: always # It will restart when the container is shut down
+    postgres:
+        image: postgres:13 # Postgres 버전
+        container_name: ${CONTAINER_NAME} # 실행하는 컨테이너의 이름 (환경변수 연동)
+        restart: always # 컨테이너가 종료되면 자동으로 재실행하는 옵션
         ports:
-            - ${POSTGRES_PORT}:5432 # Container external:internal port
+            - ${POSTGRES_PORT}:5432 # 컨테이너 외부로의 포트 번호 설정 (환경변수 연동)
         environment:
-            POSTGRES_USER: ${POSTGRES_USER} # Postgres database username
-            POSTGRES_DB: ${POSTGRES_DB} # Postgres database name
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # Connection password
-            PGDATA: /var/lib/postgresql/data/pgdata
+            POSTGRES_USER: ${POSTGRES_USER} # Postgres 데이터베이스 username (환경변수 연동)
+            POSTGRES_DB: ${POSTGRES_DB} # Postgres 데이터베이스 DB이름 (환경변수 연동)
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # Postgres 데이터베이스 연결 비밀번호 (환경변수 연동)
+            PGDATA: /var/lib/postgresql/data/pgdata # Postgres 컨테이너 내부에서의 PG데이터 저장 경로
         volumes:
-            - ./${POSTGRES_VOLUME_DIR}:/var/lib/postgresal/data/pgdata
-            - ./postgresql.conf:/tmp/postgresql.conf
-        command: postgres -c config_file=/tmp/postgresql.conf
+            - ./${POSTGRES_VOLUME_DIR}:/var/lib/postgresal/data/pgdata # PG데이터에 대한 외부 경로와 내부 경로를 연결
+            - ./postgresql.conf:/tmp/postgresql.conf # Postgres 설정 파일을 컨테이너 내부로 연결
+        command: postgres -c config_file=/tmp/postgresql.conf # Postgres 컨테이너 실행 시 설정 파일을 적용

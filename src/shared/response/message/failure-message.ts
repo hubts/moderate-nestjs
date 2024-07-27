@@ -1,12 +1,13 @@
 import { FailureName } from "../interface/response.type";
 
 /**
- * You can define the failure messages corresponding to the failure and error response codes.
+ * @description
+ * 실패 및 예측 에러 응답 코드에 대응하는 메시지를 설정합니다.
  */
 export const FAILURE_MESSAGE: {
     [key in FailureName]: string;
 } = {
-    // USER
+    // Failure
     DUPLICATE_EMAIL: "This email already exists.",
     DUPLICATE_NICKNAME: "This nickname already exists.",
     DUPLICATE_MOBILE: "This mobile already exists.",
@@ -16,7 +17,7 @@ export const FAILURE_MESSAGE: {
     USER_NOT_FOUND: "The user does not exist.",
     INVALID_REFRESH_TOKEN: "The refresh token is not valid.",
     UNAUTHORIZED_ACCESS: "Unauthorized access. Please try in a different way.",
-
+    PROFILE_NOT_FOUND: "The profile does not exist.",
     // ERROR
     UNEXPECTED_ERROR: "Unexpected error occurs. Please try again.",
 };

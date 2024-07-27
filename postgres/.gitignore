@@ -1,5 +1,6 @@
-# postgres data volume
+# Postgres 데이터 저장 디렉토리
+# (!) 환경변수 파일의 ${POSTGRES_VOLUME_DIR} 값을 변경하는 경우 아래 무시할 디렉토리 값을 변경해야 합니다.
 /pgdata
 
-# Environment
+# 환경변수 파일
 .env

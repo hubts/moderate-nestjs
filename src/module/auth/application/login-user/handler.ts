@@ -7,10 +7,14 @@ import { UserService } from "src/module/user/domain/user.service";
 import { AuthService } from "../../domain/auth.service";
 import { User } from "@prisma/client";
 import { checkUserPassword } from "src/module/user/domain/user-password-manager";
-import { SUCCESS_MESSAGE } from "src/shared/response/constant/success-message";
+import { SUCCESS_MESSAGE } from "src/shared/response/message/success-message";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 import { AuthTokenDto } from "../../dto/auth-token.dto";
-import { ExpectedFailureException } from "src/common/error/exception/expected-failure.exception";
+import { isFailureName } from "src/shared/response/util/is-failure-name";
+import {
+    ExpectedBadRequestException,
+    ExpectedNotFoundException,
+} from "src/common/error/exception/expected-failure.exception";
 
 @CommandHandler(LoginUserCommand)
 export class LoginUserHandler
@@ -33,14 +37,14 @@ export class LoginUserHandler
 
         // 조건 1: User 존재 확인
         const user = await this.userService.getUserByEmail(email);
-        if (!user) {
-            throw new ExpectedFailureException("UNREGISTERED_EMAIL");
+        if (isFailureName(user)) {
+            throw new ExpectedNotFoundException("UNREGISTERED_EMAIL");
         }
 
         // 조건 2: 비밀번호 확인
         const isPasswordCorrect = checkUserPassword(user.password, password);
         if (!isPasswordCorrect) {
-            throw new ExpectedFailureException("WRONG_PASSWORD");
+            throw new ExpectedBadRequestException("WRONG_PASSWORD");
         }
 
         /** 실행부 */

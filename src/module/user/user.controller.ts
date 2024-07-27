@@ -9,7 +9,6 @@ import { JwtRolesAuth } from "src/common/decorator/auth/jwt-roles-auth.decorator
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 import { UserInfoDto } from "./dto/user-info.dto";
 import { SuccessRes } from "src/common/decorator/api/success-res.decorator";
-import { SUCCESS_MESSAGE } from "src/shared/response/constant/success-message";
 import { IUserApi, UserRoute } from "src/shared/api/user.api";
 import { Requestor } from "src/common/decorator/auth/requestor.decorator";
 import { User } from "@prisma/client";
@@ -18,6 +17,7 @@ import { GetUserInfoByEmailCommand } from "./application/get-user-info-by-email/
 import { MyUserInfoDto } from "./dto/my-info.dto";
 import { GetMyInfoCommand } from "./application/get-my-info/command";
 import { ApiSpec } from "src/common/decorator/api/api-spec.decorator";
+import { SUCCESS_MESSAGE } from "src/shared/response/message/success-message";
 
 @ApiTags(UserRoute.prefix)
 @Controller(UserRoute.prefix)

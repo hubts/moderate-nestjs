@@ -3,8 +3,8 @@ import { GetUserInfoByIdCommand } from "./command";
 import { UserService } from "../../domain/user.service";
 import { UserInfoDto } from "../../dto/user-info.dto";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
-import { SUCCESS_MESSAGE } from "src/shared/response/constant/success-message";
-import { ExpectedFailureException } from "src/common/error/exception/expected-failure.exception";
+import { SUCCESS_MESSAGE } from "src/shared/response/message/success-message";
+import { ExpectedNotFoundException } from "src/common/error/exception/expected-failure.exception";
 
 @CommandHandler(GetUserInfoByIdCommand)
 export class GetUserInfoByIdHandler
@@ -23,7 +23,7 @@ export class GetUserInfoByIdHandler
 
         const user = await this.userService.getUserById(id);
         if (!user) {
-            throw new ExpectedFailureException("USER_NOT_FOUND");
+            throw new ExpectedNotFoundException("USER_NOT_FOUND");
         }
 
         return new SuccessResponseDto(SUCCESS_MESSAGE.USER.FOUND, {

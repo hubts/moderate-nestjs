@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
+import { Prisma, Profile, User } from "@prisma/client";
 import { PrismaService } from "src/infrastructure/prisma/prisma.service";
 
 @Injectable()
@@ -26,7 +26,9 @@ export class UserRepository {
         });
     }
 
-    async findUserWithProfileById(id: string) {
+    async findUserWithProfileById(
+        id: string
+    ): Promise<(User & { Profile: Profile | null }) | null> {
         return await this.prisma.client.user.findFirst({
             where: { id },
             include: { Profile: true },
@@ -77,7 +79,7 @@ export class UserRepository {
     }
 
     async deleteUser(id: string) {
-        await this.prisma.getTransaction().profile.delete({ userId: id });
-        return await this.prisma.getTransaction().user.delete({ id });
+        await this.prisma.getTransaction().profile.softDelete({ userId: id });
+        await this.prisma.getTransaction().user.softDelete({ id });
     }
 }

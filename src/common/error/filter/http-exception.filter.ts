@@ -49,34 +49,21 @@ export class HttpExceptionFilter implements ExceptionFilter {
         /**
          * Save error log.
          */
-        if (statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
-            // 500 error must be logged and saved.
-            this.logger.error(
-                message,
-                JSON.stringify({
+        this.logger.error(
+            message,
+            JSON.stringify({
+                statusCode,
+                request: {
+                    path,
                     token: request.headers?.authorization,
                     body: request.body,
-                    statusCode,
-                    error,
-                    cause,
-                }),
-                path
-            );
-        } else {
-            // Error log saved, however, does not print by silent mode.
-            this.logger.error(
-                message,
-                JSON.stringify({
-                    statusCode,
-                    token: request.headers?.authorization,
-                    body: request.body,
-                    error,
-                    cause,
-                }),
-                path,
-                true
-            );
-        }
+                },
+                response: error,
+                cause,
+            }),
+            path,
+            statusCode !== HttpStatus.INTERNAL_SERVER_ERROR
+        );
 
         // Return
         response.status(statusCode).json({

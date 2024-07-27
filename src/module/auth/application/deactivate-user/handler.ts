@@ -2,12 +2,12 @@ import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { DeactivateUserCommand } from "./command";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 import { Logger } from "@nestjs/common";
-import { AuthService } from "../../domain/auth.service";
 import { UserService } from "src/module/user/domain/user.service";
-import { ExpectedFailureException } from "src/common/error/exception/expected-failure.exception";
 import { checkUserPassword } from "src/module/user/domain/user-password-manager";
 import { User } from "@prisma/client";
-import { SUCCESS_MESSAGE } from "src/shared/response/constant/success-message";
+import { SUCCESS_MESSAGE } from "src/shared/response/message/success-message";
+import { isFailureName } from "src/shared/response/util/is-failure-name";
+import { ExpectedBadRequestException } from "src/common/error/exception/expected-failure.exception";
 
 @CommandHandler(DeactivateUserCommand)
 export class DeactivateUserHandler
@@ -15,10 +15,7 @@ export class DeactivateUserHandler
 {
     private logger = new Logger(DeactivateUserHandler.name);
 
-    constructor(
-        private readonly authService: AuthService,
-        private readonly userService: UserService
-    ) {}
+    constructor(private readonly userService: UserService) {}
 
     async execute(
         command: DeactivateUserCommand
@@ -29,14 +26,14 @@ export class DeactivateUserHandler
 
         // 조건 1: User 존재 확인
         const user = await this.userService.getUserByEmail(email);
-        if (!user) {
-            throw new ExpectedFailureException("UNREGISTERED_EMAIL");
+        if (isFailureName(user)) {
+            throw new ExpectedBadRequestException("UNREGISTERED_EMAIL");
         }
 
         // 조건 2: 비밀번호 확인
         const isPasswordCorrect = checkUserPassword(user.password, password);
         if (!isPasswordCorrect) {
-            throw new ExpectedFailureException("WRONG_PASSWORD");
+            throw new ExpectedBadRequestException("WRONG_PASSWORD");
         }
 
         /** 실행부 */
