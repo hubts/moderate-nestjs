@@ -4,10 +4,10 @@ import { Logger } from "@nestjs/common";
 import { UserService } from "src/module/user/domain/user.service";
 import { AuthService } from "../../domain/auth.service";
 import { User } from "@prisma/client";
-import { SUCCESS_MESSAGE } from "src/shared/response/constant/success-message";
+import { SUCCESS_MESSAGE } from "src/shared/response/message/success-message";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 import { AuthTokenDto } from "../../dto/auth-token.dto";
-import { ExpectedFailureException } from "src/common/error/exception/expected-failure.exception";
+import { ExpectedBadRequestException } from "src/common/error/exception/expected-failure.exception";
 
 @CommandHandler(JoinUserCommand)
 export class JoinUserHandler
@@ -37,11 +37,11 @@ export class JoinUserHandler
         if (duplication.exists) {
             switch (duplication.firstReason) {
                 case "email":
-                    throw new ExpectedFailureException("DUPLICATE_EMAIL");
+                    throw new ExpectedBadRequestException("DUPLICATE_EMAIL");
                 case "nickname":
-                    throw new ExpectedFailureException("DUPLICATE_NICKNAME");
+                    throw new ExpectedBadRequestException("DUPLICATE_NICKNAME");
                 case "mobile":
-                    throw new ExpectedFailureException("DUPLICATE_MOBILE");
+                    throw new ExpectedBadRequestException("DUPLICATE_MOBILE");
             }
         }
 

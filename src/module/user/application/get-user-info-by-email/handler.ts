@@ -3,8 +3,9 @@ import { GetUserInfoByEmailCommand } from "./command";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 import { UserInfoDto } from "../../dto/user-info.dto";
 import { UserService } from "../../domain/user.service";
-import { ExpectedFailureException } from "src/common/error/exception/expected-failure.exception";
-import { SUCCESS_MESSAGE } from "src/shared/response/constant/success-message";
+import { SUCCESS_MESSAGE } from "src/shared/response/message/success-message";
+import { isFailureName } from "src/shared/response/util/is-failure-name";
+import { ExpectedNotFoundException } from "src/common/error/exception/expected-failure.exception";
 
 @CommandHandler(GetUserInfoByEmailCommand)
 export class GetUserInfoByEmailHandler
@@ -21,17 +22,17 @@ export class GetUserInfoByEmailHandler
     ): Promise<SuccessResponseDto<UserInfoDto>> {
         const { email } = command.dto;
 
-        const user = await this.userService.getUserByEmail(email);
-        if (!user) {
-            throw new ExpectedFailureException("USER_NOT_FOUND");
+        const userByEmail = await this.userService.getUserByEmail(email);
+        if (isFailureName(userByEmail)) {
+            throw new ExpectedNotFoundException(userByEmail);
         }
 
         return new SuccessResponseDto(SUCCESS_MESSAGE.USER.FOUND, {
             user: {
-                id: user.id,
-                joinedAt: user.createdAt,
-                email: user.email,
-                nickname: user.nickname,
+                id: userByEmail.id,
+                joinedAt: userByEmail.createdAt,
+                email: userByEmail.email,
+                nickname: userByEmail.nickname,
             },
         });
     }

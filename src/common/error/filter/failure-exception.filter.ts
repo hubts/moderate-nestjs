@@ -1,8 +1,15 @@
-import { ExceptionFilter, Catch, ArgumentsHost } from "@nestjs/common";
+import {
+    ExceptionFilter,
+    Catch,
+    ArgumentsHost,
+    HttpStatus,
+} from "@nestjs/common";
 import { Request, Response } from "express";
 import { CustomLogger } from "../../logger/custom.logger";
-import { ExpectedFailureException } from "../exception/expected-failure.exception";
-import { IResponse } from "src/shared/response/interface/response.interface";
+import {
+    ExpectedFailureException,
+    ExpectedFailureResponse,
+} from "../exception/expected-failure.exception";
 
 @Catch(ExpectedFailureException)
 export class FailureExceptionFilter
@@ -17,34 +24,37 @@ export class FailureExceptionFilter
         const path = `${request.method} ${request.url}`;
 
         const status = exception.getStatus();
-        const cause = <IResponse<null>>exception.cause;
+        const message = exception.message;
+        const cause = exception.cause;
+        const exceptionResponse = <ExpectedFailureResponse>(
+            exception.getResponse()
+        );
+        const failure = exceptionResponse.failureResponse;
 
         // Error log saved, however, does not print by silent mode.
         this.logger.error(
-            cause.message,
+            message,
             JSON.stringify({
                 statusCode: status,
-                token: request.headers?.authorization,
-                body: request.body,
+                request: {
+                    path,
+                    token: request.headers?.authorization,
+                    body: request.body,
+                },
+                response: failure,
                 cause,
             }),
             path,
-            true
+            status !== HttpStatus.INTERNAL_SERVER_ERROR
         );
 
         // Return
         response.status(status).json({
-            success: cause.success,
-            message: cause.message,
-            code: cause.code,
-            name: cause.name,
-            data: cause.data,
-            extensions: {
-                cause,
-                ip: request.ip,
-                path,
-                timestamp: new Date().toISOString(),
-            },
+            success: failure.success,
+            message: failure.message,
+            code: failure.code,
+            name: failure.name,
+            data: failure.data,
         });
     }
 }

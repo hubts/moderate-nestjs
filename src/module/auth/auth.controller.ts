@@ -8,7 +8,7 @@ import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 import { AuthTokenDto } from "./dto/auth-token.dto";
 import { JwtRolesAuth } from "src/common/decorator/auth/jwt-roles-auth.decorator";
 import { SuccessRes } from "src/common/decorator/api/success-res.decorator";
-import { SUCCESS_MESSAGE } from "src/shared/response/constant/success-message";
+import { SUCCESS_MESSAGE } from "src/shared/response/message/success-message";
 import { FailureRes } from "src/common/decorator/api/failure-res.decorator";
 import { UserLoginDto } from "./dto/user-login.dto";
 import { AuthRoute, IAuthApi } from "src/shared/api/auth.api";

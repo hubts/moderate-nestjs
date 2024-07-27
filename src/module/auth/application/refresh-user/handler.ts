@@ -3,9 +3,12 @@ import { RefreshUserCommand } from "./command";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 import { AuthTokenDto } from "../../dto/auth-token.dto";
 import { UserService } from "src/module/user/domain/user.service";
-import { ExpectedFailureException } from "src/common/error/exception/expected-failure.exception";
 import { AuthService } from "../../domain/auth.service";
-import { SUCCESS_MESSAGE } from "src/shared/response/constant/success-message";
+import { SUCCESS_MESSAGE } from "src/shared/response/message/success-message";
+import {
+    ExpectedBadRequestException,
+    ExpectedNotFoundException,
+} from "src/common/error/exception/expected-failure.exception";
 
 @CommandHandler(RefreshUserCommand)
 export class RefreshUserHandler
@@ -29,7 +32,7 @@ export class RefreshUserHandler
         // 1. Does the user exist?
         const user = await this.userService.getUserById(id);
         if (!user) {
-            throw new ExpectedFailureException("USER_NOT_FOUND");
+            throw new ExpectedNotFoundException("USER_NOT_FOUND");
         }
 
         // 2. Is the refresh token valid?
@@ -38,7 +41,7 @@ export class RefreshUserHandler
             id
         );
         if (!isValid) {
-            throw new ExpectedFailureException("INVALID_REFRESH_TOKEN");
+            throw new ExpectedBadRequestException("INVALID_REFRESH_TOKEN");
         }
 
         /**
