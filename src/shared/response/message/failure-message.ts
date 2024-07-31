@@ -20,4 +20,5 @@ export const FAILURE_MESSAGE: {
     PROFILE_NOT_FOUND: "The profile does not exist.",
     // ERROR
     UNEXPECTED_ERROR: "Unexpected error occurs. Please try again.",
+    DATA_SOURCE_ERROR: "Error occurs in data source. Please try again.",
 };

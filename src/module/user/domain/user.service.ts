@@ -40,7 +40,7 @@ export class UserService {
     }
 
     /**
-     * User의 ID를 기반으로 Profile 정보를 함께 조회
+     * User의 ID를 기반으로 User, Profile 정보를 함께 조회
      * @param id - User ID
      * @returns 조회한 경우 User와 Profile 정보를 함께 반환, 없으면 FailureName 반환
      * @throws USER_NOT_FOUND - User를 찾을 수 없는 경우

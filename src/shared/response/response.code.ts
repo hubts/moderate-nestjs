@@ -24,4 +24,5 @@ export const RESPONSE_CODE = {
     // 아래는 예측한 에러의 경우를 지정합니다.
     // 예를 들어, DB 저장 에러 또는 외부 서버 연동 시 에러를 지정할 수 있습니다.
     "5000": "UNEXPECTED_ERROR",
+    "5001": "DATA_SOURCE_ERROR",
 } as const;

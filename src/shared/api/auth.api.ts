@@ -7,7 +7,6 @@ export const AuthRoute: IApiRoute<IAuthApi> = {
         joinUser: {
             name: "user/join",
             roles: [],
-            summary: "Join as a new user",
             description: [
                 "Anyone can join as a new user.",
                 "You must insert unique email, nickname, and mobile to join.",
@@ -19,7 +18,6 @@ export const AuthRoute: IApiRoute<IAuthApi> = {
         loginUser: {
             name: "user/login",
             roles: [],
-            summary: "After joining, login as the user.",
             description: [
                 "Anyone can login as the previously joined user.",
                 "You must insert email and password to login.",
@@ -29,7 +27,6 @@ export const AuthRoute: IApiRoute<IAuthApi> = {
         refreshUser: {
             name: "user/refresh",
             roles: [],
-            summary: "Refresh your access and refresh tokens to continue.",
             description: [
                 "Anyone who has own refresh token and identity information can refresh to get new tokens.",
                 "You must insert the refresh token recently issued and own identity information (such as ID).",
@@ -39,7 +36,6 @@ export const AuthRoute: IApiRoute<IAuthApi> = {
         deactivateUser: {
             name: "user/deactivate",
             roles: [],
-            summary: "Deactivate user for test to soft-delete the user.",
             description: [
                 "This feature is only for test.",
                 "Anyone can deactivate the user by soft-delete features.",
