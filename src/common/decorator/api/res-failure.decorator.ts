@@ -1,4 +1,4 @@
-import { HttpStatus, applyDecorators } from "@nestjs/common";
+import { HttpStatus } from "@nestjs/common";
 import { ApiResponse } from "@nestjs/swagger";
 import { IResponse } from "src/shared/response/interface/response.interface";
 import { FailureName } from "src/shared/response/interface/response.type";
@@ -9,33 +9,29 @@ interface FailureExample {
     description?: string;
 }
 
-// Options interface
-interface FailureResOptions {
-    status?: HttpStatus;
+export interface FailureResOptions {
+    status: HttpStatus;
+    examples: FailureExample[];
     description?: string;
 }
 
-export const FailureRes = (
-    examples: FailureExample[],
-    options?: FailureResOptions
-) => {
-    return applyDecorators(
+export const ResFailure = (options: FailureResOptions) => {
+    const { status, examples, description } = options;
+    return (
+        target: object,
+        key: string | symbol,
+        descriptor: TypedPropertyDescriptor<any>
+    ) => {
         ApiResponse({
-            status: options?.status ?? HttpStatus.BAD_REQUEST,
-            description: options?.description ?? "Failures",
+            status,
+            description: description ?? `${status} Error occurs.`,
             content: {
                 "application/json": {
                     examples: examples.reduce(
                         (list, example) => {
                             const failure = asFailureResponse(example.name);
                             list[failure.name] = {
-                                value: {
-                                    success: false,
-                                    code: failure.code,
-                                    name: failure.name,
-                                    message: failure.message,
-                                    data: null,
-                                },
+                                value: failure,
                                 description:
                                     example.description ?? failure.message,
                             };
@@ -50,6 +46,8 @@ export const FailureRes = (
                     ),
                 },
             },
-        })
-    );
+        })(target, key, descriptor);
+
+        return descriptor;
+    };
 };

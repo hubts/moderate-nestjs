@@ -8,7 +8,6 @@ export const UserRoute: IApiRoute<IUserApi> = {
         getUserInfoById: {
             name: "id/:id",
             roles: [],
-            summary: "Get public information of user by ID",
             description: [
                 "You can get the public information of user by ID.",
                 "If the user ID does not exist, you will receive the failure message.",
@@ -17,7 +16,6 @@ export const UserRoute: IApiRoute<IUserApi> = {
         getUserInfoByEmail: {
             name: "email/:email",
             roles: [],
-            summary: "Get public information of user by email",
             description: [
                 "You can get the public information of user by email.",
                 "If the user email does not exist, you will receive the failure message.",
@@ -26,7 +24,6 @@ export const UserRoute: IApiRoute<IUserApi> = {
         getMyInfo: {
             name: "me",
             roles: [Role.ADMIN],
-            summary: "Get user own information.",
             description: [
                 "You can get your own information by login information.",
             ],

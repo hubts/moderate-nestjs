@@ -7,113 +7,156 @@ import { UserJoinDto } from "./dto/user-join.dto";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 import { AuthTokenDto } from "./dto/auth-token.dto";
 import { JwtRolesAuth } from "src/common/decorator/auth/jwt-roles-auth.decorator";
-import { SuccessRes } from "src/common/decorator/api/success-res.decorator";
 import { SUCCESS_MESSAGE } from "src/shared/response/message/success-message";
-import { FailureRes } from "src/common/decorator/api/failure-res.decorator";
 import { UserLoginDto } from "./dto/user-login.dto";
 import { AuthRoute, IAuthApi } from "src/shared/api/auth.api";
 import { UserRefreshDto } from "./dto/user-refresh.dto";
 import { RefreshUserCommand } from "./application/refresh-user/command";
-import { ApiSpec } from "src/common/decorator/api/api-spec.decorator";
 import { DeactivateUserCommand } from "./application/deactivate-user/command";
+import { ApiSpec } from "src/common/decorator/api/api-spec.decorator";
 
 @ApiTags(AuthRoute.prefix)
 @Controller(AuthRoute.prefix)
 export class AuthController implements IAuthApi {
     constructor(private readonly commandBus: CommandBus) {}
 
-    // Join user
-    @Post(AuthRoute.subPath.joinUser.name)
-    @JwtRolesAuth(AuthRoute.subPath.joinUser.roles)
     @ApiSpec({
-        summary: AuthRoute.subPath.joinUser.summary,
+        summary: "Anyone can join as a new user.",
         description: AuthRoute.subPath.joinUser.description,
-    })
-    @SuccessRes(SUCCESS_MESSAGE.AUTH.JOIN_USER, AuthTokenDto, {
-        status: HttpStatus.CREATED,
-        description:
-            "User will be created, and access and refresh tokens will be served.",
-    })
-    @FailureRes([
-        {
-            name: "DUPLICATE_EMAIL",
-            description: "Email already exists",
+        success: {
+            message: SUCCESS_MESSAGE.AUTH.JOIN_USER,
+            description:
+                "Creates a new user and returns access and refresh tokens.",
+            dataGenericType: AuthTokenDto,
         },
-        { name: "DUPLICATE_NICKNAME", description: "Nickname already exists." },
-        { name: "DUPLICATE_MOBILE", description: "Mobile already exists." },
-    ])
+        failures: [
+            {
+                status: HttpStatus.BAD_REQUEST,
+                examples: [
+                    {
+                        name: "DUPLICATE_EMAIL",
+                        description: "When the email already exists.",
+                    },
+                    {
+                        name: "DUPLICATE_NICKNAME",
+                        description: "When the nickname already exists.",
+                    },
+                    {
+                        name: "DUPLICATE_MOBILE",
+                        description: "When the mobile already exists.",
+                    },
+                ],
+            },
+        ],
+    })
+    @JwtRolesAuth(AuthRoute.subPath.joinUser.roles)
+    @Post(AuthRoute.subPath.joinUser.name)
     async joinUser(
         @Body() body: UserJoinDto
     ): Promise<SuccessResponseDto<AuthTokenDto>> {
         return await this.commandBus.execute(new JoinUserCommand(body));
     }
 
-    // Login user
-    @Post(AuthRoute.subPath.loginUser.name)
-    @JwtRolesAuth(AuthRoute.subPath.loginUser.roles)
     @ApiSpec({
-        summary: AuthRoute.subPath.loginUser.summary,
+        summary: "After you joined, you can login as the user.",
         description: AuthRoute.subPath.loginUser.description,
-    })
-    @SuccessRes(SUCCESS_MESSAGE.AUTH.LOGIN_USER, AuthTokenDto, {
-        status: HttpStatus.CREATED,
-        description: "Successful login returns access and refresh tokens.",
-    })
-    @FailureRes([
-        { name: "UNREGISTERED_EMAIL", description: "Unknown email." },
-        {
-            name: "WRONG_PASSWORD",
-            description: "Email and password does not match",
+        success: {
+            message: SUCCESS_MESSAGE.AUTH.LOGIN_USER,
+            description: "Returns access and refresh tokens.",
+            dataGenericType: AuthTokenDto,
         },
-    ])
+        failures: [
+            {
+                status: HttpStatus.BAD_REQUEST,
+                examples: [
+                    {
+                        name: "UNREGISTERED_EMAIL",
+                        description: "When the email does not exist.",
+                    },
+                    {
+                        name: "WRONG_PASSWORD",
+                        description:
+                            "When the password is incorrect corresponding to the email.",
+                    },
+                ],
+            },
+        ],
+    })
+    @JwtRolesAuth(AuthRoute.subPath.loginUser.roles)
+    @Post(AuthRoute.subPath.loginUser.name)
     async loginUser(
         @Body() body: UserLoginDto
     ): Promise<SuccessResponseDto<AuthTokenDto>> {
         return await this.commandBus.execute(new LoginUserCommand(body));
     }
 
-    // Refresh user
-    @Post(AuthRoute.subPath.refreshUser.name)
-    @JwtRolesAuth(AuthRoute.subPath.refreshUser.roles)
     @ApiSpec({
-        summary: AuthRoute.subPath.refreshUser.summary,
+        summary: "Refresh your tokens as new ones to continue.",
         description: AuthRoute.subPath.refreshUser.description,
-    })
-    @SuccessRes(SUCCESS_MESSAGE.AUTH.LOGIN_USER, AuthTokenDto, {
-        status: HttpStatus.CREATED,
-        description: "New access and refresh tokens are served.",
-    })
-    @FailureRes([
-        { name: "USER_NOT_FOUND", description: "Unknown user." },
-        {
-            name: "INVALID_REFRESH_TOKEN",
-            description: "Incorrect refresh token.",
+        success: {
+            message: SUCCESS_MESSAGE.AUTH.LOGIN_USER,
+            description: "Returns new access and refresh tokens.",
+            dataGenericType: AuthTokenDto,
         },
-    ])
+        failures: [
+            {
+                status: HttpStatus.NOT_FOUND,
+                examples: [
+                    {
+                        name: "USER_NOT_FOUND",
+                        description: "When the user not found.",
+                    },
+                ],
+            },
+            {
+                status: HttpStatus.BAD_REQUEST,
+                examples: [
+                    {
+                        name: "INVALID_REFRESH_TOKEN",
+                        description: "When the refresh token is invalid.",
+                    },
+                ],
+            },
+        ],
+    })
+    @JwtRolesAuth(AuthRoute.subPath.refreshUser.roles)
+    @Post(AuthRoute.subPath.refreshUser.name)
     async refreshUser(
         @Body() body: UserRefreshDto
     ): Promise<SuccessResponseDto<AuthTokenDto>> {
         return await this.commandBus.execute(new RefreshUserCommand(body));
     }
 
-    // Deactivate user
-    @Post(AuthRoute.subPath.deactivateUser.name)
-    @JwtRolesAuth(AuthRoute.subPath.deactivateUser.roles)
     @ApiSpec({
-        summary: AuthRoute.subPath.deactivateUser.summary,
+        summary: "Deactivate user for test to soft-delete the user.",
         description: AuthRoute.subPath.deactivateUser.description,
-    })
-    @SuccessRes(SUCCESS_MESSAGE.AUTH.USER_DEACTIVATED, null, {
-        status: HttpStatus.CREATED,
-        description: "User will be deactivated.",
-    })
-    @FailureRes([
-        { name: "UNREGISTERED_EMAIL", description: "Unknown email." },
-        {
-            name: "WRONG_PASSWORD",
-            description: "Email and password does not match",
+        success: {
+            message: SUCCESS_MESSAGE.AUTH.USER_DEACTIVATED,
+            description: "User will be deactivated.",
         },
-    ])
+        failures: [
+            {
+                status: HttpStatus.NOT_FOUND,
+                examples: [
+                    {
+                        name: "UNREGISTERED_EMAIL",
+                        description: "Unknown email.",
+                    },
+                ],
+            },
+            {
+                status: HttpStatus.BAD_REQUEST,
+                examples: [
+                    {
+                        name: "WRONG_PASSWORD",
+                        description: "Email and password does not match",
+                    },
+                ],
+            },
+        ],
+    })
+    @JwtRolesAuth(AuthRoute.subPath.deactivateUser.roles)
+    @Post(AuthRoute.subPath.deactivateUser.name)
     async deactivateUser(
         @Body() body: UserLoginDto
     ): Promise<SuccessResponseDto> {
