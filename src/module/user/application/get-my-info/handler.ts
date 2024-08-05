@@ -3,9 +3,9 @@ import { GetMyInfoCommand } from "./command";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 import { MyUserInfoDto } from "../../dto/my-info.dto";
 import { UserService } from "../../domain/user.service";
-import { SUCCESS_MESSAGE } from "src/shared/response/message/success-message";
+import { SUCCESS_MESSAGE } from "src/shared/api/constant/success-message.constant";
 import { ExpectedNotFoundException } from "src/common/error/exception/expected-failure.exception";
-import { isFailureName } from "src/shared/response/util/is-failure-name";
+import { isFailureName } from "src/shared/api/lib/is-failure-name";
 
 @CommandHandler(GetMyInfoCommand)
 export class GetMyInfoHandler

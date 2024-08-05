@@ -2,7 +2,7 @@ import { HttpStatus, RequestMethod, Type } from "@nestjs/common";
 import { ApiExtraModels, ApiResponse, getSchemaPath } from "@nestjs/swagger";
 import { METHOD_METADATA } from "@nestjs/common/constants";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
-import { SUCCESS_MESSAGE } from "src/shared/response/message/success-message";
+import { SUCCESS_MESSAGE } from "src/shared/api/constant/success-message.constant";
 
 export interface SuccessResOptions {
     message: string;

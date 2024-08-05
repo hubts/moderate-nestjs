@@ -4,7 +4,7 @@ import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 import { AuthTokenDto } from "../../dto/auth-token.dto";
 import { UserService } from "src/module/user/domain/user.service";
 import { AuthService } from "../../domain/auth.service";
-import { SUCCESS_MESSAGE } from "src/shared/response/message/success-message";
+import { SUCCESS_MESSAGE } from "src/shared/api/constant/success-message.constant";
 import {
     ExpectedBadRequestException,
     ExpectedNotFoundException,

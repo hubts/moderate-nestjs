@@ -6,7 +6,7 @@ import { Role } from "@prisma/client";
 
 import { Random } from "src/shared/util/random";
 import { CacheService } from "src/infrastructure/cache/cache.service";
-import { JwtPayload } from "src/shared/api/interface/jwt-payload.interface";
+import { JwtPayload } from "src/shared/role/jwt-payload.interface";
 import {
     REFRESH_TOKEN_KEY_PREFIX,
     REFRESH_TOKEN_LENGTH,

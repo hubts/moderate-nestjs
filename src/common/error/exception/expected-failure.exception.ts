@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
-import { IResponse } from "src/shared/response/interface/response.interface";
-import { FailureName } from "src/shared/response/interface/response.type";
-import { asFailureResponse } from "src/shared/response/util/as-failure-response";
+import { CommonResponse } from "src/shared/api/interface/common-response.interface";
+import { asFailureResponse } from "src/shared/api/lib/as-failure-response";
+import { FailureName } from "src/shared/api/lib/response.type-helper";
 
 export interface ExpectedFailureResponse {
     statusCode: number;
     message: string;
-    failureResponse: IResponse<null>;
+    failureResponse: CommonResponse<null>;
 }
 
 export class ExpectedFailureException extends HttpException {

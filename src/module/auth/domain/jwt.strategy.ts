@@ -5,7 +5,7 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 
 import { JwtConfig } from "src/config/validated/jwt.config";
 import { User } from "@prisma/client";
-import { JwtPayload } from "src/shared/api/interface/jwt-payload.interface";
+import { JwtPayload } from "src/shared/role/jwt-payload.interface";
 import { UserService } from "src/module/user/domain/user.service";
 
 /**

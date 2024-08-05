@@ -7,10 +7,10 @@ import { UserService } from "src/module/user/domain/user.service";
 import { AuthService } from "../../domain/auth.service";
 import { User } from "@prisma/client";
 import { checkUserPassword } from "src/module/user/domain/user-password-manager";
-import { SUCCESS_MESSAGE } from "src/shared/response/message/success-message";
+import { SUCCESS_MESSAGE } from "src/shared/api/constant/success-message.constant";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 import { AuthTokenDto } from "../../dto/auth-token.dto";
-import { isFailureName } from "src/shared/response/util/is-failure-name";
+import { isFailureName } from "src/shared/api/lib/is-failure-name";
 import {
     ExpectedBadRequestException,
     ExpectedNotFoundException,

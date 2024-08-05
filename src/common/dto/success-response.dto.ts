@@ -1,12 +1,12 @@
-import { IResponse } from "src/shared/response/interface/response.interface";
+import { CommonResponse } from "src/shared/api/interface/common-response.interface";
 import {
     ResponseCode,
     SuccessCode,
     SuccessName,
-} from "src/shared/response/interface/response.type";
+} from "src/shared/api/lib/response.type-helper";
 import { ApiProperty } from "@nestjs/swagger";
 
-export class SuccessResponseDto<T = null> implements IResponse<T> {
+export class SuccessResponseDto<T = null> implements CommonResponse<T> {
     @ApiProperty({
         type: Boolean,
         example: true,

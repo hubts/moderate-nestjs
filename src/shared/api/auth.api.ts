@@ -1,56 +1,16 @@
-import { IApiRoute } from "./interface/api-route.type";
-import { IResponse } from "../response/interface/response.interface";
+import { CommonResponse } from "./interface/common-response.interface";
 
-export const AuthRoute: IApiRoute<IAuthApi> = {
-    prefix: "auth",
-    subPath: {
-        joinUser: {
-            name: "user/join",
-            roles: [],
-            description: [
-                "Anyone can join as a new user.",
-                "You must insert unique email, nickname, and mobile to join.",
-                "The password you insert will be protected by 1-way encryption.",
-                "See example schema of request body.",
-                "If you are successfully joined, you can get new access and refresh tokens.",
-            ],
-        },
-        loginUser: {
-            name: "user/login",
-            roles: [],
-            description: [
-                "Anyone can login as the previously joined user.",
-                "You must insert email and password to login.",
-                "If you login successfully, you can get new access and refresh tokens.",
-            ],
-        },
-        refreshUser: {
-            name: "user/refresh",
-            roles: [],
-            description: [
-                "Anyone who has own refresh token and identity information can refresh to get new tokens.",
-                "You must insert the refresh token recently issued and own identity information (such as ID).",
-                "You will get new access and refresh tokens.",
-            ],
-        },
-        deactivateUser: {
-            name: "user/deactivate",
-            roles: [],
-            description: [
-                "This feature is only for test.",
-                "Anyone can deactivate the user by soft-delete features.",
-            ],
-        },
-    },
-};
-
-export interface IAuthApi {
-    joinUser: (input: IUserJoinDto) => Promise<IResponse<IAuthTokenResult>>;
-    loginUser: (input: IUserLoginDto) => Promise<IResponse<IAuthTokenResult>>;
+export interface AuthApi {
+    joinUser: (
+        input: IUserJoinDto
+    ) => Promise<CommonResponse<IAuthTokenResult>>;
+    loginUser: (
+        input: IUserLoginDto
+    ) => Promise<CommonResponse<IAuthTokenResult>>;
     refreshUser: (
         input: IUserRefreshDto
-    ) => Promise<IResponse<IAuthTokenResult>>;
-    deactivateUser: (input: IUserLoginDto) => Promise<IResponse<null>>;
+    ) => Promise<CommonResponse<IAuthTokenResult>>;
+    deactivateUser: (input: IUserLoginDto) => Promise<CommonResponse<null>>;
 }
 
 export interface IUserLoginDto {
