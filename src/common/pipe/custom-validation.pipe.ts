@@ -44,7 +44,7 @@ export class CustomValidationPipe extends ValidationPipe {
             });
         }
 
-        return value;
+        return object;
     }
 
     searchErrorConstraints(

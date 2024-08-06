@@ -1,0 +1,27 @@
+model Cache {
+    key       String   @id
+    value     String
+    ttl       Int
+    expiredAt DateTime @db.Timestamptz(6)
+}
+
+model ConsoleLog {
+    id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    idx       Int      @default(autoincrement())
+    createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+    message String
+    context String
+    level   String
+    trace   String?
+}
+
+model ErrorLog {
+    id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    idx       Int      @default(autoincrement())
+    createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+    message String
+    context String
+    trace   String?
+}
