@@ -13,6 +13,7 @@ import { CustomLogger } from "./common/logger/custom.logger";
 import { setupSwagger } from "./common/swagger/setup";
 import { IServerConfig } from "./config/config.interface";
 import { ServerConfig } from "./config/validated/server.config";
+import { SuccessResponseDto } from "./common/dto/success-response.dto";
 
 async function run() {
     const logger = new Logger("Main");
@@ -52,6 +53,7 @@ async function run() {
             title: packageJson.name,
             version: packageJson.version,
             description: "Documents to experience API.",
+            extraModels: [SuccessResponseDto],
         });
 
         // Secure HTTP header and compression
