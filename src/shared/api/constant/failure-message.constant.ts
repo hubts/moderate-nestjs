@@ -1,4 +1,4 @@
-import { FailureName } from "../interface/response.type";
+import { FailureName } from "../lib/response.type-helper";
 
 /**
  * @description

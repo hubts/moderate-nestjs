@@ -1,8 +1,8 @@
 import { HttpStatus } from "@nestjs/common";
 import { ApiResponse } from "@nestjs/swagger";
-import { IResponse } from "src/shared/response/interface/response.interface";
-import { FailureName } from "src/shared/response/interface/response.type";
-import { asFailureResponse } from "src/shared/response/util/as-failure-response";
+import { CommonResponse } from "src/shared/api/interface/common-response.interface";
+import { asFailureResponse } from "src/shared/api/lib/as-failure-response";
+import { FailureName } from "src/shared/api/lib/response.type-helper";
 
 interface FailureExample {
     name: FailureName;
@@ -39,7 +39,7 @@ export const ResFailure = (options: FailureResOptions) => {
                         },
                         {} as {
                             [key: string]: {
-                                value: IResponse<null>;
+                                value: CommonResponse<null>;
                                 description: string;
                             };
                         }

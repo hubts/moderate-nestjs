@@ -5,4 +5,5 @@ export interface SwaggerSetupOptions {
     title?: string;
     description?: string;
     version?: string;
+    extraModels?: Function[];
 }

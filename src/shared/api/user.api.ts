@@ -1,46 +1,15 @@
-import { Role, User } from "@prisma/client";
-import { IApiRoute } from "./interface/api-route.type";
-import { IResponse } from "../response/interface/response.interface";
+import { CommonResponse } from "./interface/common-response.interface";
 
-export const UserRoute: IApiRoute<IUserApi> = {
-    prefix: "users",
-    subPath: {
-        getUserInfoById: {
-            name: "id/:id",
-            roles: [],
-            description: [
-                "You can get the public information of user by ID.",
-                "If the user ID does not exist, you will receive the failure message.",
-            ],
-        },
-        getUserInfoByEmail: {
-            name: "email/:email",
-            roles: [],
-            description: [
-                "You can get the public information of user by email.",
-                "If the user email does not exist, you will receive the failure message.",
-            ],
-        },
-        getMyInfo: {
-            name: "me",
-            roles: [Role.ADMIN],
-            description: [
-                "You can get your own information by login information.",
-            ],
-        },
-    },
-};
-
-export interface IUserApi {
+export interface UserApi<R> {
     getUserInfoById: (
         input: IUserIdParam
-    ) => Promise<IResponse<IUserResource<IUserInfoResult>>>;
+    ) => Promise<CommonResponse<IUserResource<IUserInfoResult>>>;
     getUserInfoByEmail: (
         input: IUserEmailParam
-    ) => Promise<IResponse<IUserResource<IUserInfoResult>>>;
+    ) => Promise<CommonResponse<IUserResource<IUserInfoResult>>>;
     getMyInfo: (
-        user: User
-    ) => Promise<IResponse<IUserResource<IMyUserInfoResult>>>;
+        requestor: R
+    ) => Promise<CommonResponse<IUserResource<IMyUserInfoResult>>>;
 }
 
 export interface IUserIdParam {

@@ -3,7 +3,6 @@ import { IsNotEmpty, IsEmail, IsPhoneNumber } from "class-validator";
 import { IsNickname } from "src/common/decorator/validator/is-nickname.decorator";
 import { IsPassword } from "src/common/decorator/validator/is-password.decorator";
 import { IUserJoinDto } from "src/shared/api/auth.api";
-import { USER_PROPERTY_PATTERN } from "src/shared/constant/user.constant";
 import { Random } from "src/shared/util/random";
 
 export class UserJoinDto implements IUserJoinDto {
@@ -19,7 +18,6 @@ export class UserJoinDto implements IUserJoinDto {
     @IsPassword()
     @ApiProperty({
         description: "Your password",
-        pattern: USER_PROPERTY_PATTERN.PASSWORD,
         example: Random.lowercase(6) + Random.digits(4),
     })
     password: string;
@@ -28,7 +26,6 @@ export class UserJoinDto implements IUserJoinDto {
     @IsNickname()
     @ApiProperty({
         description: "Your nickname (never used)",
-        pattern: USER_PROPERTY_PATTERN.NICKNAME,
         example: Random.nickname(),
     })
     nickname: string;

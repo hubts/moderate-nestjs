@@ -2,9 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { UserRepository } from "../repository/user.repository";
 import { checkUserPropsExist } from "./check-user-props-exist";
 import { checkUserPassword, hashUserPassword } from "./user-password-manager";
-import { ReturnFailure } from "src/shared/response/interface/response.type";
-import { isFailureName } from "src/shared/response/util/is-failure-name";
+import { ReturnFailure } from "src/shared/api/lib/response.type-helper";
 import { Profile, User } from "@prisma/client";
+import { isFailureName } from "src/shared/api/lib/is-failure-name";
 
 @Injectable()
 export class UserService {

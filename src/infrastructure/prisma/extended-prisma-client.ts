@@ -1,9 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import {
-    softDelete,
-    softDeleteMany,
-    filterSoftDeleted,
-} from "./util/soft-delete.extension";
+    filterSoftDeletedExtension,
+    softDeleteExtension,
+} from "./soft-delete.extension";
 
 /**
  * Extended Prisma Client Class
@@ -24,9 +23,8 @@ export class PrismaClientExtended extends PrismaClient {
 // Function changing the prisma client to extended prisma client.
 export const extendPrismaClient = (prismaClient: PrismaClient) => {
     return prismaClient
-        .$extends(softDelete)
-        .$extends(softDeleteMany)
-        .$extends(filterSoftDeleted);
+        .$extends(softDeleteExtension)
+        .$extends(filterSoftDeletedExtension);
 };
 
 // Type of extended prisma client.

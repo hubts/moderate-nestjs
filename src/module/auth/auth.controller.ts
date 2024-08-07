@@ -1,3 +1,4 @@
+import { AuthRoute } from "src/shared/api/auth.route";
 import { ApiTags } from "@nestjs/swagger";
 import { Body, Controller, HttpStatus, Post } from "@nestjs/common";
 import { CommandBus } from "@nestjs/cqrs";
@@ -7,22 +8,22 @@ import { UserJoinDto } from "./dto/user-join.dto";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 import { AuthTokenDto } from "./dto/auth-token.dto";
 import { JwtRolesAuth } from "src/common/decorator/auth/jwt-roles-auth.decorator";
-import { SUCCESS_MESSAGE } from "src/shared/response/message/success-message";
+import { SUCCESS_MESSAGE } from "src/shared/api/constant/success-message.constant";
 import { UserLoginDto } from "./dto/user-login.dto";
-import { AuthRoute, IAuthApi } from "src/shared/api/auth.api";
 import { UserRefreshDto } from "./dto/user-refresh.dto";
 import { RefreshUserCommand } from "./application/refresh-user/command";
 import { DeactivateUserCommand } from "./application/deactivate-user/command";
 import { ApiSpec } from "src/common/decorator/api/api-spec.decorator";
+import { AuthApi } from "src/shared/api/auth.api";
 
-@ApiTags(AuthRoute.prefix)
-@Controller(AuthRoute.prefix)
-export class AuthController implements IAuthApi {
+@ApiTags(AuthRoute.apiTags)
+@Controller(AuthRoute.pathPrefix)
+export class AuthController implements AuthApi {
     constructor(private readonly commandBus: CommandBus) {}
 
     @ApiSpec({
         summary: "Anyone can join as a new user.",
-        description: AuthRoute.subPath.joinUser.description,
+        description: AuthRoute.joinUser.description,
         success: {
             message: SUCCESS_MESSAGE.AUTH.JOIN_USER,
             description:
@@ -49,8 +50,8 @@ export class AuthController implements IAuthApi {
             },
         ],
     })
-    @JwtRolesAuth(AuthRoute.subPath.joinUser.roles)
-    @Post(AuthRoute.subPath.joinUser.name)
+    @JwtRolesAuth(AuthRoute.joinUser.roles)
+    @Post(AuthRoute.joinUser.subRoute)
     async joinUser(
         @Body() body: UserJoinDto
     ): Promise<SuccessResponseDto<AuthTokenDto>> {
@@ -59,7 +60,7 @@ export class AuthController implements IAuthApi {
 
     @ApiSpec({
         summary: "After you joined, you can login as the user.",
-        description: AuthRoute.subPath.loginUser.description,
+        description: AuthRoute.loginUser.description,
         success: {
             message: SUCCESS_MESSAGE.AUTH.LOGIN_USER,
             description: "Returns access and refresh tokens.",
@@ -82,8 +83,8 @@ export class AuthController implements IAuthApi {
             },
         ],
     })
-    @JwtRolesAuth(AuthRoute.subPath.loginUser.roles)
-    @Post(AuthRoute.subPath.loginUser.name)
+    @JwtRolesAuth(AuthRoute.loginUser.roles)
+    @Post(AuthRoute.loginUser.subRoute)
     async loginUser(
         @Body() body: UserLoginDto
     ): Promise<SuccessResponseDto<AuthTokenDto>> {
@@ -92,7 +93,7 @@ export class AuthController implements IAuthApi {
 
     @ApiSpec({
         summary: "Refresh your tokens as new ones to continue.",
-        description: AuthRoute.subPath.refreshUser.description,
+        description: AuthRoute.refreshUser.description,
         success: {
             message: SUCCESS_MESSAGE.AUTH.LOGIN_USER,
             description: "Returns new access and refresh tokens.",
@@ -119,8 +120,8 @@ export class AuthController implements IAuthApi {
             },
         ],
     })
-    @JwtRolesAuth(AuthRoute.subPath.refreshUser.roles)
-    @Post(AuthRoute.subPath.refreshUser.name)
+    @JwtRolesAuth(AuthRoute.refreshUser.roles)
+    @Post(AuthRoute.refreshUser.subRoute)
     async refreshUser(
         @Body() body: UserRefreshDto
     ): Promise<SuccessResponseDto<AuthTokenDto>> {
@@ -129,7 +130,7 @@ export class AuthController implements IAuthApi {
 
     @ApiSpec({
         summary: "Deactivate user for test to soft-delete the user.",
-        description: AuthRoute.subPath.deactivateUser.description,
+        description: AuthRoute.deactivateUser.description,
         success: {
             message: SUCCESS_MESSAGE.AUTH.USER_DEACTIVATED,
             description: "User will be deactivated.",
@@ -155,8 +156,8 @@ export class AuthController implements IAuthApi {
             },
         ],
     })
-    @JwtRolesAuth(AuthRoute.subPath.deactivateUser.roles)
-    @Post(AuthRoute.subPath.deactivateUser.name)
+    @JwtRolesAuth(AuthRoute.deactivateUser.roles)
+    @Post(AuthRoute.deactivateUser.subRoute)
     async deactivateUser(
         @Body() body: UserLoginDto
     ): Promise<SuccessResponseDto> {

@@ -1,8 +1,8 @@
 import { HttpStatus, RequestMethod, Type } from "@nestjs/common";
 import { ApiExtraModels, ApiResponse, getSchemaPath } from "@nestjs/swagger";
 import { METHOD_METADATA } from "@nestjs/common/constants";
+import { SUCCESS_MESSAGE } from "src/shared/api/constant/success-message.constant";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
-import { SUCCESS_MESSAGE } from "src/shared/response/message/success-message";
 
 export interface SuccessResOptions {
     message: string;
@@ -19,14 +19,8 @@ export const ResSuccess = (options: SuccessResOptions) => {
         descriptor: TypedPropertyDescriptor<T>
     ) => {
         // Set extra models
-        if (!dataGenericType) {
-            ApiExtraModels(SuccessResponseDto)(target, key, descriptor);
-        } else {
-            ApiExtraModels(SuccessResponseDto, dataGenericType)(
-                target,
-                key,
-                descriptor
-            );
+        if (dataGenericType) {
+            ApiExtraModels(dataGenericType)(target, key, descriptor);
         }
 
         // Get http method

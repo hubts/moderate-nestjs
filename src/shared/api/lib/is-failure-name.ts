@@ -1,4 +1,4 @@
-import { FailureName, FailureNames } from "../interface/response.type";
+import { FailureName, FailureNames } from "./response.type-helper";
 
 /**
  * 입력 값이 FailureName인지 검사하는 타입 가드

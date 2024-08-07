@@ -8,5 +8,6 @@
         "picsum",
         "psql",
         "RDBMS"
-    ]
+    ],
+    "typescript.tsdk": "node_modules/typescript/lib"
 }

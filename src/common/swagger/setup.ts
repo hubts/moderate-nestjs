@@ -7,8 +7,15 @@ export function setupSwagger(
     app: NestExpressApplication,
     options: SwaggerSetupOptions
 ): void {
-    const { path, serverUrl, localhostPort, title, description, version } =
-        options;
+    const {
+        path,
+        serverUrl,
+        localhostPort,
+        title,
+        description,
+        version,
+        extraModels,
+    } = options;
 
     // Setup the configurations.
     const swaggerConfig = new DocumentBuilder();
@@ -34,7 +41,10 @@ export function setupSwagger(
     });
     const swaggerDocument = SwaggerModule.createDocument(
         app,
-        swaggerConfig.build()
+        swaggerConfig.build(),
+        {
+            extraModels: extraModels ?? [],
+        }
     );
 
     // NOTE: You can change the style of swagger from here.

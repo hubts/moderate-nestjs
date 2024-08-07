@@ -5,8 +5,8 @@ import { Logger } from "@nestjs/common";
 import { UserService } from "src/module/user/domain/user.service";
 import { checkUserPassword } from "src/module/user/domain/user-password-manager";
 import { User } from "@prisma/client";
-import { SUCCESS_MESSAGE } from "src/shared/response/message/success-message";
-import { isFailureName } from "src/shared/response/util/is-failure-name";
+import { SUCCESS_MESSAGE } from "src/shared/api/constant/success-message.constant";
+import { isFailureName } from "src/shared/api/lib/is-failure-name";
 import { ExpectedBadRequestException } from "src/common/error/exception/expected-failure.exception";
 
 @CommandHandler(DeactivateUserCommand)
