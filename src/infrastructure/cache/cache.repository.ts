@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import { Cache } from "@prisma/client";
+import { ICache } from "./cache.interface";
 
 @Injectable()
 export class CacheRepository {
@@ -69,7 +69,7 @@ export class CacheRepository {
         });
     }
 
-    async upsert(cache: Cache) {
+    async upsert(cache: ICache) {
         return await this.prisma.cache.upsert({
             where: {
                 key: cache.key,

@@ -1,6 +1,6 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
 import { PrismaClientExtended } from "./extended-prisma-client";
-import { PrismaTxClient } from "./prisma.type";
+import { PrismaTxClient } from "./type/prisma-tx-client.type";
 
 @Injectable()
 export class PrismaService
@@ -13,9 +13,9 @@ export class PrismaService
         super({
             log: [
                 { emit: "stdout", level: "query" },
-                // { emit: "stdout", level: "info" },
-                // { emit: "stdout", level: "warn" },
-                // { emit: "stdout", level: "error" },
+                { emit: "stdout", level: "info" },
+                { emit: "stdout", level: "warn" },
+                { emit: "stdout", level: "error" },
             ],
         });
         // this.$on("query", e => {
