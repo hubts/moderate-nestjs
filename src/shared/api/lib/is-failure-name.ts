@@ -1,4 +1,8 @@
-import { FailureName, FailureNames } from "./response.type-helper";
+import {
+    FailureName,
+    FailureNames,
+    ReturnFailureWithCause,
+} from "./response.type-helper";
 
 /**
  * 입력 값이 FailureName인지 검사하는 타입 가드
@@ -9,6 +13,19 @@ export const isFailureName = <T>(
     value: T | FailureName
 ): value is FailureName => {
     return (
-        typeof value === "string" && FailureNames.includes(value as FailureName)
+        !!value &&
+        typeof value === "string" &&
+        FailureNames.includes(value as FailureName)
+    );
+};
+
+export const isFailureNameWithCause = <T>(
+    value: T | ReturnFailureWithCause<FailureName>
+): value is ReturnFailureWithCause<FailureName> => {
+    return (
+        !!value &&
+        typeof value === "object" &&
+        "failureName" in value &&
+        isFailureName(value.failureName)
     );
 };
