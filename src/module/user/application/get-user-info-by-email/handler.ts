@@ -5,7 +5,7 @@ import { UserInfoDto } from "../../dto/user-info.dto";
 import { UserService } from "../../domain/user.service";
 import { SUCCESS_MESSAGE } from "src/shared/api/constant/success-message.constant";
 import { ExpectedNotFoundException } from "src/common/error/exception/expected-failure.exception";
-import { isFailureName } from "src/shared/api/lib/is-failure-name";
+import { isFailureName } from "src/shared/api/lib";
 
 @CommandHandler(GetUserInfoByEmailCommand)
 export class GetUserInfoByEmailHandler

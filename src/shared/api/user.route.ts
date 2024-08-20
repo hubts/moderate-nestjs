@@ -1,5 +1,5 @@
 import { ApiRoute } from "./lib/api-route.type";
-import { Role } from "../role/user-role.type";
+import { Role } from "../role/user.role";
 import { UserApi } from "./user.api";
 
 export const UserRoute: ApiRoute<UserApi<Role>, Role> = {

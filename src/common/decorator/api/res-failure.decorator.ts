@@ -1,8 +1,7 @@
 import { HttpStatus } from "@nestjs/common";
 import { ApiResponse } from "@nestjs/swagger";
 import { CommonResponse } from "src/shared/api/interface/common-response.interface";
-import { asFailureResponse } from "src/shared/api/lib/as-failure-response";
-import { FailureName } from "src/shared/api/lib/response.type-helper";
+import { FailureName, asFailureResponse } from "src/shared/api/lib";
 
 interface FailureExample {
     name: FailureName;

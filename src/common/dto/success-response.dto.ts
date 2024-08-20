@@ -1,10 +1,6 @@
-import { CommonResponse } from "src/shared/api/interface/common-response.interface";
-import {
-    ResponseCode,
-    SuccessCode,
-    SuccessName,
-} from "src/shared/api/lib/response.type-helper";
 import { ApiProperty } from "@nestjs/swagger";
+import { CommonResponse } from "src/shared/api/interface";
+import { ResponseCode, SuccessCode, SuccessName } from "src/shared/api/lib";
 
 export class SuccessResponseDto<T = null> implements CommonResponse<T> {
     @ApiProperty({

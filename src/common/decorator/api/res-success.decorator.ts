@@ -23,7 +23,11 @@ export const ResSuccess = (options: SuccessResOptions) => {
             ApiExtraModels(dataGenericType)(target, key, descriptor);
         }
 
-        // Get http method
+        /**
+         * Get http method
+         * (주의!) 여기서 Reflect.getMetadata로 HTTP 메소드를 가져오려면,
+         * 이 데코레이터보다 더 하단에 @Get, @Post 등의 데코레이터가 위치해야 합니다.
+         */
         let statusCode = HttpStatus.OK;
         if (descriptor.value) {
             const httpMethod = Reflect.getMetadata(

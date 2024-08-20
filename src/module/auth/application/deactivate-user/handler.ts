@@ -1,12 +1,13 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { Logger } from "@nestjs/common";
+import { User } from "@prisma/client";
+
 import { DeactivateUserCommand } from "./command";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
-import { Logger } from "@nestjs/common";
 import { UserService } from "src/module/user/domain/user.service";
 import { checkUserPassword } from "src/module/user/domain/user-password-manager";
-import { User } from "@prisma/client";
-import { SUCCESS_MESSAGE } from "src/shared/api/constant/success-message.constant";
-import { isFailureName } from "src/shared/api/lib/is-failure-name";
+import { SUCCESS_MESSAGE } from "src/shared/api/constant";
+import { isFailureName } from "src/shared/api/lib";
 import { ExpectedBadRequestException } from "src/common/error/exception/expected-failure.exception";
 
 @CommandHandler(DeactivateUserCommand)
