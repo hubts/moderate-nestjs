@@ -5,14 +5,16 @@ import {
 } from "./soft-delete.extension";
 
 /**
- * Extended Prisma Client Class
+ * Prisma Client 확장 클래스
  *
- * This will be extended to our PrismaService.
- * This includes the instance of extended prisma client.
+ * @description
+ * 구현된 PrismaService에 대한 확장을 위한 클래스입니다.
+ * 이것은 확장된 Prisma 클라이언트의 인스턴스를 포함합니다.
  */
 export class PrismaClientExtended extends PrismaClient {
     extendedPrismaClient: ExtendedPrismaClient;
 
+    // 확장된 Prisma 클라이언트를 반환합니다.
     get client() {
         if (!this.extendedPrismaClient)
             this.extendedPrismaClient = extendPrismaClient(this);
@@ -20,12 +22,17 @@ export class PrismaClientExtended extends PrismaClient {
     }
 }
 
-// Function changing the prisma client to extended prisma client.
+/**
+ * 일반 Prisma 클라이언트를 확장된 Prisma 클라이언트로 확장하는 함수
+ *
+ * @description
+ * 별도로 정의한 확장(Extension) 함수들을 이곳에서 적용($extends)합니다.
+ */
 export const extendPrismaClient = (prismaClient: PrismaClient) => {
     return prismaClient
         .$extends(softDeleteExtension)
         .$extends(filterSoftDeletedExtension);
 };
 
-// Type of extended prisma client.
+// 확장된 Prisma 클라이언트의 타입
 export type ExtendedPrismaClient = ReturnType<typeof extendPrismaClient>;

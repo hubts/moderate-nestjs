@@ -1,26 +1,29 @@
 import { ApiTags } from "@nestjs/swagger";
-import { Controller, Get, HttpStatus, Param } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { CommandBus } from "@nestjs/cqrs";
 
 import { GetUserInfoByIdCommand } from "./application/get-user-info-by-id/command";
-import { UserIdParam } from "./dto/user-id.param";
 import { JwtRolesAuth } from "src/common/decorator/auth/jwt-roles-auth.decorator";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 import { UserInfoDto } from "./dto/user-info.dto";
 import { Requestor } from "src/common/decorator/auth/requestor.decorator";
-import { User } from "@prisma/client";
-import { UserEmailParam } from "./dto/user-email.param";
 import { GetUserInfoByEmailCommand } from "./application/get-user-info-by-email/command";
-import { MyUserInfoDto } from "./dto/my-info.dto";
 import { GetMyInfoCommand } from "./application/get-my-info/command";
-import { SUCCESS_MESSAGE } from "src/shared/api/constant/success-message.constant";
 import { ApiSpec } from "src/common/decorator/api/api-spec.decorator";
-import { UserApi } from "src/shared/api/user.api";
-import { UserRoute } from "src/shared/api/user.route";
+import { UserRoute } from "src/shared/api/user/user.route";
+import { UserApi } from "src/shared/api/user/user.api";
+import { UserModel } from "src/shared/api/user/user.domain";
+import { SUCCESS_MESSAGE } from "src/shared/constant";
+import { CommonResponse } from "src/shared/type";
+import { UserIdParamsDto } from "./dto/user-id-params.dto";
+import { UserEmailParamsDto } from "./dto/user-email-params.dto";
+import { UserInfoWithProfileDto } from "./dto/user-info-with-profile.dto";
+import { UserUpdateDto } from "./dto/user-update.dto";
+import { UpdateMyInfoCommand } from "./application/update-my-info/command";
 
 @ApiTags(UserRoute.apiTags)
 @Controller(UserRoute.pathPrefix)
-export class UserController implements UserApi<User> {
+export class UserController implements UserApi<UserModel> {
     constructor(private readonly commandBus: CommandBus) {}
 
     @ApiSpec({
@@ -31,22 +34,12 @@ export class UserController implements UserApi<User> {
             description: "Returns public information of user.",
             dataGenericType: UserInfoDto,
         },
-        failures: [
-            {
-                status: HttpStatus.NOT_FOUND,
-                examples: [
-                    {
-                        name: "USER_NOT_FOUND",
-                        description: "When the user does not exist.",
-                    },
-                ],
-            },
-        ],
+        errors: ["USER_NOT_FOUND"],
     })
     @JwtRolesAuth(UserRoute.getUserInfoById.roles)
     @Get(UserRoute.getUserInfoById.subRoute)
     async getUserInfoById(
-        @Param() params: UserIdParam
+        @Param() params: UserIdParamsDto
     ): Promise<SuccessResponseDto<UserInfoDto>> {
         return await this.commandBus.execute(
             new GetUserInfoByIdCommand(params)
@@ -61,22 +54,12 @@ export class UserController implements UserApi<User> {
             description: "Returns public information of user.",
             dataGenericType: UserInfoDto,
         },
-        failures: [
-            {
-                status: HttpStatus.NOT_FOUND,
-                examples: [
-                    {
-                        name: "USER_NOT_FOUND",
-                        description: "When the user does not exist.",
-                    },
-                ],
-            },
-        ],
+        errors: ["USER_NOT_FOUND"],
     })
     @JwtRolesAuth(UserRoute.getUserInfoByEmail.roles)
     @Get(UserRoute.getUserInfoByEmail.subRoute)
     async getUserInfoByEmail(
-        @Param() params: UserEmailParam
+        @Param() params: UserEmailParamsDto
     ): Promise<SuccessResponseDto<UserInfoDto>> {
         return await this.commandBus.execute(
             new GetUserInfoByEmailCommand(params)
@@ -89,31 +72,35 @@ export class UserController implements UserApi<User> {
         success: {
             message: SUCCESS_MESSAGE.USER.FOUND,
             description: "Returns user's own information.",
-            dataGenericType: MyUserInfoDto,
+            dataGenericType: UserInfoWithProfileDto,
         },
-        failures: [
-            {
-                status: HttpStatus.NOT_FOUND,
-                examples: [
-                    {
-                        name: "USER_NOT_FOUND",
-                        description:
-                            "When the login user not found (may be attack).",
-                    },
-                    {
-                        name: "PROFILE_NOT_FOUND",
-                        description:
-                            "When the profile not found (may be attack).",
-                    },
-                ],
-            },
-        ],
+        errors: ["USER_NOT_FOUND", "PROFILE_NOT_FOUND"],
     })
     @JwtRolesAuth(UserRoute.getMyInfo.roles)
     @Get(UserRoute.getMyInfo.subRoute)
     async getMyInfo(
-        @Requestor() user: User
-    ): Promise<SuccessResponseDto<MyUserInfoDto>> {
+        @Requestor() user: UserModel
+    ): Promise<SuccessResponseDto<UserInfoWithProfileDto>> {
         return await this.commandBus.execute(new GetMyInfoCommand(user));
+    }
+
+    @ApiSpec({
+        summary: "Update user own information.",
+        description: UserRoute.updateMyInfo.description,
+        success: {
+            message: SUCCESS_MESSAGE.USER.UPDATED,
+            description: "User's own information will be updated.",
+        },
+        errors: ["DUPLICATE_NICKNAME", "DUPLICATE_MOBILE"],
+    })
+    @JwtRolesAuth(UserRoute.updateMyInfo.roles)
+    @Post(UserRoute.updateMyInfo.subRoute)
+    async updateMyInfo(
+        @Requestor() requestor: UserModel,
+        @Body() input: UserUpdateDto
+    ): Promise<CommonResponse<null>> {
+        return await this.commandBus.execute(
+            new UpdateMyInfoCommand(requestor, input)
+        );
     }
 }

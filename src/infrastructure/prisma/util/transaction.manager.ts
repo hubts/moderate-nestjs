@@ -1,6 +1,7 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { HttpException, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { Prisma } from "@prisma/client";
+import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
 
 @Injectable()
 export class TransactionManager {
@@ -10,15 +11,25 @@ export class TransactionManager {
         return await this.prisma.client.$transaction(async tx => {
             try {
                 this.prisma.beginTransaction(tx);
-                return callback();
+                return await callback();
             } catch (e) {
-                if (e instanceof Prisma.PrismaClientKnownRequestError) {
-                    throw new InternalServerErrorException(
-                        `[${e.code}] The transaction of database has broken`,
-                        { cause: e, description: e.message }
-                    );
+                if (
+                    e instanceof Prisma.PrismaClientKnownRequestError ||
+                    e instanceof Prisma.PrismaClientValidationError
+                ) {
+                    throw new ExpectedErrorException("EXTERNAL_SERVER_ERROR", {
+                        cause: e,
+                        describe: e.message,
+                    });
+                } else if (e instanceof HttpException) {
+                    throw e;
                 }
-                throw e;
+                throw new ExpectedErrorException("EXTERNAL_SERVER_ERROR", {
+                    cause: `${e}`,
+                    describe: `${e}`,
+                });
+            } finally {
+                this.prisma.endTransaction();
             }
         });
     }

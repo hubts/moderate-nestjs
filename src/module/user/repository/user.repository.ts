@@ -1,66 +1,67 @@
 import { Injectable } from "@nestjs/common";
-import { Prisma, Profile, User } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { PrismaService } from "src/infrastructure/prisma/prisma.service";
 
 @Injectable()
 export class UserRepository {
     constructor(private readonly prisma: PrismaService) {}
 
-    async findUser(where: Prisma.UserWhereUniqueInput) {
-        return await this.prisma.client.user.findUnique({ where });
+    // Create
+    async createUser(input: Prisma.UserCreateInput) {
+        return await this.prisma.getTransaction().user.create({ data: input });
     }
 
-    async findUserByMobile(mobile: string) {
-        return await this.prisma.client.user.findFirst({
-            where: { Profile: { mobile } },
-        });
+    // Find
+    async findUserByUnique(where: Prisma.UserWhereUniqueInput) {
+        return await this.prisma.getTransaction().user.findUnique({ where });
     }
 
-    async findManyUsers(where: Prisma.UserWhereInput) {
-        return await this.prisma.client.user.findMany({ where });
+    // Find & Relation(Profile)
+    async findUserAndProfileByUserId(id: string) {
+        return await this.prisma
+            .getTransaction()
+            .user.findUnique({ where: { id }, include: { Profile: true } });
     }
 
-    async findProfile(userId: string) {
-        return await this.prisma.client.profile.findUnique({
-            where: { userId },
-        });
-    }
-
-    async findUserWithProfileById(
-        id: string
-    ): Promise<(User & { Profile: Profile | null }) | null> {
-        return await this.prisma.client.user.findFirst({
+    // Find & Relation(Login History)
+    async findUserAndLoginHistoriesByUserId(id: string) {
+        return await this.prisma.getTransaction().user.findUnique({
             where: { id },
-            include: { Profile: true },
+            include: { UserLoginHistories: true },
         });
     }
 
-    async findManyUsersByEmailOrNicknameOrMobile(props: {
+    // FindMany by unique
+    async findManyUsersByUnique(options: {
         email: string;
         nickname: string;
+        name: string;
         mobile: string;
     }) {
-        const { email, nickname, mobile } = props;
+        const { email, nickname, mobile, name } = options;
         return await this.prisma.user.findMany({
             select: {
                 email: true,
                 nickname: true,
                 Profile: {
                     select: {
+                        name: true,
                         mobile: true,
                     },
                 },
             },
             where: {
-                OR: [{ email }, { nickname }, { Profile: { mobile } }],
+                OR: [
+                    { email },
+                    { nickname },
+                    { Profile: { mobile } },
+                    { Profile: { name } },
+                ],
             },
         });
     }
 
-    async createUser(data: Prisma.UserCreateInput) {
-        return await this.prisma.getTransaction().user.create({ data });
-    }
-
+    // Update
     async updateUser(id: string, data: Prisma.UserUpdateInput) {
         return await this.prisma.getTransaction().user.update({
             where: { id },
@@ -68,18 +69,10 @@ export class UserRepository {
         });
     }
 
-    async updateProfileByUserId(
-        userId: string,
-        data: Prisma.ProfileUpdateInput
-    ) {
-        return await this.prisma.getTransaction().profile.update({
-            where: { userId },
-            data,
-        });
-    }
-
+    // Delete
     async deleteUser(id: string) {
         await this.prisma.getTransaction().profile.softDelete({ userId: id });
+        // TODO: Delete login histories
         await this.prisma.getTransaction().user.softDelete({ id });
     }
 }

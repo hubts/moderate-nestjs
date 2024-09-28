@@ -1,8 +1,8 @@
 model Cache {
     key       String   @id
-    value     String
+    value     String   @db.VarChar
     ttl       Int
-    expiredAt DateTime @db.Timestamptz(6)
+    expiresAt DateTime @db.Timestamptz(6)
 }
 
 model ConsoleLog {
@@ -10,10 +10,10 @@ model ConsoleLog {
     idx       Int      @default(autoincrement())
     createdAt DateTime @default(now()) @db.Timestamptz(6)
 
-    message String
-    context String
-    level   String
-    trace   String?
+    message String  @db.VarChar
+    context String  @db.VarChar
+    level   String  @db.VarChar
+    trace   String? @db.VarChar
 }
 
 model ErrorLog {
@@ -21,7 +21,7 @@ model ErrorLog {
     idx       Int      @default(autoincrement())
     createdAt DateTime @default(now()) @db.Timestamptz(6)
 
-    message String
-    context String
-    trace   String?
+    message String  @db.VarChar
+    context String  @db.VarChar
+    trace   String? @db.VarChar
 }

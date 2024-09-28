@@ -3,18 +3,15 @@ import { Logger } from "@nestjs/common";
 
 import { LoginUserCommand } from "./command";
 
-import { UserService } from "src/module/user/domain/user.service";
-import { AuthService } from "../../domain/auth.service";
-import { User } from "@prisma/client";
-import { checkUserPassword } from "src/module/user/domain/user-password-manager";
-import { SUCCESS_MESSAGE } from "src/shared/api/constant/success-message.constant";
-import { SuccessResponseDto } from "src/common/dto/success-response.dto";
+import { AuthService } from "../../service/auth.service";
 import { AuthTokenDto } from "../../dto/auth-token.dto";
-import { isFailureName } from "src/shared/api/lib";
-import {
-    ExpectedBadRequestException,
-    ExpectedNotFoundException,
-} from "src/common/error/exception/expected-failure.exception";
+import { SuccessResponseDto } from "src/common/dto/success-response.dto";
+import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
+import { SUCCESS_MESSAGE } from "src/shared/constant";
+import { asSuccessResponse } from "src/common/response/as-success-response";
+import { isError } from "src/common/error/util/error";
+import { UserService } from "src/module/user/service/user.service";
+import { UserModel } from "src/shared/api/user/user.domain";
 
 @CommandHandler(LoginUserCommand)
 export class LoginUserHandler
@@ -35,16 +32,21 @@ export class LoginUserHandler
 
         /** 조건부 */
 
-        // 조건 1: User 존재 확인
-        const user = await this.userService.getUserByEmail(email);
-        if (isFailureName(user)) {
-            throw new ExpectedNotFoundException("UNREGISTERED_EMAIL");
-        }
-
-        // 조건 2: 비밀번호 확인
-        const isPasswordCorrect = checkUserPassword(user.password, password);
-        if (!isPasswordCorrect) {
-            throw new ExpectedBadRequestException("WRONG_PASSWORD");
+        // 조건 1: User 로그인 시도
+        const user = await this.userService.login(email, password);
+        if (isError(user)) {
+            switch (user.error) {
+                case "USER_NOT_FOUND": {
+                    throw new ExpectedErrorException("UNREGISTERED_EMAIL", {
+                        email,
+                    });
+                }
+                case "WRONG_PASSWORD": {
+                    throw new ExpectedErrorException("WRONG_PASSWORD", {
+                        email,
+                    });
+                }
+            }
         }
 
         /** 실행부 */
@@ -55,13 +57,13 @@ export class LoginUserHandler
 
         // 종료
         this.log(user);
-        return new SuccessResponseDto(SUCCESS_MESSAGE.AUTH.JOIN_USER, {
+        return asSuccessResponse(SUCCESS_MESSAGE.AUTH.JOIN_USER, {
             accessToken,
             refreshToken,
         });
     }
 
-    log(user: User) {
+    log(user: UserModel) {
         this.logger.log(`User login: ${this.userService.summarize(user)}`);
     }
 }

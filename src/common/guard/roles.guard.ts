@@ -5,7 +5,7 @@ import {
     UnauthorizedException,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { Role, User } from "@prisma/client";
+import { UserModel, UserRole } from "src/shared/api/user/user.domain";
 
 /**
  * RolesGuard detects the role of outside actor.
@@ -19,7 +19,10 @@ export class RolesGuard implements CanActivate {
     constructor(private readonly reflector: Reflector) {}
 
     canActivate(context: ExecutionContext): boolean {
-        const roles = this.reflector.get<Role[]>("roles", context.getHandler());
+        const roles = this.reflector.get<UserRole[]>(
+            "roles",
+            context.getHandler()
+        );
         if (!roles.length) {
             return true;
         }
@@ -33,7 +36,7 @@ export class RolesGuard implements CanActivate {
          */
 
         const request = context.switchToHttp().getRequest();
-        const user = request.user as User;
+        const user = request.user as UserModel;
         if (!user) {
             // This error occurs when JWT was not extracted.
             // However, this guard is called after the extracting.

@@ -1,6 +1,6 @@
 import { ICommand } from "@nestjs/cqrs";
-import { User } from "@prisma/client";
+import { UserModel } from "src/shared/api/user/user.domain";
 
 export class GetMyInfoCommand implements ICommand {
-    constructor(readonly user: User) {}
+    constructor(readonly user: UserModel) {}
 }

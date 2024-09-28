@@ -10,7 +10,12 @@ import { validate, ValidationError } from "class-validator";
 @Injectable()
 export class CustomValidationPipe extends ValidationPipe {
     constructor() {
-        super();
+        super({
+            transform: true,
+            transformOptions: {
+                enableImplicitConversion: true,
+            },
+        });
     }
 
     async transform(value: any, { metatype, type }: ArgumentMetadata) {
@@ -18,8 +23,8 @@ export class CustomValidationPipe extends ValidationPipe {
             return value;
         }
 
-        const object = plainToClass(metatype, value);
-        const errors = await validate(object, {
+        const transformed = plainToClass(metatype, value);
+        const errors = await validate(transformed, {
             skipNullProperties: false, // If property is null, would you let me in?
             skipMissingProperties: false, // If property is missed, would you let me in?
             whitelist: true,
@@ -44,7 +49,7 @@ export class CustomValidationPipe extends ValidationPipe {
             });
         }
 
-        return object;
+        return transformed;
     }
 
     searchErrorConstraints(

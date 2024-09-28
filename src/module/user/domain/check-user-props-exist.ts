@@ -2,20 +2,23 @@ export const checkUserPropsExist = (
     users: {
         email: string;
         nickname: string;
-        mobile: string | undefined;
+        mobile: string | null;
+        name: string | null;
     }[],
     where: {
         email: string;
         nickname: string;
         mobile: string;
+        name: string;
     }
 ): {
     exists: boolean;
-    firstReason?: "email" | "nickname" | "mobile" | undefined;
+    firstReason: "email" | "nickname" | "mobile" | "name" | null;
 } => {
     if (!users.length) {
         return {
             exists: false,
+            firstReason: null,
         };
     }
 
@@ -28,6 +31,8 @@ export const checkUserPropsExist = (
             ? "nickname"
             : users.find(user => user.mobile === mobile)
             ? "mobile"
-            : undefined,
+            : users.find(user => user.name === where.name)
+            ? "name"
+            : null,
     };
 };

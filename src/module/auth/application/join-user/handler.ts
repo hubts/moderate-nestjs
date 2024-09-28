@@ -1,13 +1,14 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { JoinUserCommand } from "./command";
 import { Logger } from "@nestjs/common";
-import { UserService } from "src/module/user/domain/user.service";
-import { AuthService } from "../../domain/auth.service";
-import { User } from "@prisma/client";
-import { SUCCESS_MESSAGE } from "src/shared/api/constant/success-message.constant";
+import { AuthService } from "../../service/auth.service";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 import { AuthTokenDto } from "../../dto/auth-token.dto";
-import { ExpectedBadRequestException } from "src/common/error/exception/expected-failure.exception";
+import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
+import { SUCCESS_MESSAGE } from "src/shared/constant";
+import { asSuccessResponse } from "src/common/response/as-success-response";
+import { UserService } from "src/module/user/service/user.service";
+import { UserModel } from "src/shared/api/user/user.domain";
 
 @CommandHandler(JoinUserCommand)
 export class JoinUserHandler
@@ -24,7 +25,8 @@ export class JoinUserHandler
     async execute(
         command: JoinUserCommand
     ): Promise<SuccessResponseDto<AuthTokenDto>> {
-        const { email, nickname, password, mobile } = command.dto;
+        const { dto } = command;
+        const { email, nickname, password, mobile, name, address } = dto;
 
         /** 조건부 */
 
@@ -33,15 +35,22 @@ export class JoinUserHandler
             email,
             nickname,
             mobile,
+            name,
         });
         if (duplication.exists) {
             switch (duplication.firstReason) {
                 case "email":
-                    throw new ExpectedBadRequestException("DUPLICATE_EMAIL");
+                    throw new ExpectedErrorException("DUPLICATE_EMAIL", {
+                        email,
+                    });
                 case "nickname":
-                    throw new ExpectedBadRequestException("DUPLICATE_NICKNAME");
+                    throw new ExpectedErrorException("DUPLICATE_NICKNAME", {
+                        nickname,
+                    });
                 case "mobile":
-                    throw new ExpectedBadRequestException("DUPLICATE_MOBILE");
+                    throw new ExpectedErrorException("DUPLICATE_MOBILE", {
+                        mobile,
+                    });
             }
         }
 
@@ -56,21 +65,23 @@ export class JoinUserHandler
             password,
             nickname,
             mobile,
+            name,
+            address,
         });
 
         // 실행 2: 로그인 토큰 발행
         const { accessToken, refreshToken } =
-            await this.authService.issueAuthTokens(newUser);
+            this.authService.issueAuthTokens(newUser);
 
         // 종료
         this.log(newUser);
-        return new SuccessResponseDto(SUCCESS_MESSAGE.AUTH.JOIN_USER, {
+        return asSuccessResponse(SUCCESS_MESSAGE.AUTH.JOIN_USER, {
             accessToken,
             refreshToken,
         });
     }
 
-    log(user: User) {
+    log(user: UserModel) {
         this.logger.log(
             `New user arrived: ${this.userService.summarize(user)}`
         );

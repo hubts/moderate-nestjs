@@ -1,39 +1,43 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { GetMyInfoCommand } from "./command";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
-import { MyUserInfoDto } from "../../dto/my-info.dto";
-import { UserService } from "../../domain/user.service";
-import { SUCCESS_MESSAGE } from "src/shared/api/constant/success-message.constant";
-import { ExpectedNotFoundException } from "src/common/error/exception/expected-failure.exception";
-import { isFailureName } from "src/shared/api/lib";
+import { UserService } from "../../service/user.service";
+import { UserInfoWithProfileDto } from "../../dto/user-info-with-profile.dto";
+import { isError } from "src/common/error/util/error";
+import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
+import { SUCCESS_MESSAGE } from "src/shared/constant";
+import { asSuccessResponse } from "src/common/response/as-success-response";
 
 @CommandHandler(GetMyInfoCommand)
 export class GetMyInfoHandler
     implements
-        ICommandHandler<GetMyInfoCommand, SuccessResponseDto<MyUserInfoDto>>
+        ICommandHandler<
+            GetMyInfoCommand,
+            SuccessResponseDto<UserInfoWithProfileDto>
+        >
 {
     constructor(private readonly userService: UserService) {}
 
     async execute(
         command: GetMyInfoCommand
-    ): Promise<SuccessResponseDto<MyUserInfoDto>> {
-        const { id } = command.user;
+    ): Promise<SuccessResponseDto<UserInfoWithProfileDto>> {
+        const { user } = command;
+        const { id, joinedAt, email, nickname, role } = user;
 
-        const userWithProfile = await this.userService.getUserWithProfileById(
-            id
-        );
-        if (isFailureName(userWithProfile)) {
-            throw new ExpectedNotFoundException(userWithProfile);
+        const profile = await this.userService.getProfileByUserId(id);
+        if (isError(profile)) {
+            throw new ExpectedErrorException(profile.error, profile.cause);
         }
 
-        return new SuccessResponseDto(SUCCESS_MESSAGE.USER.FOUND, {
-            user: {
-                id: userWithProfile.id,
-                joinedAt: userWithProfile.createdAt,
-                email: userWithProfile.email,
-                nickname: userWithProfile.nickname,
-                mobile: userWithProfile.Profile.mobile,
-            },
+        return asSuccessResponse(SUCCESS_MESSAGE.USER.FOUND, {
+            id,
+            joinedAt,
+            email,
+            nickname,
+            role,
+            name: profile.name,
+            mobile: profile.mobile,
+            address: profile.address,
         });
     }
 }

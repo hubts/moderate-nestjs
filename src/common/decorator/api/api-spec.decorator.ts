@@ -1,17 +1,21 @@
 import { ApiOperation } from "@nestjs/swagger";
-import { ResSuccess, SuccessResOptions } from "./res-success.decorator";
-import { FailureResOptions, ResFailure } from "./res-failure.decorator";
+import { ErrorName } from "src/shared/type";
+import { ApiResErrors } from "./api-res-errors.decorator";
+import {
+    ApiResSuccess,
+    ApiResSuccessOptions,
+} from "./api-res-success.decorator";
 
 interface ApiSpecOptions {
     summary: string;
     description?: string[];
     deprecated?: boolean;
-    success?: SuccessResOptions;
-    failures?: FailureResOptions[];
+    success?: ApiResSuccessOptions;
+    errors?: ErrorName[];
 }
 
 export const ApiSpec = (options: ApiSpecOptions): MethodDecorator => {
-    const { summary, description, deprecated, success, failures } = options;
+    const { summary, description, deprecated, success, errors } = options;
 
     return <T>(
         target: object,
@@ -26,16 +30,14 @@ export const ApiSpec = (options: ApiSpecOptions): MethodDecorator => {
             deprecated: deprecated ?? false,
         })(target, key, descriptor);
 
-        // Set success response
+        // Set success schema as response example
         if (success) {
-            ResSuccess(success)(target, key, descriptor);
+            ApiResSuccess(success)(target, key, descriptor);
         }
 
-        // Set failures response
-        if (failures?.length) {
-            failures.forEach(failure => {
-                ResFailure(failure)(target, key, descriptor);
-            });
+        // Set errors schema as response example
+        if (errors?.length) {
+            ApiResErrors(errors)(target, key, descriptor);
         }
 
         return descriptor;

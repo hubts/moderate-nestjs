@@ -1,6 +1,6 @@
 import { ICommand } from "@nestjs/cqrs";
-import { UserIdParam } from "../../dto/user-id.param";
+import { UserIdParamsDto } from "../../dto/user-id-params.dto";
 
 export class GetUserInfoByIdCommand implements ICommand {
-    constructor(readonly dto: UserIdParam) {}
+    constructor(readonly dto: UserIdParamsDto) {}
 }
