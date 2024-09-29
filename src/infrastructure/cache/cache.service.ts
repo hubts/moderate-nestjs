@@ -44,7 +44,7 @@ export class CacheService implements ICacheService {
     async expiredAt(key: string): Promise<Date> {
         const result = await this.cache.findValue(key);
         if (!result) return new Date();
-        return result.expiredAt;
+        return result.expiresAt;
     }
 
     async getAllKeyValues(pattern = ""): Promise<KeyValue[]> {
@@ -61,16 +61,16 @@ export class CacheService implements ICacheService {
 
     async set(key: string, value: string, ttl?: number): Promise<Date> {
         ttl ??= this.DEFAULT_SET_TTL; // Default: 30 seconds
-        const expiredAt = new Date(
+        const expiresAt = new Date(
             new Date().getTime() + ttl * TimeExtension.ONE_SECOND_IN_MS
         );
         await this.cache.upsert({
             key,
             value,
             ttl,
-            expiredAt,
+            expiresAt,
         });
-        return expiredAt;
+        return expiresAt;
     }
 
     async del(key: string): Promise<void> {

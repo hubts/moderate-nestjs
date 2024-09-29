@@ -1,40 +1,43 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { Logger } from "@nestjs/common";
-import { User } from "@prisma/client";
 
 import { DeactivateUserCommand } from "./command";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
-import { UserService } from "src/module/user/domain/user.service";
-import { checkUserPassword } from "src/module/user/domain/user-password-manager";
-import { SUCCESS_MESSAGE } from "src/shared/api/constant";
-import { isFailureName } from "src/shared/api/lib";
-import { ExpectedBadRequestException } from "src/common/error/exception/expected-failure.exception";
+import { isError } from "src/common/error/util/error";
+import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
+import { SUCCESS_MESSAGE } from "src/shared/constant";
+import { asSuccessResponse } from "src/common/response/as-success-response";
+import { UserService } from "src/module/user/service/user.service";
+import { UserModel } from "src/shared/api/user/user.domain";
 
 @CommandHandler(DeactivateUserCommand)
 export class DeactivateUserHandler
-    implements ICommandHandler<DeactivateUserCommand, SuccessResponseDto<void>>
+    implements ICommandHandler<DeactivateUserCommand, SuccessResponseDto>
 {
     private logger = new Logger(DeactivateUserHandler.name);
 
     constructor(private readonly userService: UserService) {}
 
-    async execute(
-        command: DeactivateUserCommand
-    ): Promise<SuccessResponseDto<void>> {
+    async execute(command: DeactivateUserCommand): Promise<SuccessResponseDto> {
         const { email, password } = command.dto;
 
         /** 조건부 */
 
-        // 조건 1: User 존재 확인
-        const user = await this.userService.getUserByEmail(email);
-        if (isFailureName(user)) {
-            throw new ExpectedBadRequestException("UNREGISTERED_EMAIL");
-        }
-
-        // 조건 2: 비밀번호 확인
-        const isPasswordCorrect = checkUserPassword(user.password, password);
-        if (!isPasswordCorrect) {
-            throw new ExpectedBadRequestException("WRONG_PASSWORD");
+        // 조건 1: User 로그인 시도
+        const user = await this.userService.login(email, password);
+        if (isError(user)) {
+            switch (user.error) {
+                case "USER_NOT_FOUND": {
+                    throw new ExpectedErrorException("UNREGISTERED_EMAIL", {
+                        email,
+                    });
+                }
+                case "WRONG_PASSWORD": {
+                    throw new ExpectedErrorException("WRONG_PASSWORD", {
+                        email,
+                    });
+                }
+            }
         }
 
         /** 실행부 */
@@ -44,10 +47,10 @@ export class DeactivateUserHandler
 
         // 종료
         this.log(user);
-        return new SuccessResponseDto(SUCCESS_MESSAGE.AUTH.USER_DEACTIVATED);
+        return asSuccessResponse(SUCCESS_MESSAGE.AUTH.USER_DEACTIVATED);
     }
 
-    log(user: User) {
+    log(user: UserModel) {
         this.logger.log(
             `User deactivated: ${this.userService.summarize(user)}`
         );

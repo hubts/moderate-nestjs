@@ -11,11 +11,11 @@ import { AppService } from "./module/app/app.service";
 import { UserModule } from "./module/user/user.module";
 import { AuthModule } from "./module/auth/auth.module";
 import { HttpExceptionFilter } from "./common/error/filter/http-exception.filter";
+import { ExpectedErrorExceptionFilter } from "./common/error/filter/expected-error-exception.filter";
 import { CustomLoggerModule } from "./common/logger/custom-logger.module";
 import { ThrottlerConfigService } from "./config/service/throttler.config.service";
 import { CacheModule } from "./infrastructure/cache/cache.module";
 import { PrismaModule } from "./infrastructure/prisma/prisma.module";
-import { FailureExceptionFilter } from "./common/error/filter/failure-exception.filter";
 import { CqrsModule } from "@nestjs/cqrs";
 
 const DomainModules = [
@@ -49,7 +49,7 @@ const DomainModules = [
         { provide: APP_GUARD, useClass: ThrottlerGuard },
         { provide: APP_PIPE, useClass: CustomValidationPipe },
         { provide: APP_FILTER, useClass: HttpExceptionFilter }, // Second filter
-        { provide: APP_FILTER, useClass: FailureExceptionFilter }, // First filter
+        { provide: APP_FILTER, useClass: ExpectedErrorExceptionFilter }, // First filter
     ],
 })
 export class AppModule {}

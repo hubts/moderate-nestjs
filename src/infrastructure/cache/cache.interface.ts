@@ -2,7 +2,7 @@ export interface ICache {
     key: string;
     value: string;
     ttl: number;
-    expiredAt: Date;
+    expiresAt: Date;
 }
 
 export interface ICacheService {

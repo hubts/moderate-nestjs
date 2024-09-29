@@ -2,13 +2,12 @@ import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { RefreshUserCommand } from "./command";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 import { AuthTokenDto } from "../../dto/auth-token.dto";
-import { UserService } from "src/module/user/domain/user.service";
-import { AuthService } from "../../domain/auth.service";
-import { SUCCESS_MESSAGE } from "src/shared/api/constant/success-message.constant";
-import {
-    ExpectedBadRequestException,
-    ExpectedNotFoundException,
-} from "src/common/error/exception/expected-failure.exception";
+import { AuthService } from "../../service/auth.service";
+import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
+import { SUCCESS_MESSAGE } from "src/shared/constant";
+import { asSuccessResponse } from "src/common/response/as-success-response";
+import { UserService } from "src/module/user/service/user.service";
+import { isError } from "src/common/error/util/error";
 
 @CommandHandler(RefreshUserCommand)
 export class RefreshUserHandler
@@ -23,25 +22,25 @@ export class RefreshUserHandler
     async execute(
         command: RefreshUserCommand
     ): Promise<SuccessResponseDto<AuthTokenDto>> {
-        const { refreshToken, id } = command.dto;
+        const { refreshToken, userId } = command.dto;
 
         /**
          * Condition
          */
 
         // 1. Does the user exist?
-        const user = await this.userService.getUserById(id);
-        if (!user) {
-            throw new ExpectedNotFoundException("USER_NOT_FOUND");
+        const user = await this.userService.getUserById(userId);
+        if (isError(user)) {
+            throw new ExpectedErrorException("USER_NOT_FOUND");
         }
 
         // 2. Is the refresh token valid?
         const isValid = await this.authService.verifyRefreshToken(
             refreshToken,
-            id
+            userId
         );
         if (!isValid) {
-            throw new ExpectedBadRequestException("INVALID_REFRESH_TOKEN");
+            throw new ExpectedErrorException("INVALID_REFRESH_TOKEN");
         }
 
         /**
@@ -56,7 +55,7 @@ export class RefreshUserHandler
          * Returns
          */
 
-        return new SuccessResponseDto(SUCCESS_MESSAGE.AUTH.LOGIN_USER, {
+        return asSuccessResponse(SUCCESS_MESSAGE.AUTH.LOGIN_USER, {
             accessToken,
             refreshToken: newRefreshToken,
         });

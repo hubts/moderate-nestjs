@@ -1,10 +1,12 @@
+import { isError } from "src/common/error/util/error";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { GetUserInfoByIdCommand } from "./command";
-import { UserService } from "../../domain/user.service";
 import { UserInfoDto } from "../../dto/user-info.dto";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
-import { SUCCESS_MESSAGE } from "src/shared/api/constant/success-message.constant";
-import { ExpectedNotFoundException } from "src/common/error/exception/expected-failure.exception";
+import { UserService } from "../../service/user.service";
+import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
+import { SUCCESS_MESSAGE } from "src/shared/constant";
+import { asSuccessResponse } from "src/common/response/as-success-response";
 
 @CommandHandler(GetUserInfoByIdCommand)
 export class GetUserInfoByIdHandler
@@ -19,20 +21,20 @@ export class GetUserInfoByIdHandler
     async execute(
         command: GetUserInfoByIdCommand
     ): Promise<SuccessResponseDto<UserInfoDto>> {
-        const { id } = command.dto;
+        const { dto } = command;
+        const { id } = dto;
 
         const user = await this.userService.getUserById(id);
-        if (!user) {
-            throw new ExpectedNotFoundException("USER_NOT_FOUND");
+        if (isError(user)) {
+            throw new ExpectedErrorException(user.error, user.cause);
         }
 
-        return new SuccessResponseDto(SUCCESS_MESSAGE.USER.FOUND, {
-            user: {
-                id: user.id,
-                joinedAt: user.createdAt,
-                email: user.email,
-                nickname: user.nickname,
-            },
+        return asSuccessResponse(SUCCESS_MESSAGE.USER.FOUND, {
+            id: user.id,
+            joinedAt: user.joinedAt,
+            email: user.email,
+            nickname: user.nickname,
+            role: user.role,
         });
     }
 }

@@ -1,8 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IUserInfoResult, IUserResource } from "src/shared/api/user.api";
+import { UserInfo } from "src/shared/api/user/user.api";
+import { UserRole, UserRoles } from "src/shared/api/user/user.domain";
 import { Random } from "src/shared/util/random";
 
-export class InfoDto implements IUserInfoResult {
+export class UserInfoDto implements UserInfo {
     @ApiProperty({
         description: "User ID",
         example: Random.uuid(),
@@ -16,17 +17,20 @@ export class InfoDto implements IUserInfoResult {
     joinedAt: Date;
 
     @ApiProperty({
+        description: "Email",
         example: Random.email(),
     })
     email: string;
 
     @ApiProperty({
+        description: "Nickname",
         example: Random.nickname(),
     })
     nickname: string;
-}
 
-export class UserInfoDto implements IUserResource<InfoDto> {
-    @ApiProperty()
-    user: InfoDto;
+    @ApiProperty({
+        description: `UserRole: ${UserRoles}`,
+        example: UserRoles[0],
+    })
+    role: UserRole;
 }

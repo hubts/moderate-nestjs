@@ -9,33 +9,36 @@ import {
     IsOptional,
     Min,
 } from "class-validator";
-import {
-    Paginated,
-    PaginationOptions,
-} from "src/shared/api/interface/pagination.interface";
+import { Paginated, PaginationOptions } from "src/shared/type";
 
 export class PaginationOptionsDto implements PaginationOptions {
     @IsOptional()
     @IsInt()
     @Min(0)
-    @Transform(({ value }) => Number(value))
+    @Transform(({ value }) => {
+        if (!value) return 0;
+        return Number(value);
+    })
     @ApiPropertyOptional({
         description: "건너뛰는 데이터의 개수 단위 (Page)",
         example: 0,
         default: 0,
     })
-    skip: number = 0;
+    skip: number;
 
     @IsOptional()
     @IsInt()
     @Min(1)
-    @Transform(({ value }) => Number(value))
+    @Transform(({ value }) => {
+        if (!value) return 10;
+        return Number(value);
+    })
     @ApiPropertyOptional({
         description: "가져올 데이터의 개수 (Size)",
         example: 10,
         default: 10,
     })
-    take: number = 10;
+    take: number;
 }
 
 export abstract class PaginatedDto<T> implements Paginated<T> {

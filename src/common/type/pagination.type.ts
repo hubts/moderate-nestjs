@@ -1,7 +1,4 @@
-import {
-    Paginated,
-    PaginationOptions,
-} from "src/shared/api/interface/pagination.interface";
+import { Paginated, PaginationOptions } from "src/shared/type";
 
 export type FindManyAllModels<T> = () => Promise<Paginated<T>>;
 

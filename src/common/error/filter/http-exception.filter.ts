@@ -52,13 +52,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
         this.logger.error(
             message,
             JSON.stringify({
+                token: request.headers?.authorization,
+                body: request.body,
                 statusCode,
-                request: {
-                    path,
-                    token: request.headers?.authorization,
-                    body: request.body,
-                },
-                response: error,
+                error,
                 cause,
             }),
             path,

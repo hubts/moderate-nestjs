@@ -11,7 +11,7 @@ export class CacheRepository {
         return (
             await this.prisma.cache.deleteMany({
                 where: {
-                    expiredAt: {
+                    expiresAt: {
                         lte: deadline,
                     },
                 },
@@ -79,14 +79,14 @@ export class CacheRepository {
         });
     }
 
-    async renew(key: string, ttl: number, expiredAt: Date) {
+    async renew(key: string, ttl: number, expiresAt: Date) {
         await this.prisma.cache.update({
             where: {
                 key,
             },
             data: {
                 ttl,
-                expiredAt,
+                expiresAt,
             },
         });
     }

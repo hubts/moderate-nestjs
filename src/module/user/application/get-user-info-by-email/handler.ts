@@ -2,10 +2,11 @@ import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { GetUserInfoByEmailCommand } from "./command";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 import { UserInfoDto } from "../../dto/user-info.dto";
-import { UserService } from "../../domain/user.service";
-import { SUCCESS_MESSAGE } from "src/shared/api/constant/success-message.constant";
-import { ExpectedNotFoundException } from "src/common/error/exception/expected-failure.exception";
-import { isFailureName } from "src/shared/api/lib";
+import { UserService } from "../../service/user.service";
+import { isError } from "src/common/error/util/error";
+import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
+import { SUCCESS_MESSAGE } from "src/shared/constant";
+import { asSuccessResponse } from "src/common/response/as-success-response";
 
 @CommandHandler(GetUserInfoByEmailCommand)
 export class GetUserInfoByEmailHandler
@@ -20,20 +21,23 @@ export class GetUserInfoByEmailHandler
     async execute(
         command: GetUserInfoByEmailCommand
     ): Promise<SuccessResponseDto<UserInfoDto>> {
-        const { email } = command.dto;
+        const { dto } = command;
+        const { email } = dto;
 
         const userByEmail = await this.userService.getUserByEmail(email);
-        if (isFailureName(userByEmail)) {
-            throw new ExpectedNotFoundException(userByEmail);
+        if (isError(userByEmail)) {
+            throw new ExpectedErrorException(
+                userByEmail.error,
+                userByEmail.cause
+            );
         }
 
-        return new SuccessResponseDto(SUCCESS_MESSAGE.USER.FOUND, {
-            user: {
-                id: userByEmail.id,
-                joinedAt: userByEmail.createdAt,
-                email: userByEmail.email,
-                nickname: userByEmail.nickname,
-            },
+        return asSuccessResponse(SUCCESS_MESSAGE.USER.FOUND, {
+            id: userByEmail.id,
+            joinedAt: userByEmail.joinedAt,
+            email: userByEmail.email,
+            nickname: userByEmail.nickname,
+            role: userByEmail.role,
         });
     }
 }

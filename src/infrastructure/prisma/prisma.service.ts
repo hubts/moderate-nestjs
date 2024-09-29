@@ -1,6 +1,14 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
+import {
+    Inject,
+    Injectable,
+    OnModuleDestroy,
+    OnModuleInit,
+} from "@nestjs/common";
 import { PrismaClientExtended } from "./extended-prisma-client";
 import { PrismaTxClient } from "./type/prisma-tx-client.type";
+import { PRISMA_MODULE_OPTIONS } from "./constant/prisma.constant";
+import { PrismaModuleOptions } from "./type/prisma-module-options.interface";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class PrismaService
@@ -9,14 +17,22 @@ export class PrismaService
 {
     private tx: PrismaTxClient;
 
-    constructor() {
+    constructor(
+        @Inject(PRISMA_MODULE_OPTIONS)
+        readonly options: PrismaModuleOptions
+    ) {
+        const { log } = options;
+        const logConfig: Prisma.LogDefinition[] =
+            (log && [
+                { level: "query", emit: "stdout" },
+                { level: "info", emit: "stdout" },
+                { level: "warn", emit: "stdout" },
+                { level: "error", emit: "stdout" },
+            ]) ||
+            [];
+
         super({
-            log: [
-                { emit: "stdout", level: "query" },
-                { emit: "stdout", level: "info" },
-                { emit: "stdout", level: "warn" },
-                { emit: "stdout", level: "error" },
-            ],
+            log: logConfig,
         });
         // this.$on("query", e => {
         //     console.log("Query: " + e.query);
@@ -37,7 +53,11 @@ export class PrismaService
         this.tx = tx;
     }
 
+    endTransaction() {
+        this.tx = this.client;
+    }
+
     getTransaction() {
-        return this.tx ?? new PrismaClientExtended();
+        return this.tx ?? this.client;
     }
 }

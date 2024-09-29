@@ -55,5 +55,9 @@ export function setupSwagger(
     SwaggerModule.setup(path, app, swaggerDocument, {
         explorer: true,
         customCss: style,
+        swaggerOptions: {
+            tagsSorter: "alpha",
+            // operationsSorter: "alpha",
+        },
     });
 }
