@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Hightlight color
+GREEN="\e[0;32m"
+# No Color (END)
+NC="\e[0m"
+
+# Print Github branch to check
 print_branch() {
     git_branch=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
     if (( $? != 0 )); then
@@ -7,43 +13,31 @@ print_branch() {
         exit 1
     fi
 
-    echo "> 🌴 Your current branch is [ $git_branch ]"
+    printf "> 🌴 Your current branch is [ $GREEN%s$NC ]\n" $git_branch
 }
 
+# Extract package.json to get name and version
 extract_package() {
-    APP_NAME=$(node -p "require('$RUN_DIR/package.json').name")
+    PACKAGE_NAME=$(node -p "require('$RUN_DIR/package.json').name")
+    APP_NAME="${PACKAGE_NAME##*/}"
     if (( $? != 0 )); then
-        echo "> 😅 Cannot find node command or 'package.json'"
+        echo "> 😅 Cannot find 'node' command or 'package.json'"
         exit 1
     fi
     APP_VERSION=$(node -p "require('$RUN_DIR/package.json').version")
-    IMAGE_FULLNAME="$APP_NAME:$APP_VERSION"
+    IMAGE_FULLNAME="$DOCKER_HUB_NAME/$APP_NAME:$APP_VERSION"
     CONTAINER_NAME="$APP_NAME"
+    
+    printf "> 😁 Image name is [ $GREEN%s$NC ]\n" $IMAGE_FULLNAME
 }
 
-build() {
-    echo "> 🔎 Try to find [ $IMAGE_FULLNAME ] image"
-    existing_image=$(docker images | grep -w "$APP_NAME" | grep -w "$APP_VERSION")
-    if [ -z "$existing_image" ]; then
-        echo "> 🐳 [ $IMAGE_FULLNAME ] image build started"
-        
-        docker build --rm -t $IMAGE_FULLNAME $RUN_DIR
-        if (( $? != 0 )); then
-            echo "> 😅 [ $IMAGE_FULLNAME ] image build failed"
-            exit 1
-        fi
-
-        echo "> Successfully 🐳 [ $IMAGE_FULLNAME ] image built"
-    else
-        echo "> 🧐 [ $IMAGE_FULLNAME ] image already exists"
-    fi
-}
-
+# Terminate the previous container.
 terminate() {
     previous_container=$(docker ps -qa --filter "name=$CONTAINER_NAME" | grep -q . && docker stop $CONTAINER_NAME && docker rm -fv $CONTAINER_NAME)
     [ ! -z "$previous" ] && echo "> 🧹 Previous container cleaned"
 }
 
+# Export environment variables to set.
 export_env() {
     ENV_FILENAME="$1"
     [ -z "$ENV_FILENAME" ] && echo "> ✋ Environment filename not given" && exit 1
@@ -54,38 +48,51 @@ export_env() {
     source $ENV_FILE
 }
 
+# Clean legacy images.
 clean_image() {
-    legacy_images=$(docker images --filter "before=$IMAGE_FULLNAME" --filter=reference="$APP_NAME:*" -q)
+    legacy_images=$(docker images --filter "before=$IMAGE_FULLNAME" --filter=reference="$DOCKER_HUB_NAME/$APP_NAME:*" -q)
     if [ ! -z "$legacy_images" ]; then
         docker rmi -f $legacy_images
         if (( $? == 0)); then
-            echo "$legacy_images"
             echo "> 🧹 Legacy images cleaned"
         else
-            echo "> 😵‍💫 Stop the running container [ $CONTAINER_NAME ] to delete all legacy images"
+            printf "> 😵‍💫 Stop the running container [ $GREEN%s$NC ] to delete all legacy images\n" $CONTAINER_NAME
         fi
     else
-        echo "> 🥱 Images before [ $IMAGE_FULLNAME ] have been already cleaned"
+        printf "> 🥱 Images before [ $GREEN%s$NC ] have been already cleaned\n" $IMAGE_FULLNAME
     fi
 }
 
-# GLOBAL
-SCRIPT_DIR=$(dirname $0) # Script was executed by './script/run.sh'
+################
+# Global ENVs  #
+################
+
+# Script may execute by './script/docker/*.sh'.
+# If you change the path of this script, you must match the path.
+SCRIPT_DIR=$(dirname $(dirname $0)) 
 RUN_DIR=$(dirname $SCRIPT_DIR) # Run in root directory with 'package.json'
+[[ "$RUN_DIR" == "." ]] && RUN_DIR=$(pwd)
+
+# Predefined variables as empty
 APP_NAME=""
 APP_VERSION=""
 IMAGE_FULLNAME=""
 CONTAINER_NAME=""
 ENV_FILE=""
 
-#########
-#  RUN  #
-#########
-print_branch # (Optional) Print git branch
-extract_package # Extract app name and version from package
-build # Build docker image
-terminate # Terminate the previous container with the same name
-export_env ".env" # (Optional) Export environment variables (if you use variables in run command, this is essential)
+# Docker hub account name (prefix)
+# You must set this variable.
+DOCKER_HUB_NAME="hubaccount"
+
+################
+# Main Process #
+################
+
+print_branch
+extract_package
+terminate
+export_env ".env"
+docker pull $IMAGE_FULLNAME
 
 ###############################################
 # (Customize) Here is your docker run command #
@@ -99,7 +106,8 @@ docker run -dit \
     $IMAGE_FULLNAME
 
 ###############################################
-(( $? == 0 )) && echo "> ✨ Successfully started [ $IMAGE_FULLNAME ]"
+
+(( $? == 0 )) && printf "> ✨ Successfully started [ $GREEN%s$NC ]\n" $IMAGE_FULLNAME
 
 # (Optional) Clean legacy images
 read -p "> 🙋 Do you want to delete legacy images? (y/N): " answer

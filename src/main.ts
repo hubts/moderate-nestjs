@@ -23,7 +23,6 @@ async function run() {
         const app = await NestFactory.create<NestExpressApplication>(
             AppModule,
             {
-                bufferLogs: true,
                 abortOnError: true,
             }
         );
