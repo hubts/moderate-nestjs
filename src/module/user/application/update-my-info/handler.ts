@@ -31,11 +31,14 @@ export class UpdateMyInfoHandler
         if (duplication.exists) {
             switch (duplication.firstReason) {
                 case "nickname":
-                    throw new ExpectedErrorException("DUPLICATE_NICKNAME", {
-                        nickname,
-                    });
+                    throw new ExpectedErrorException(
+                        "USER_NICKNAME_DUPLICATED",
+                        {
+                            nickname,
+                        }
+                    );
                 case "mobile":
-                    throw new ExpectedErrorException("DUPLICATE_MOBILE", {
+                    throw new ExpectedErrorException("USER_MOBILE_DUPLICATED", {
                         mobile,
                     });
             }

@@ -4,7 +4,7 @@ import { ConfigType } from "@nestjs/config";
 import { ExtractJwt, Strategy } from "passport-jwt";
 
 import { JwtConfig } from "src/config/validated/jwt.config";
-import { JwtPayload } from "src/shared/role/jwt-payload.interface";
+import { JwtPayload } from "src/shared/type/jwt-payload.interface";
 import { UserModel } from "src/shared/api/user/user.domain";
 import { UserService } from "src/module/user/service/user.service";
 import { isError } from "src/common/error/util/error";

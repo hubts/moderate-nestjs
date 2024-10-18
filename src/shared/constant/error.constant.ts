@@ -11,59 +11,58 @@ export const ERROR: {
         description?: string | string[];
     };
 } = {
-    // AUTH / USER
-    DUPLICATE_EMAIL: {
-        message: "This email already exists.",
-        status: 400,
+    UNAUTHORIZED: {
+        message: "Unauthorized access. You need to login first.",
+        status: 401,
     },
-    DUPLICATE_NICKNAME: {
-        message: "This nickname already exists.",
-        status: 400,
+    FORBIDDEN_RESOURCE: {
+        message: "You do not have permission to access this resource.",
+        status: 403,
     },
-    DUPLICATE_MOBILE: {
-        message: "This mobile already exists.",
-        status: 400,
+    INTERNAL_SERVER_ERROR: {
+        message: "Internal server error occurs. Please contact us.",
+        status: 500,
     },
+    SERVICE_UNAVAILABLE: {
+        message: "Service is unavailable. Please try again later.",
+        status: 503,
+    },
+
+    // AUTH
     WRONG_PASSWORD: {
-        message: "This is wrong password.",
+        message: "You entered the wrong password. Please try again.",
         status: 400,
     },
     SAME_PASSWORD: {
-        message: "This password is same as before.",
+        message: "You cannot change it to the same password.",
         status: 400,
     },
-    UNREGISTERED_EMAIL: {
-        message: "This email is not registered.",
+    INVALID_REFRESH_TOKEN: {
+        message: "Your refresh token is not valid.",
         status: 400,
     },
+
+    // USER
     USER_NOT_FOUND: {
         message: "The user does not exist.",
         status: 404,
     },
-    INVALID_REFRESH_TOKEN: {
-        message: "The refresh token is not valid.",
+    USER_EMAIL_DUPLICATED: {
+        message: "This email already exists.",
         status: 400,
     },
-    UNAUTHORIZED_ACCESS: {
-        message: "Unauthorized access. Please try in a different way.",
-        status: 401,
+    USER_NICKNAME_DUPLICATED: {
+        message: "This nickname already exists.",
+        status: 400,
     },
+    USER_MOBILE_DUPLICATED: {
+        message: "This mobile already exists.",
+        status: 400,
+    },
+
+    // PROFILE
     PROFILE_NOT_FOUND: {
         message: "The profile does not exist.",
         status: 404,
-    },
-
-    // EXTERNAL
-    UNEXPECTED_ERROR: {
-        message: "Unexpected error occurs. Please contact us.",
-        status: 403,
-    },
-    DATA_SOURCE_ERROR: {
-        message: "Error occurs in data source. Please contact us.",
-        status: 500,
-    },
-    EXTERNAL_SERVER_ERROR: {
-        message: "Error occurs in external server. Please contact us.",
-        status: 403,
     },
 };

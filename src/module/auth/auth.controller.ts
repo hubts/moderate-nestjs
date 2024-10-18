@@ -30,7 +30,11 @@ export class AuthController implements AuthApi {
                 "Creates a new user and returns access and refresh tokens.",
             dataGenericType: AuthTokenDto,
         },
-        errors: ["DUPLICATE_EMAIL", "DUPLICATE_NICKNAME", "DUPLICATE_MOBILE"],
+        errors: [
+            "USER_EMAIL_DUPLICATED",
+            "USER_NICKNAME_DUPLICATED",
+            "USER_MOBILE_DUPLICATED",
+        ],
     })
     @JwtRolesAuth(AuthRoute.joinUser.roles)
     @Post(AuthRoute.joinUser.subRoute)
@@ -48,7 +52,7 @@ export class AuthController implements AuthApi {
             description: "Returns access and refresh tokens.",
             dataGenericType: AuthTokenDto,
         },
-        errors: ["UNREGISTERED_EMAIL", "WRONG_PASSWORD"],
+        errors: ["USER_NOT_FOUND", "WRONG_PASSWORD"],
     })
     @JwtRolesAuth(AuthRoute.loginUser.roles)
     @Post(AuthRoute.loginUser.subRoute)
@@ -83,7 +87,7 @@ export class AuthController implements AuthApi {
             message: SUCCESS_MESSAGE.AUTH.USER_DEACTIVATED,
             description: "User will be deactivated.",
         },
-        errors: ["UNREGISTERED_EMAIL", "WRONG_PASSWORD"],
+        errors: ["USER_NOT_FOUND", "WRONG_PASSWORD"],
     })
     @JwtRolesAuth(AuthRoute.deactivateUser.roles)
     @Post(AuthRoute.deactivateUser.subRoute)

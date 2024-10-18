@@ -7,7 +7,7 @@ import {
 import { ConfigType } from "@nestjs/config";
 import { CustomLoggerService } from "./custom-logger.service";
 import { ServerConfig } from "src/config/validated/server.config";
-import { Random } from "src/shared/util/random";
+import { Random } from "src/common/util/random";
 
 @Injectable()
 export class CustomLogger extends ConsoleLogger {

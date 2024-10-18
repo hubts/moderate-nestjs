@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEmail, IsNotEmpty } from "class-validator";
 import { UserEmailParams } from "src/shared/api/user/user.api";
-import { Random } from "src/shared/util/random";
+import { Random } from "src/common/util/random";
 
 export class UserEmailParamsDto implements UserEmailParams {
     @IsNotEmpty()

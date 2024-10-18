@@ -17,14 +17,14 @@ export class TransactionManager {
                     e instanceof Prisma.PrismaClientKnownRequestError ||
                     e instanceof Prisma.PrismaClientValidationError
                 ) {
-                    throw new ExpectedErrorException("EXTERNAL_SERVER_ERROR", {
+                    throw new ExpectedErrorException("INTERNAL_SERVER_ERROR", {
                         cause: e,
                         describe: e.message,
                     });
                 } else if (e instanceof HttpException) {
                     throw e;
                 }
-                throw new ExpectedErrorException("EXTERNAL_SERVER_ERROR", {
+                throw new ExpectedErrorException("INTERNAL_SERVER_ERROR", {
                     cause: `${e}`,
                     describe: `${e}`,
                 });

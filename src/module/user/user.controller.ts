@@ -91,7 +91,7 @@ export class UserController implements UserApi<UserModel> {
             message: SUCCESS_MESSAGE.USER.UPDATED,
             description: "User's own information will be updated.",
         },
-        errors: ["DUPLICATE_NICKNAME", "DUPLICATE_MOBILE"],
+        errors: ["USER_NICKNAME_DUPLICATED", "USER_MOBILE_DUPLICATED"],
     })
     @JwtRolesAuth(UserRoute.updateMyInfo.roles)
     @Post(UserRoute.updateMyInfo.subRoute)

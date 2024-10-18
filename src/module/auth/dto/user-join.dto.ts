@@ -3,7 +3,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsPhoneNumber, IsString } from "class-validator";
 import { IsNickname } from "src/common/decorator/validator/is-nickname.decorator";
 import { UserJoin } from "src/shared/api/auth/auth.api";
-import { Random } from "src/shared/util/random";
+import { Random } from "src/common/util/random";
 
 export class UserJoinDto extends UserLoginDto implements UserJoin {
     @IsNotEmpty()

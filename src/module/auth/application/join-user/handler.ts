@@ -40,15 +40,18 @@ export class JoinUserHandler
         if (duplication.exists) {
             switch (duplication.firstReason) {
                 case "email":
-                    throw new ExpectedErrorException("DUPLICATE_EMAIL", {
+                    throw new ExpectedErrorException("USER_EMAIL_DUPLICATED", {
                         email,
                     });
                 case "nickname":
-                    throw new ExpectedErrorException("DUPLICATE_NICKNAME", {
-                        nickname,
-                    });
+                    throw new ExpectedErrorException(
+                        "USER_NICKNAME_DUPLICATED",
+                        {
+                            nickname,
+                        }
+                    );
                 case "mobile":
-                    throw new ExpectedErrorException("DUPLICATE_MOBILE", {
+                    throw new ExpectedErrorException("USER_MOBILE_DUPLICATED", {
                         mobile,
                     });
             }

@@ -2,7 +2,7 @@ import { registerDecorator, ValidationOptions } from "class-validator";
 import {
     USER_PROPERTY_LENGTH,
     USER_PROPERTY_PATTERN,
-} from "src/shared/property/user.property";
+} from "src/shared/api/user/user.property";
 
 export function IsNickname(validationOptions?: ValidationOptions) {
     return function (object: Record<string, any>, propertyName: string) {

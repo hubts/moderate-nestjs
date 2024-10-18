@@ -3,7 +3,7 @@ import { Cron, CronExpression } from "@nestjs/schedule";
 
 import { CacheRepository } from "./cache.repository";
 import { ICacheService, KeyValue } from "./cache.interface";
-import { TimeExtension } from "src/shared/util/time-extension";
+import { TimeExtension } from "src/common/util/time-extension";
 
 @Injectable()
 export class CacheService implements ICacheService {

@@ -4,21 +4,29 @@
  * 도메인별로 다루는 에러를 분류하여 지정하면 편리합니다.
  */
 export const ERROR_CODE = {
-    // AUTH / USER
-    "4001": "DUPLICATE_EMAIL",
-    "4002": "DUPLICATE_NICKNAME",
-    "4003": "DUPLICATE_MOBILE",
-    "4004": "WRONG_PASSWORD",
-    "4005": "SAME_PASSWORD",
-    "4006": "UNREGISTERED_EMAIL",
-    "4007": "USER_NOT_FOUND",
-    "4008": "INVALID_REFRESH_TOKEN",
-    "4009": "UNAUTHORIZED_ACCESS",
-    "4010": "PROFILE_NOT_FOUND",
+    /**
+     * 기본적인 에러
+     */
+    "401": "UNAUTHORIZED",
+    "403": "FORBIDDEN_RESOURCE",
+    "500": "INTERNAL_SERVER_ERROR", // 서버 내부 에러 (예를 들어, DB 에러 등)
+    "503": "SERVICE_UNAVAILABLE", // 서비스 이용 불가 (또는 외부 서버 응답불가 등)
 
-    // EXTERNAL
-    // 예를 들어, DB 저장 에러 또는 외부 서버 연동 시 에러를 지정할 수 있습니다.
-    "5000": "UNEXPECTED_ERROR",
-    "5001": "DATA_SOURCE_ERROR",
-    "5002": "EXTERNAL_SERVER_ERROR",
+    /**
+     * 커스텀 에러
+     */
+
+    // AUTH
+    "4001": "WRONG_PASSWORD",
+    "4002": "SAME_PASSWORD",
+    "4003": "INVALID_REFRESH_TOKEN",
+
+    // USER
+    "4100": "USER_NOT_FOUND",
+    "4101": "USER_EMAIL_DUPLICATED",
+    "4102": "USER_NICKNAME_DUPLICATED",
+    "4103": "USER_MOBILE_DUPLICATED",
+
+    // PROFILE
+    "4150": "PROFILE_NOT_FOUND",
 } as const;

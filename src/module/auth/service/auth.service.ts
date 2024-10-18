@@ -3,14 +3,14 @@ import { JwtService } from "@nestjs/jwt";
 import { JwtConfig } from "src/config/validated/jwt.config";
 import { ConfigType } from "@nestjs/config";
 
-import { Random } from "src/shared/util/random";
+import { Random } from "src/common/util/random";
 import { CacheService } from "src/infrastructure/cache/cache.service";
-import { JwtPayload } from "src/shared/role/jwt-payload.interface";
+import { JwtPayload } from "src/shared/type/jwt-payload.interface";
 import {
     REFRESH_TOKEN_KEY_PREFIX,
     REFRESH_TOKEN_LENGTH,
 } from "../constant/token.constant";
-import { CryptoExtension } from "src/shared/util/crypto-extension";
+import { CryptoExtension } from "src/common/util/crypto-extension";
 import { UserRole } from "src/shared/api/user/user.domain";
 
 @Injectable()

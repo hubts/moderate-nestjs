@@ -37,7 +37,7 @@ export class LoginUserHandler
         if (isError(user)) {
             switch (user.error) {
                 case "USER_NOT_FOUND": {
-                    throw new ExpectedErrorException("UNREGISTERED_EMAIL", {
+                    throw new ExpectedErrorException("USER_NOT_FOUND", {
                         email,
                     });
                 }

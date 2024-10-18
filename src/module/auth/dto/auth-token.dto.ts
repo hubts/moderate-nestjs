@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString } from "class-validator";
 import { AuthToken } from "src/shared/api/auth/auth.api";
-import { Random } from "src/shared/util/random";
+import { Random } from "src/common/util/random";
 
 export class AuthTokenDto implements AuthToken {
     @IsNotEmpty()
