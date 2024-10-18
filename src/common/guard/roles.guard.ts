@@ -1,11 +1,7 @@
-import {
-    Injectable,
-    CanActivate,
-    ExecutionContext,
-    UnauthorizedException,
-} from "@nestjs/common";
+import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { UserModel, UserRole } from "src/shared/api/user/user.domain";
+import { ExpectedErrorException } from "../error/exception/expected-error.exception";
 
 /**
  * RolesGuard detects the role of outside actor.
@@ -32,16 +28,21 @@ export class RolesGuard implements CanActivate {
          */
 
         /**
-         * Process
+         * Check
          */
-
-        const request = context.switchToHttp().getRequest();
-        const user = request.user as UserModel;
+        const request = context.switchToHttp().getRequest() as Request & {
+            user?: UserModel;
+        };
+        const user = request.user;
         if (!user) {
             // This error occurs when JWT was not extracted.
             // However, this guard is called after the extracting.
             // Then, this condition may not be needed.
-            throw new UnauthorizedException("JWT not found");
+            throw new ExpectedErrorException(
+                "UNAUTHORIZED",
+                undefined,
+                "User role not found"
+            );
         }
 
         /**

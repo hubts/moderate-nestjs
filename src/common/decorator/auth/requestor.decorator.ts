@@ -1,8 +1,5 @@
-import {
-    ExecutionContext,
-    UnauthorizedException,
-    createParamDecorator,
-} from "@nestjs/common";
+import { ExecutionContext, createParamDecorator } from "@nestjs/common";
+import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
 import { UserModel } from "src/shared/api/user/user.domain";
 
 /**
@@ -11,11 +8,13 @@ import { UserModel } from "src/shared/api/user/user.domain";
 export const Requestor = createParamDecorator(
     (data: unknown, ctx: ExecutionContext) => {
         const request = ctx.switchToHttp().getRequest() as Request & {
-            user: UserModel;
+            user?: UserModel;
         };
         if (!request.user) {
-            throw new UnauthorizedException(
-                "Authentication is required to access"
+            throw new ExpectedErrorException(
+                "UNAUTHORIZED",
+                undefined,
+                "User not found"
             );
         }
         return request.user;

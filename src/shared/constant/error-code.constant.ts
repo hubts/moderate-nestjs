@@ -7,8 +7,9 @@ export const ERROR_CODE = {
     /**
      * 기본적인 에러
      */
-    "401": "UNAUTHORIZED",
-    "403": "FORBIDDEN_RESOURCE",
+    "400": "BAD_REQUEST", // 클라이언트 요청 오류 (예를 들어, 파라미터 오류 등)
+    "401": "UNAUTHORIZED", // 인증 오류 (예를 들어, 로그인 필요 등)
+    "403": "FORBIDDEN_RESOURCE", // 리소스 접근 권한 없음
     "500": "INTERNAL_SERVER_ERROR", // 서버 내부 에러 (예를 들어, DB 에러 등)
     "503": "SERVICE_UNAVAILABLE", // 서비스 이용 불가 (또는 외부 서버 응답불가 등)
 

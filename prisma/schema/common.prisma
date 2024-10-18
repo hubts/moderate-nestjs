@@ -10,18 +10,9 @@ model ConsoleLog {
     idx       Int      @default(autoincrement())
     createdAt DateTime @default(now()) @db.Timestamptz(6)
 
-    message String  @db.VarChar
-    context String  @db.VarChar
-    level   String  @db.VarChar
-    trace   String? @db.VarChar
-}
-
-model ErrorLog {
-    id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-    idx       Int      @default(autoincrement())
-    createdAt DateTime @default(now()) @db.Timestamptz(6)
-
-    message String  @db.VarChar
-    context String  @db.VarChar
-    trace   String? @db.VarChar
+    level    String
+    message  String
+    request  Json?
+    response Json?
+    cause    Json?
 }

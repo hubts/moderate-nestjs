@@ -1,5 +1,5 @@
 import { PassportStrategy } from "@nestjs/passport";
-import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
 import { ExtractJwt, Strategy } from "passport-jwt";
 
@@ -8,6 +8,7 @@ import { JwtPayload } from "src/shared/type/jwt-payload.interface";
 import { UserModel } from "src/shared/api/user/user.domain";
 import { UserService } from "src/module/user/service/user.service";
 import { isError } from "src/common/error/util/error";
+import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
 
 /**
  * Define a validation strategy for 'JwtAuthGuard'.
@@ -37,13 +38,23 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     async validate(payload: JwtPayload): Promise<UserModel> {
         const { id, role } = payload;
+        // Check if the payload is valid
         if (!id || !role) {
-            throw new UnauthorizedException("Invalid JWT payload");
+            throw new ExpectedErrorException(
+                "UNAUTHORIZED",
+                undefined,
+                "Invalid JWT payload"
+            );
         }
 
+        // Check if the user exists
         const user = await this.userService.getUserById(id);
         if (isError(user)) {
-            throw new UnauthorizedException("Unknown user ID");
+            throw new ExpectedErrorException(
+                "UNAUTHORIZED",
+                undefined,
+                "Unknown user ID"
+            );
         }
         return user;
     }

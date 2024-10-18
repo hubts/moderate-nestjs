@@ -4,9 +4,12 @@ import { ERROR } from "src/shared/constant";
 import { ErrorName } from "src/shared/type";
 
 export class ExpectedErrorException extends HttpException {
-    constructor(name: ErrorName, cause?: object) {
+    constructor(name: ErrorName, cause?: object, detail?: string) {
         const status = ERROR[name].status;
         const errorResponse = asErrorResponse(name);
+        if (detail) {
+            errorResponse.message += ` (Detail: ${detail})`;
+        }
         super(errorResponse, status, {
             cause,
         });

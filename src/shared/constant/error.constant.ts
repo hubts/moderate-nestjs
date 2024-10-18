@@ -11,6 +11,10 @@ export const ERROR: {
         description?: string | string[];
     };
 } = {
+    BAD_REQUEST: {
+        message: "Bad request. Please check your request.",
+        status: 400,
+    },
     UNAUTHORIZED: {
         message: "Unauthorized access. You need to login first.",
         status: 401,
