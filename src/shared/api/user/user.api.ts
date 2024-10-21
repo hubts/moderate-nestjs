@@ -1,12 +1,16 @@
 import { CommonResponse } from "src/shared/type";
 import { UserModel, UserProfileModel } from "./user.domain";
 
-export interface UserApi<R> {
+export interface UserApi<R extends UserModel> {
+    // Get user info by ID
     getUserInfoById(params: UserIdParams): Promise<CommonResponse<UserInfo>>;
+    // Get user info by email
     getUserInfoByEmail(
         params: UserEmailParams
     ): Promise<CommonResponse<UserInfo>>;
+    // Get my info
     getMyInfo(requestor: R): Promise<CommonResponse<UserInfoWithProfile>>;
+    // Update my info
     updateMyInfo(
         requestor: R,
         input: UserUpdate

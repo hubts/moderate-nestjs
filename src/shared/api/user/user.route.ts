@@ -1,8 +1,8 @@
 import { ApiRoute } from "src/shared/type";
 import { UserApi } from "./user.api";
-import { UserRole } from "./user.domain";
+import { UserModel, UserRole } from "./user.domain";
 
-export const UserRoute: ApiRoute<UserApi<UserRole>, UserRole> = {
+export const UserRoute: ApiRoute<UserApi<UserModel>, UserRole> = {
     apiTags: "User",
     pathPrefix: "users",
     getUserInfoById: {

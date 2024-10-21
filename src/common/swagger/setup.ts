@@ -9,6 +9,7 @@ export function setupSwagger(
 ): void {
     const {
         path,
+        theme,
         serverUrl,
         localhostPort,
         title,
@@ -48,8 +49,9 @@ export function setupSwagger(
     );
 
     // NOTE: You can change the style of swagger from here.
-    const theme = new SwaggerTheme();
-    const style = theme.getBuffer(SwaggerThemeNameEnum.ONE_DARK);
+    const style = new SwaggerTheme().getBuffer(
+        theme ?? SwaggerThemeNameEnum.CLASSIC
+    );
 
     // Finally
     SwaggerModule.setup(path, app, swaggerDocument, {

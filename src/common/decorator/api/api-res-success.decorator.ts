@@ -4,6 +4,14 @@ import { METHOD_METADATA } from "@nestjs/common/constants";
 import { SUCCESS_MESSAGE } from "src/shared/constant";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 
+/**
+ * Option interface of successful API response.
+ *
+ * @param message - Message for the success response.
+ * @param dataGenericType - Generic type of inner-depth data in the response data.
+ * @param status - HTTP status code (optional).
+ * @param description - Description for the response (optional).
+ */
 export interface ApiResSuccessOptions {
     message: string;
     dataGenericType?: Type | null;
@@ -11,6 +19,15 @@ export interface ApiResSuccessOptions {
     description?: string;
 }
 
+/**
+ * Decorator for successful API response.
+ *
+ * This function generates API response for successful request.
+ * You can use this to define a success example for API response in swagger.
+ *
+ * @param options {ApiResSuccessOptions} - Options for the successful API response.
+ * @returns
+ */
 export const ApiResSuccess = (options: ApiResSuccessOptions) => {
     const { message, dataGenericType, status, description } = options;
     return <T>(

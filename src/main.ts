@@ -14,6 +14,7 @@ import { setupSwagger } from "./common/swagger/setup";
 import { IServerConfig } from "./config/config.interface";
 import { ServerConfig } from "./config/validated/server.config";
 import { SuccessResponseDto } from "./common/dto/success-response.dto";
+import { SwaggerThemeNameEnum } from "swagger-themes";
 
 async function run() {
     const logger = new Logger("Main");
@@ -47,6 +48,7 @@ async function run() {
         const swaggerPath = "docs";
         setupSwagger(app, {
             path: swaggerPath,
+            theme: SwaggerThemeNameEnum.FEELING_BLUE,
             serverUrl: serverConfig.externalEndpoint,
             // localhostPort: serverConfig.port,
             title: packageJson.name,
@@ -61,12 +63,6 @@ async function run() {
 
         // Logging middleware (optional)
         app.use(morgan(serverConfig.isProduction ? "combined" : "dev"));
-
-        // API prefix and versioning (optional)
-        // app.setGlobalPrefix("api");
-        // app.enableVersioning({
-        //     type: VersioningType.URI,
-        // });
 
         /**
          * Start

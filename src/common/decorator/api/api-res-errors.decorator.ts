@@ -3,6 +3,11 @@ import { asErrorResponse } from "src/common/response/as-error-response";
 import { ERROR } from "src/shared/constant";
 import { CommonResponse, ErrorName } from "src/shared/type";
 
+/**
+ * Group errors by status.
+ * @param names - Error names.
+ * @returns Grouped error names by status (as key).
+ */
 function groupErrorsByStatus(names: ErrorName[]): {
     [key: number]: ErrorName[];
 } {
@@ -19,7 +24,14 @@ function groupErrorsByStatus(names: ErrorName[]): {
     return result;
 }
 
+/**
+ * Decorator for API response errors.
+ *
+ * This function group errors, and generate API response for each status with the errors.
+ * You can use this to define error examples for API response in swagger.
+ */
 export const ApiResErrors = (names: ErrorName[]) => {
+    // Group errors by status.
     const groupedErrorsObject = groupErrorsByStatus(names);
     const statuses = Object.keys(groupedErrorsObject).map(status =>
         Number(status)

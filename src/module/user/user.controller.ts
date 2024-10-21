@@ -1,15 +1,13 @@
 import { ApiTags } from "@nestjs/swagger";
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Param } from "@nestjs/common";
 import { CommandBus } from "@nestjs/cqrs";
 
 import { GetUserInfoByIdCommand } from "./application/get-user-info-by-id/command";
-import { JwtRolesAuth } from "src/common/decorator/auth/jwt-roles-auth.decorator";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 import { UserInfoDto } from "./dto/user-info.dto";
 import { Requestor } from "src/common/decorator/auth/requestor.decorator";
 import { GetUserInfoByEmailCommand } from "./application/get-user-info-by-email/command";
 import { GetMyInfoCommand } from "./application/get-my-info/command";
-import { ApiSpec } from "src/common/decorator/api/api-spec.decorator";
 import { UserRoute } from "src/shared/api/user/user.route";
 import { UserApi } from "src/shared/api/user/user.api";
 import { UserModel } from "src/shared/api/user/user.domain";
@@ -20,15 +18,15 @@ import { UserEmailParamsDto } from "./dto/user-email-params.dto";
 import { UserInfoWithProfileDto } from "./dto/user-info-with-profile.dto";
 import { UserUpdateDto } from "./dto/user-update.dto";
 import { UpdateMyInfoCommand } from "./application/update-my-info/command";
+import { Route } from "src/common/decorator/api/route.decorator";
 
 @ApiTags(UserRoute.apiTags)
 @Controller(UserRoute.pathPrefix)
 export class UserController implements UserApi<UserModel> {
     constructor(private readonly commandBus: CommandBus) {}
 
-    @ApiSpec({
+    @Route.Get(UserRoute.getUserInfoById, {
         summary: "Get public information of user by ID.",
-        description: UserRoute.getUserInfoById.description,
         success: {
             message: SUCCESS_MESSAGE.USER.FOUND,
             description: "Returns public information of user.",
@@ -36,8 +34,6 @@ export class UserController implements UserApi<UserModel> {
         },
         errors: ["USER_NOT_FOUND"],
     })
-    @JwtRolesAuth(UserRoute.getUserInfoById.roles)
-    @Get(UserRoute.getUserInfoById.subRoute)
     async getUserInfoById(
         @Param() params: UserIdParamsDto
     ): Promise<SuccessResponseDto<UserInfoDto>> {
@@ -46,9 +42,8 @@ export class UserController implements UserApi<UserModel> {
         );
     }
 
-    @ApiSpec({
+    @Route.Get(UserRoute.getUserInfoByEmail, {
         summary: "Get public information of user by email",
-        description: UserRoute.getUserInfoByEmail.description,
         success: {
             message: SUCCESS_MESSAGE.USER.FOUND,
             description: "Returns public information of user.",
@@ -56,8 +51,6 @@ export class UserController implements UserApi<UserModel> {
         },
         errors: ["USER_NOT_FOUND"],
     })
-    @JwtRolesAuth(UserRoute.getUserInfoByEmail.roles)
-    @Get(UserRoute.getUserInfoByEmail.subRoute)
     async getUserInfoByEmail(
         @Param() params: UserEmailParamsDto
     ): Promise<SuccessResponseDto<UserInfoDto>> {
@@ -66,9 +59,8 @@ export class UserController implements UserApi<UserModel> {
         );
     }
 
-    @ApiSpec({
+    @Route.Get(UserRoute.getMyInfo, {
         summary: "Get user own information.",
-        description: UserRoute.getMyInfo.description,
         success: {
             message: SUCCESS_MESSAGE.USER.FOUND,
             description: "Returns user's own information.",
@@ -76,25 +68,20 @@ export class UserController implements UserApi<UserModel> {
         },
         errors: ["USER_NOT_FOUND", "PROFILE_NOT_FOUND"],
     })
-    @JwtRolesAuth(UserRoute.getMyInfo.roles)
-    @Get(UserRoute.getMyInfo.subRoute)
     async getMyInfo(
-        @Requestor() user: UserModel
+        @Requestor() requestor: UserModel
     ): Promise<SuccessResponseDto<UserInfoWithProfileDto>> {
-        return await this.commandBus.execute(new GetMyInfoCommand(user));
+        return await this.commandBus.execute(new GetMyInfoCommand(requestor));
     }
 
-    @ApiSpec({
+    @Route.Post(UserRoute.updateMyInfo, {
         summary: "Update user own information.",
-        description: UserRoute.updateMyInfo.description,
         success: {
             message: SUCCESS_MESSAGE.USER.UPDATED,
             description: "User's own information will be updated.",
         },
         errors: ["USER_NICKNAME_DUPLICATED", "USER_MOBILE_DUPLICATED"],
     })
-    @JwtRolesAuth(UserRoute.updateMyInfo.roles)
-    @Post(UserRoute.updateMyInfo.subRoute)
     async updateMyInfo(
         @Requestor() requestor: UserModel,
         @Body() input: UserUpdateDto

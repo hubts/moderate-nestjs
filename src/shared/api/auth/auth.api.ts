@@ -2,9 +2,13 @@ import { CommonResponse } from "src/shared/type";
 import { UserModel, UserProfileModel } from "../user/user.domain";
 
 export interface AuthApi {
+    // Join
     joinUser(input: UserJoin): Promise<CommonResponse<AuthToken>>;
+    // Login
     loginUser(input: UserLogin): Promise<CommonResponse<AuthToken>>;
+    // Refresh tokens
     refreshUser(input: TokenRefresh): Promise<CommonResponse<AuthToken>>;
+    // Deactivate user
     deactivateUser(input: UserLogin): Promise<CommonResponse<null>>;
 }
 
