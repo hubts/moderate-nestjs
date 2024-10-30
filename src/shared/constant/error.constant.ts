@@ -27,6 +27,10 @@ export const ERROR: {
         message: "Internal server error occurs. Please contact us.",
         status: 500,
     },
+    NOT_IMPLEMENTED: {
+        message: "This feature is not implemented yet.",
+        status: 501,
+    },
     SERVICE_UNAVAILABLE: {
         message: "Service is unavailable. Please try again later.",
         status: 503,

@@ -7,6 +7,7 @@ import {
     ApiResSuccess,
     ApiResSuccessOptions,
 } from "./api-res-success.decorator";
+import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
 
 /**
  * Option interface of API specification.
@@ -71,7 +72,7 @@ export const ApiSpec = <R>(
                 break;
             }
             default: {
-                break;
+                throw new ExpectedErrorException("NOT_IMPLEMENTED");
             }
         }
         HttpMethod(subRoute)(target, key, descriptor);
