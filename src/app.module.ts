@@ -3,19 +3,23 @@ import { ConfigModule } from "@nestjs/config";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { APP_FILTER, APP_GUARD, APP_PIPE } from "@nestjs/core";
 
-import { AppController } from "./module/app/app.controller";
+import { AppController } from "./module/_app/app.controller";
 import { CustomValidationPipe } from "./common/pipe/custom-validation.pipe";
-import { HealthCheckModule } from "./module/health-check/health-check.module";
+import { HealthCheckModule } from "./module/_health-check/health-check.module";
 import { configurations } from "./config/configurations";
-import { AppService } from "./module/app/app.service";
+import { AppService } from "./module/_app/app.service";
 import { UserModule } from "./module/user/user.module";
 import { AuthModule } from "./module/auth/auth.module";
 import { CustomLoggerModule } from "./common/logger/custom-logger.module";
-import { ThrottlerConfigService } from "./config/service/throttler.config.service";
-import { CacheModule } from "./infrastructure/cache/cache.module";
-import { PrismaModule } from "./infrastructure/prisma/prisma.module";
-import { CqrsModule } from "@nestjs/cqrs";
+import { ThrottlerConfigService } from "./config/internal/throttler.config.service";
+import { CacheModule } from "./infrastructure/_cache/cache.module";
+import { PrismaModule } from "./infrastructure/_prisma/prisma.module";
 import { CustomErrorExceptionFilter } from "./common/error/filter/custom-error-exception.filter";
+import { MulterModule } from "@nestjs/platform-express";
+import { MulterConfigService } from "./config/internal/multer.config.service";
+import { ServeStaticModule } from "@nestjs/serve-static";
+import { ServeStaticConfigService } from "./config/internal/server-static.config.service";
+import { AttachmentModule } from "./infrastructure/_attachment/attachment.module";
 
 const DomainModules = [
     /**
@@ -38,7 +42,13 @@ const DomainModules = [
         HealthCheckModule, // Health check module
         PrismaModule, // Prisma ORM module (global)
         CacheModule, // Cache module (global)
-        CqrsModule.forRoot(),
+        AttachmentModule, // Attachment module (global)
+        MulterModule.registerAsync({
+            useClass: MulterConfigService,
+        }),
+        ServeStaticModule.forRootAsync({
+            useClass: ServeStaticConfigService,
+        }),
         ...DomainModules,
     ],
     controllers: [AppController],

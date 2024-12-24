@@ -1,9 +1,14 @@
 {
     "cSpell.words": [
+        "autoincrement",
+        "datasource",
+        "dbgenerated",
         "dbname",
         "Dockerlized",
         "EFGH",
+        "fieldname",
         "ossp",
+        "pgcrypto",
         "PGDATA",
         "picsum",
         "psql",

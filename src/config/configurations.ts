@@ -1,5 +1,5 @@
-import { JwtConfig } from "./validated/jwt.config";
-import { ServerConfig } from "./validated/server.config";
-import { ThrottlerConfig } from "./validated/throttler.config";
+import { JwtConfig } from "./internal/jwt.config";
+import { ServerConfig } from "./internal/server.config";
+import { ThrottlerConfig } from "./internal/throttler.config";
 
 export const configurations = [ServerConfig, ThrottlerConfig, JwtConfig];

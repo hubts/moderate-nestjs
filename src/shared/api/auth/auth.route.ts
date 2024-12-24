@@ -6,6 +6,7 @@ export const AuthRoute: ApiRoute<AuthApi, UserRole> = {
     apiTags: "Authentication",
     pathPrefix: "auth",
     joinUser: {
+        method: "POST",
         subRoute: "user/join",
         roles: [],
         description: [
@@ -17,6 +18,7 @@ export const AuthRoute: ApiRoute<AuthApi, UserRole> = {
         ],
     },
     loginUser: {
+        method: "POST",
         subRoute: "user/login",
         roles: [],
         description: [
@@ -26,6 +28,7 @@ export const AuthRoute: ApiRoute<AuthApi, UserRole> = {
         ],
     },
     refreshUser: {
+        method: "POST",
         subRoute: "user/refresh",
         roles: [],
         description: [
@@ -35,6 +38,7 @@ export const AuthRoute: ApiRoute<AuthApi, UserRole> = {
         ],
     },
     deactivateUser: {
+        method: "POST",
         subRoute: "user/deactivate",
         roles: [],
         description: [

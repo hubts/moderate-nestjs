@@ -1,3 +1,7 @@
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
 export class TimeExtension {
     static ONE_SECOND_IN_MS = 1000;
     static ONE_MINUTE_IN_MS = 60 * this.ONE_SECOND_IN_MS;
@@ -23,7 +27,18 @@ export class TimeExtension {
      * @returns {boolean} If date is former than compare, returns true. If not, returns false.
      */
     static isFormerDateThan(date: Date, compare: Date = new Date()): boolean {
-        return new Date(date).getTime() <= new Date(compare).getTime();
+        return new Date(date).getTime() < new Date(compare).getTime();
+    }
+
+    /**
+     * Compare two dates whether the date1 is same date as the date2.
+     *
+     * @param {Date} date - Date.
+     * @param {Date} compare - Target date to compare (default = now).
+     * @returns {boolean} If date is same as compare, returns true. If not, returns false.
+     */
+    static isSameDate(date: Date, compare: Date = new Date()): boolean {
+        return new Date(date).getTime() === new Date(compare).getTime();
     }
 
     /**
@@ -58,5 +73,41 @@ export class TimeExtension {
             new Date(start).getTime() <= target &&
             target <= new Date(end).getTime()
         );
+    }
+
+    /**
+     * Get the start and end time of today in KST.
+     * @returns The dates of the start and end of today.
+     */
+    static getTodayString(input?: {
+        tz?: "Asia/Seoul" | "UTC";
+        format?: string;
+    }): string {
+        dayjs.extend(utc);
+        dayjs.extend(timezone);
+        return dayjs()
+            .tz(input?.tz ?? "UTC")
+            .format(input?.format ?? "YYYY-MM-DD HH:mm:ss");
+    }
+
+    static getTodayYYMMDD(): string {
+        return this.getTodayString({
+            tz: "Asia/Seoul",
+            format: "YYMMDD",
+        });
+    }
+
+    static getTodayYYYYMMDD(): string {
+        return this.getTodayString({
+            tz: "Asia/Seoul",
+            format: "YYYYMMDD",
+        });
+    }
+
+    static getCurrentHHMMSS(): string {
+        return this.getTodayString({
+            tz: "Asia/Seoul",
+            format: "HHmmss",
+        });
     }
 }

@@ -1,10 +1,3 @@
-export interface IConfig {
-    SERVER: IServerConfig;
-    DB: IDatabaseConfig;
-    JWT: IJwtConfig;
-    THROTTLER: IThrottlerConfig;
-}
-
 export enum ServerEnv {
     LOCAL = "local",
     DEVELOPMENT = "development",
@@ -15,19 +8,19 @@ export enum ServerEnv {
 export interface IServerConfig {
     env: ServerEnv;
     port: number;
-    externalEndpoint: string;
+    endpoint: {
+        globalPrefix: string;
+        external: string;
+    };
     isProduction: boolean;
-}
-
-export interface IDatabaseConfig {
-    host: string;
-    port: number;
-    username: string;
-    password: string;
-    dbname: string;
-    sync: boolean;
-    logging: boolean;
-    schema: string;
+    docs: {
+        path: string;
+        fullPath: string;
+    };
+    fileServeStatic: {
+        path: string;
+        fullPath: string;
+    };
 }
 
 export interface IJwtConfig {

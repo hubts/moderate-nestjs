@@ -3,12 +3,12 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
 import { ExtractJwt, Strategy } from "passport-jwt";
 
-import { JwtConfig } from "src/config/validated/jwt.config";
+import { JwtConfig } from "src/config/internal/jwt.config";
 import { JwtPayload } from "src/shared/type/jwt-payload.interface";
 import { UserModel } from "src/shared/api/user/user.domain";
-import { UserService } from "src/module/user/service/user.service";
 import { isError } from "src/common/error/util/error";
 import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
+import { UserQueryService } from "src/module/user/provider/service/user-query.service";
 
 /**
  * Define a validation strategy for 'JwtAuthGuard'.
@@ -27,7 +27,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor(
         @Inject(JwtConfig.KEY)
         jwtConfig: ConfigType<typeof JwtConfig>,
-        private readonly userService: UserService
+        private readonly userQueryService: UserQueryService
     ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -48,7 +48,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         }
 
         // Check if the user exists
-        const user = await this.userService.getUserById(id);
+        const user = await this.userQueryService.getUserById(id);
         if (isError(user)) {
             throw new ExpectedErrorException(
                 "UNAUTHORIZED",

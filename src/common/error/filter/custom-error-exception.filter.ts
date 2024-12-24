@@ -5,10 +5,9 @@ import {
     HttpException,
 } from "@nestjs/common";
 import { Request, Response } from "express";
-import { CommonResponse, ErrorCode, ErrorName } from "src/shared/type";
 import { CustomLogger } from "../../logger/custom.logger";
 import { ExpectedErrorException } from "../exception/expected-error.exception";
-import { ERROR_CODE } from "src/shared";
+import { ErrorCode, ERROR_CODE, ErrorName, CommonResponse } from "src/shared";
 
 @Catch()
 export class CustomErrorExceptionFilter implements ExceptionFilter {
@@ -60,14 +59,19 @@ export class CustomErrorExceptionFilter implements ExceptionFilter {
         // Setup data
 
         // Error log saved, however, does not print by silent mode.
-        this.logger.error(message, stack, path, {
-            request: {
-                path,
-                token: request.headers?.authorization,
-                body: request.body,
+        this.logger.errorMore(message, {
+            ...(stack && { stack }),
+            context: path,
+            detail: {
+                save: true,
+                request: {
+                    path,
+                    token: request.headers?.authorization,
+                    body: request.body,
+                },
+                response: exceptionResponse,
+                cause: cause as object,
             },
-            response: exceptionResponse,
-            cause: cause as object,
         });
 
         // Return

@@ -1,11 +1,10 @@
 {
     "name": "moderate-nestjs",
-    "version": "0.0.23",
+    "version": "0.0.24",
     "description": "REST API Backend using NestJS, Prisma, PostgreSQL, and Docker",
     "author": "hubts",
     "private": true,
     "license": "MIT",
-    "main": "index.js",
     "repository": {
         "type": "git",
         "url": "https://github.com/hubts/moderate-nestjs.git"
@@ -25,26 +24,27 @@
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
+        "#----------------Docker--------------------#": "Docker",
         "git": "./script/git/skyrocket.sh",
         "deploy": "./script/docker/run.sh",
         "push": "./script/docker/build-and-push.sh",
         "pull": "./script/docker/pull-and-run.sh",
+        "#----------------Prisma--------------------#": "Prisma",
         "prisma:sync": "prisma generate && prisma db push",
-        "prisma:push": "prisma db push",
-        "prisma:pull": "prisma db pull",
-        "prisma:migrate": "prisma migrate dev --name",
-        "prisma:migrate-create-only": "prisma migrate dev --create-only --name"
+        "prisma:seed": "prisma db seed",
+        "prisma:migrate:create": "prisma migrate dev --create-only --name",
+        "prisma:migrate:apply": "prisma migrate deploy"
     },
     "dependencies": {
         "@nestjs/axios": "^3.0.0",
         "@nestjs/common": "^10.2.7",
         "@nestjs/config": "^3.1.1",
         "@nestjs/core": "^10.2.7",
-        "@nestjs/cqrs": "^10.2.6",
         "@nestjs/jwt": "^10.2.0",
         "@nestjs/passport": "^10.0.3",
         "@nestjs/platform-express": "^10.2.7",
         "@nestjs/schedule": "^4.0.0",
+        "@nestjs/serve-static": "^4.0.2",
         "@nestjs/swagger": "^7.3.1",
         "@nestjs/terminus": "^10.1.1",
         "@nestjs/throttler": "^5.0.1",
@@ -55,6 +55,7 @@
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.0",
         "compression": "^1.7.4",
+        "dayjs": "^1.11.13",
         "helmet": "^7.0.0",
         "morgan": "^1.10.0",
         "passport": "^0.7.0",
@@ -74,6 +75,7 @@
         "@types/express": "^4.17.13",
         "@types/jest": "28.1.8",
         "@types/morgan": "^1.9.3",
+        "@types/multer": "^1.4.12",
         "@types/node": "^16.0.0",
         "@types/passport-jwt": "^4.0.0",
         "@types/supertest": "^2.0.11",
@@ -123,5 +125,8 @@
         "moduleNameMapper": {
             "^src/(.*)$": "<rootDir>/src/$1"
         }
+    },
+    "prisma": {
+        "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
     }
 }
