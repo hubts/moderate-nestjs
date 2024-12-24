@@ -6,8 +6,8 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 import { JwtConfig } from "src/config/internal/jwt.config";
 import { JwtPayload } from "src/shared/type/jwt-payload.interface";
 import { UserModel } from "src/shared/api/user/user.domain";
-import { isError } from "src/common/error/util/error";
-import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
+import { isError } from "src/common/error/error-type-helper";
+import { ExpectedErrorException } from "src/common/error/expected-error.exception";
 import { UserQueryService } from "src/module/user/provider/service/user-query.service";
 
 /**

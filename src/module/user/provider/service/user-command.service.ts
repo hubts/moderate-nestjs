@@ -7,13 +7,15 @@ import {
 } from "../../domain/user-password-manager";
 import { UserLoginHistoryRepository } from "../repository/user-login-history.repository";
 import { UserRepository } from "../repository/user.repository";
-import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
+import { ExpectedErrorException } from "src/common/error/expected-error.exception";
+import { ProfileAttachmentService } from "./profile-attachment.service";
 
 @Injectable()
 export class UserCommandService {
     constructor(
         private readonly userRepo: UserRepository,
-        private readonly userLoginHistoryRepo: UserLoginHistoryRepository
+        private readonly userLoginHistoryRepo: UserLoginHistoryRepository,
+        private readonly profileAttachmentService: ProfileAttachmentService
     ) {}
 
     /**
@@ -28,8 +30,22 @@ export class UserCommandService {
         mobile: string;
         address: string;
         name: string;
+        profileImage?: Express.Multer.File;
     }): Promise<UserModel> {
-        const { email, password, nickname, mobile, address, name } = input;
+        const {
+            email,
+            password,
+            nickname,
+            mobile,
+            address,
+            name,
+            profileImage,
+        } = input;
+        if (profileImage) {
+            await this.profileAttachmentService.uploadProfileImage(
+                profileImage
+            );
+        }
         const createdUser = await this.userRepo.createUser({
             email,
             password: hashUserPassword(password),
@@ -39,6 +55,7 @@ export class UserCommandService {
                     mobile,
                     name,
                     address,
+                    ...(profileImage && { imageUrl: profileImage.path }),
                 },
             },
         });
@@ -55,8 +72,8 @@ export class UserCommandService {
         email: string,
         password: string,
         history?: {
-            ip: string;
-            agent: string;
+            ip?: string;
+            agent?: string;
         }
     ): Promise<UserModel> {
         const user = await this.userRepo.findUserByUnique({ email });

@@ -44,6 +44,7 @@ model Profile {
     name      String    @db.VarChar
     address   String    @db.VarChar
     mobile    String    @unique @db.VarChar
+    imageUrl  String?   @db.VarChar
     // Relation
     userId    String    @unique @db.Uuid
     User      User      @relation(fields: [userId], references: [id], onDelete: Cascade)

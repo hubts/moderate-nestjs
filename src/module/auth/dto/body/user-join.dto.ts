@@ -1,6 +1,11 @@
 import { UserLoginDto } from "./user-login.dto";
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsPhoneNumber, IsString } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import {
+    IsNotEmpty,
+    IsOptional,
+    IsPhoneNumber,
+    IsString,
+} from "class-validator";
 import { IsNickname } from "src/common/decorator/validator/is-nickname.decorator";
 import { UserJoin } from "src/shared/api/auth/auth.api";
 import { Random } from "src/common/util/random";
@@ -38,4 +43,11 @@ export class UserJoinDto extends UserLoginDto implements UserJoin {
         example: Random.phoneNumber(),
     })
     mobile: string;
+
+    @IsOptional()
+    @ApiPropertyOptional({
+        type: "string",
+        format: "binary",
+    })
+    profileImage?: Express.Multer.File;
 }

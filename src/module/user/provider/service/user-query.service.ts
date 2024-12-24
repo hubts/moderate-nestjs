@@ -4,7 +4,7 @@ import { userProfileMapper } from "../../domain/mapper/user-profile.mapper";
 import { userMapper } from "../../domain/mapper/user.mapper";
 import { ProfileRepository } from "../repository/profile.repository";
 import { UserRepository } from "../repository/user.repository";
-import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
+import { ExpectedErrorException } from "src/common/error/expected-error.exception";
 
 @Injectable()
 export class UserQueryService {

@@ -14,7 +14,7 @@ import { CustomLoggerModule } from "./common/logger/custom-logger.module";
 import { ThrottlerConfigService } from "./config/internal/throttler.config.service";
 import { CacheModule } from "./infrastructure/_cache/cache.module";
 import { PrismaModule } from "./infrastructure/_prisma/prisma.module";
-import { CustomErrorExceptionFilter } from "./common/error/filter/custom-error-exception.filter";
+import { CustomErrorExceptionFilter } from "./common/error/custom-error-exception.filter";
 import { MulterModule } from "@nestjs/platform-express";
 import { MulterConfigService } from "./config/internal/multer.config.service";
 import { ServeStaticModule } from "@nestjs/serve-static";

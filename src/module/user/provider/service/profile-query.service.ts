@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { UserProfileModel } from "src/shared";
 import { userProfileMapper } from "../../domain/mapper/user-profile.mapper";
 import { ProfileRepository } from "../repository/profile.repository";
-import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
+import { ExpectedErrorException } from "src/common/error/expected-error.exception";
 
 @Injectable()
 export class ProfileQueryService {

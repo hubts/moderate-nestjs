@@ -9,5 +9,6 @@ export function userProfileMapper(entity: Profile): UserProfileModel {
         address: entity.address,
         mobile: entity.mobile,
         updatedAt: entity.updatedAt,
+        imageUrl: entity.imageUrl,
     };
 }

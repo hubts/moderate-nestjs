@@ -8,6 +8,7 @@ import { UserCommandService } from "./provider/service/user-command.service";
 import { ProfileQueryService } from "./provider/service/profile-query.service";
 import { ProfileCommandService } from "./provider/service/profile-command.service";
 import { UserLoginHistoryRepository } from "./provider/repository/user-login-history.repository";
+import { ProfileAttachmentService } from "./provider/service/profile-attachment.service";
 
 const providers = [
     UserRepository,
@@ -18,6 +19,7 @@ const providers = [
     UserCommandService,
     ProfileQueryService,
     ProfileCommandService,
+    ProfileAttachmentService,
     //
     UserService,
 ];

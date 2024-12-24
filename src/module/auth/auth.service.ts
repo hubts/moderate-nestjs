@@ -26,9 +26,9 @@ export class AuthService implements ApiToService<AuthApi> {
         return { accessToken, refreshToken };
     }
 
-    async loginUser(input: UserLogin): Promise<AuthToken> {
+    async loginUser(input: UserLogin, ipAddress?: string): Promise<AuthToken> {
         const { email, password } = input;
-        const user = await this.authUser.loginUser(email, password);
+        const user = await this.authUser.loginUser(email, password, ipAddress);
         const { accessToken, refreshToken } =
             this.authToken.issueAuthTokens(user);
         return { accessToken, refreshToken };

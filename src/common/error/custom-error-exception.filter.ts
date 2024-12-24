@@ -5,10 +5,14 @@ import {
     HttpException,
 } from "@nestjs/common";
 import { Request, Response } from "express";
-import { CustomLogger } from "../../logger/custom.logger";
-import { ExpectedErrorException } from "../exception/expected-error.exception";
+import { CustomLogger } from "../logger/custom.logger";
+import { ExpectedErrorException } from "./expected-error.exception";
 import { ErrorCode, ERROR_CODE, ErrorName, CommonResponse } from "src/shared";
 
+/**
+ * [ 에러 처리 필터 ]
+ * 발생하는 모든 에러를 처리하는 필터
+ */
 @Catch()
 export class CustomErrorExceptionFilter implements ExceptionFilter {
     constructor(private logger: CustomLogger) {
@@ -45,10 +49,13 @@ export class CustomErrorExceptionFilter implements ExceptionFilter {
             } else {
                 error = new ExpectedErrorException(
                     "INTERNAL_SERVER_ERROR",
-                    error
+                    error,
+                    error.message
                 );
             }
         }
+
+        // Now, 'error' is an instance of ExpectedErrorException
         const exception = error as ExpectedErrorException;
         const status = exception.getStatus();
         const message = exception.message;
@@ -56,9 +63,7 @@ export class CustomErrorExceptionFilter implements ExceptionFilter {
         const cause = exception.cause;
         const exceptionResponse = <CommonResponse<null>>exception.getResponse();
 
-        // Setup data
-
-        // Error log saved, however, does not print by silent mode.
+        // Error log
         this.logger.errorMore(message, {
             ...(stack && { stack }),
             context: path,
@@ -77,7 +82,7 @@ export class CustomErrorExceptionFilter implements ExceptionFilter {
         // Return
         response.status(status).json({
             ...exceptionResponse,
-            // TODO: TEST EXTENSION
+            // TODO: below is TEST EXTENSION
             extension: {
                 timestamp: new Date().toISOString(),
                 request: {

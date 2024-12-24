@@ -7,7 +7,7 @@ import {
     ApiResSuccess,
     ApiResSuccessOptions,
 } from "./api-res-success.decorator";
-import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
+import { ExpectedErrorException } from "src/common/error/expected-error.exception";
 
 /**
  * Option interface of API specification.

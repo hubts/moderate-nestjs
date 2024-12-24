@@ -1,7 +1,7 @@
 import { Injectable, ArgumentMetadata, ValidationPipe } from "@nestjs/common";
 import { plainToClass } from "class-transformer";
 import { validate, ValidationError } from "class-validator";
-import { ExpectedErrorException } from "../error/exception/expected-error.exception";
+import { ExpectedErrorException } from "../error/expected-error.exception";
 
 @Injectable()
 export class CustomValidationPipe extends ValidationPipe {

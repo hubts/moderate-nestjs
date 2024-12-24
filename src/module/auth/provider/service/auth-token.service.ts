@@ -10,7 +10,7 @@ import {
 import { JwtPayload, UserRole } from "src/shared";
 import { CryptoExtension } from "src/common/util/crypto-extension";
 import { Random } from "src/common/util/random";
-import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
+import { ExpectedErrorException } from "src/common/error/expected-error.exception";
 
 @Injectable()
 export class AuthTokenService {

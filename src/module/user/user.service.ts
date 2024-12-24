@@ -9,8 +9,8 @@ import {
     UserModel,
     UserUpdate,
 } from "src/shared";
-import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
-import { isError } from "src/common/error/util/error";
+import { ExpectedErrorException } from "src/common/error/expected-error.exception";
+import { isError } from "src/common/error/error-type-helper";
 import { UserQueryService } from "./provider/service/user-query.service";
 import { UserCommandService } from "./provider/service/user-command.service";
 import { ProfileQueryService } from "./provider/service/profile-query.service";

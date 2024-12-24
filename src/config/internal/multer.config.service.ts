@@ -34,3 +34,13 @@ export class MulterConfigService implements MulterOptionsFactory {
         };
     }
 }
+
+export function getMulterOptions(): MulterOptions {
+    return {
+        dest: process.env.FILE_SERVE_STATIC_PATH ?? "uploads",
+        storage: diskStorage({
+            destination: process.env.FILE_SERVE_STATIC_PATH ?? "uploads",
+            filename: editFilename,
+        }),
+    };
+}

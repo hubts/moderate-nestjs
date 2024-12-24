@@ -18,7 +18,9 @@ export type UserLogin = Pick<UserModel, "email"> & {
 
 export type UserJoin = UserLogin &
     Pick<UserModel, "nickname"> &
-    Pick<UserProfileModel, "name" | "mobile" | "address">;
+    Pick<UserProfileModel, "name" | "mobile" | "address"> & {
+        profileImage?: Express.Multer.File;
+    };
 
 export type TokenRefresh = {
     userId: string;
