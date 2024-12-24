@@ -8,11 +8,11 @@ import compression from "compression";
 import morgan from "morgan";
 
 import { AppModule } from "./app.module";
-import { HealthCheckController } from "./module/health-check/health-check.controller";
+import { HealthCheckController } from "./module/_health-check/health-check.controller";
 import { CustomLogger } from "./common/logger/custom.logger";
 import { setupSwagger } from "./common/swagger/setup";
 import { IServerConfig } from "./config/config.interface";
-import { ServerConfig } from "./config/validated/server.config";
+import { ServerConfig } from "./config/internal/server.config";
 import { SuccessResponseDto } from "./common/dto/success-response.dto";
 import { SwaggerThemeNameEnum } from "swagger-themes";
 
@@ -45,11 +45,11 @@ async function run() {
         });
 
         // Swagger
-        const swaggerPath = "docs";
+        const swaggerPath = serverConfig.docs.fullPath;
         setupSwagger(app, {
             path: swaggerPath,
             theme: SwaggerThemeNameEnum.FEELING_BLUE,
-            serverUrl: serverConfig.externalEndpoint,
+            serverUrl: `${serverConfig.endpoint.external}/${serverConfig.endpoint.globalPrefix}`,
             // localhostPort: serverConfig.port,
             title: packageJson.name,
             version: packageJson.version,
@@ -64,6 +64,12 @@ async function run() {
         // Logging middleware (optional)
         app.use(morgan(serverConfig.isProduction ? "combined" : "dev"));
 
+        // API prefix and versioning (optional)
+        app.setGlobalPrefix(serverConfig.endpoint.globalPrefix);
+        // app.enableVersioning({
+        //     type: VersioningType.URI,
+        // });
+
         /**
          * Start
          */
@@ -74,8 +80,8 @@ async function run() {
             log += `< Information >\n`;
             log += `🌏 Env                 : ${serverConfig.env}\n`;
             log += `🌏 Application URL     : ${await app.getUrl()}\n`;
-            log += `🌏 External endpoint   : ${serverConfig.externalEndpoint}\n`;
-            log += `🌏 Swagger document    : ${serverConfig.externalEndpoint}/${swaggerPath}\n`;
+            log += `🌏 External endpoint   : ${serverConfig.endpoint.external}\n`;
+            log += `🌏 Swagger document    : ${serverConfig.endpoint.external}${serverConfig.docs.fullPath}\n`;
             log += `🌏 Healthy (overview)  : ${
                 status.overview ? "✅" : "🚫"
             }\n`;

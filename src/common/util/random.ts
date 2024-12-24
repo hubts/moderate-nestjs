@@ -1,5 +1,5 @@
 import { TimeExtension } from "./time-extension";
-import { randomBytes } from "crypto";
+import { createHash, randomBytes, randomInt } from "crypto";
 import { v4 as uuidv4 } from "uuid";
 
 export class Random {
@@ -35,7 +35,7 @@ export class Random {
      * @returns Random number in range.
      */
     static number(min: number, max: number): number {
-        return Math.ceil(Math.random() * (max - min) + min);
+        return randomInt(min, max);
     }
 
     /**
@@ -100,9 +100,8 @@ export class Random {
      * @returns Random no-space nickname.
      */
     static nickname(): string {
-        return NICKNAME_POOL[
-            Math.floor(Math.random() * NICKNAME_POOL.length)
-        ].toLowerCase();
+        const randomIndex = this.number(0, NICKNAME_POOL.length - 1);
+        return NICKNAME_POOL[randomIndex].toLowerCase();
     }
 
     /**
@@ -111,10 +110,11 @@ export class Random {
      * @returns Random digits[0-9] in length.
      */
     static digits(length = 4): string {
-        const unit = Math.pow(10, length);
-        return (Math.floor(Math.random() * unit) + unit)
-            .toString()
-            .substring(1);
+        let result = "";
+        for (let i = 0; i < length; i++) {
+            result += this.number(0, 9).toString();
+        }
+        return result;
     }
 
     /**
@@ -155,14 +155,13 @@ export class Random {
      * @param diffDays - The number of days (N) away from the date (Negative numbers mean the past).
      * @returns Random (past or future) date between the particular date and the date before/after the N days.
      */
-    static dateBetween(date = new Date(), diffDays = 0): Date {
-        const difference =
+    static dateBetween(date = new Date(), diffDays = 1): Date {
+        const diffDaysAsInt =
             diffDays < 0 ? Math.ceil(diffDays) : Math.floor(diffDays);
-        const diffDaysInMs = difference * TimeExtension.ONE_DAY_IN_MS;
+        const diffDaysInMs = diffDaysAsInt * TimeExtension.ONE_DAY_IN_MS;
+        const randomDiffTime = this.number(0, Math.abs(diffDaysInMs));
         const randomTimeUtilInMs =
-            diffDays < 0
-                ? this.number(diffDaysInMs, 0)
-                : this.number(0, diffDaysInMs);
+            diffDays < 0 ? randomDiffTime * -1 : randomDiffTime;
         return new Date(date.getTime() + randomTimeUtilInMs);
     }
 
@@ -210,7 +209,7 @@ export class Random {
      */
     static shuffle<T>(array: T[]): T[] {
         for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
+            const j = this.number(0, i);
             [array[i], array[j]] = [array[j], array[i]];
         }
         return array;
@@ -234,10 +233,40 @@ export class Random {
         return `${year}-${monthString}-${dayString}`;
     }
 
+    /**
+     * Get random phone number in (010-ABCD-EFGH) format.
+     * @returns Random phone number.
+     */
     static phoneNumber(): string {
         const ABCD = this.digits(4);
         const EFGH = this.digits(4);
         return `010-${ABCD}-${EFGH}`;
+    }
+
+    /**
+     * Get random SHA256 hash.
+     * @param plain - Plain text to hash (default = "").
+     * @returns Random SHA256 hash.
+     */
+    static hash(plain = ""): string {
+        return createHash("sha256").update(plain).digest("hex");
+    }
+
+    /**
+     * Get random Base58 string.
+     * @param length - Length of random Base58 string (default = 10).
+     * @returns Random Base58 string.
+     */
+    static base58(length = 10): string {
+        const BASE58_ALPHABET =
+            "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+        const bytes = randomBytes(length);
+
+        let result = "";
+        for (let i = 0; i < length; i++) {
+            result += BASE58_ALPHABET[bytes[i] % BASE58_ALPHABET.length];
+        }
+        return result;
     }
 }
 

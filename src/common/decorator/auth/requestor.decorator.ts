@@ -1,5 +1,5 @@
 import { ExecutionContext, createParamDecorator } from "@nestjs/common";
-import { ExpectedErrorException } from "src/common/error/exception/expected-error.exception";
+import { ExpectedErrorException } from "src/common/error/expected-error.exception";
 import { UserModel } from "src/shared/api/user/user.domain";
 
 /**

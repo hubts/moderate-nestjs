@@ -2,22 +2,19 @@ import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 
 import { AuthController } from "./auth.controller";
-import { AuthService } from "./service/auth.service";
-import { JwtStrategy } from "./domain/jwt.strategy";
-import { JoinUserHandler } from "./application/join-user/handler";
-import { JwtConfigService } from "src/config/service/jwt.config.service";
-import { LoginUserHandler } from "./application/login-user/handler";
+import { JwtStrategy } from "./provider/infra/jwt.strategy";
+import { JwtConfigService } from "src/config/internal/jwt.config.service";
 import { UserModule } from "../user/user.module";
-import { RefreshUserHandler } from "./application/refresh-user/handler";
-import { DeactivateUserHandler } from "./application/deactivate-user/handler";
+import { AuthTokenService } from "./provider/service/auth-token.service";
+import { AuthUserService } from "./provider/service/auth-user.service";
+import { AuthService } from "./auth.service";
 
 const providers = [
+    AuthTokenService,
+    AuthUserService,
     AuthService,
+    //
     JwtStrategy,
-    JoinUserHandler,
-    LoginUserHandler,
-    RefreshUserHandler,
-    DeactivateUserHandler,
 ];
 
 @Module({

@@ -6,6 +6,7 @@ export const UserRoute: ApiRoute<UserApi<UserModel>, UserRole> = {
     apiTags: "User",
     pathPrefix: "users",
     getUserInfoById: {
+        method: "GET",
         subRoute: "id/:id",
         roles: [],
         description: [
@@ -14,6 +15,7 @@ export const UserRoute: ApiRoute<UserApi<UserModel>, UserRole> = {
         ],
     },
     getUserInfoByEmail: {
+        method: "GET",
         subRoute: "email/:email",
         roles: [],
         description: [
@@ -22,11 +24,13 @@ export const UserRoute: ApiRoute<UserApi<UserModel>, UserRole> = {
         ],
     },
     getMyInfo: {
+        method: "GET",
         subRoute: "me",
         roles: ["USER"],
         description: ["You can get your own information by login information."],
     },
     updateMyInfo: {
+        method: "POST",
         subRoute: "me",
         roles: ["USER"],
         description: [

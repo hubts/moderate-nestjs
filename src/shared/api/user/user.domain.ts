@@ -26,4 +26,5 @@ export interface UserProfileModel {
     name: string;
     address: string;
     mobile: string;
+    imageUrl: string | null;
 }

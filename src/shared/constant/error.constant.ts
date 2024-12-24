@@ -23,9 +23,18 @@ export const ERROR: {
         message: "You do not have permission to access this resource.",
         status: 403,
     },
+    PAYLOAD_TOO_LARGE: {
+        message:
+            "The payload size is too large. Check your request or file size.",
+        status: 413,
+    },
     INTERNAL_SERVER_ERROR: {
         message: "Internal server error occurs. Please contact us.",
         status: 500,
+    },
+    NOT_IMPLEMENTED: {
+        message: "This feature is not implemented yet.",
+        status: 501,
     },
     SERVICE_UNAVAILABLE: {
         message: "Service is unavailable. Please try again later.",
