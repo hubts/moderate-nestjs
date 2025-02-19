@@ -1,0 +1,27 @@
+{
+    "name": "moderate-nestjs-sdk",
+    "version": "0.0.2",
+    "description": "SDK for moderate-nestjs",
+    "author": "hubts",
+    "private": false,
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/hubts/moderate-nestjs.git"
+    },
+    "files": [
+        "dist/**/*"
+    ],
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com"
+    },
+    "scripts": {
+        "build": "tsc",
+        "prepublishOnly": "yarn build"
+    },
+    "devDependencies": {
+        "typescript": "^5.7.3"
+    }
+}
