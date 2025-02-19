@@ -1,5 +1,5 @@
-import { CommonResponse } from "src/shared/type";
-import { UserModel, UserProfileModel } from "./user.domain";
+import { CommonResponse } from "../../type";
+import { UserModel, UserProfileModel } from "../user/user.domain";
 
 export interface UserApi<R extends UserModel> {
     // Get user info by ID

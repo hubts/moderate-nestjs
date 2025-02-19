@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from "@nestjs/swagger";
 import { IsOptional, IsPhoneNumber } from "class-validator";
 import { IsNickname } from "src/common/decorator/validator/is-nickname.decorator";
 import { IsPassword } from "src/common/decorator/validator/is-password.decorator";
-import { UserUpdate } from "src/shared/api/user/user.api";
+import { UserUpdate } from "@sdk";
 import { Random } from "src/common/util/random";
 
 export class UserUpdateDto implements UserUpdate {

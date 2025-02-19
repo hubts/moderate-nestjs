@@ -1,4 +1,4 @@
-import { ApiRouteOptions } from "src/shared";
+import { ApiRouteOptions } from "@sdk";
 import { ApiSpec, ApiSpecOptions } from "./api-spec.decorator";
 
 /**

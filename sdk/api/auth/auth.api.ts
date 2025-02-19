@@ -1,4 +1,4 @@
-import { CommonResponse } from "src/shared/type";
+import { CommonResponse } from "../../type";
 import { UserModel, UserProfileModel } from "../user/user.domain";
 
 export interface AuthApi {

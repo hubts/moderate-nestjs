@@ -1,6 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { UserModel, UserRole } from "src/shared/api/user/user.domain";
+import { UserModel, UserRole } from "@sdk";
 import { ExpectedErrorException } from "../error/expected-error.exception";
 
 /**

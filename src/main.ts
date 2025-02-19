@@ -28,7 +28,7 @@ async function run() {
             }
         );
         const serverConfig = app.get<IServerConfig>(ServerConfig.KEY);
-        const packageJson = require("../package.json");
+        const packageJson = require("../../package.json");
 
         // Custom logger (with database saving)
         app.useLogger(app.get(CustomLogger));

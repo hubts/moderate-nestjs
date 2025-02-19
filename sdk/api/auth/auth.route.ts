@@ -1,4 +1,4 @@
-import { ApiRoute } from "src/shared/type";
+import { ApiRoute } from "../../type";
 import { AuthApi } from "./auth.api";
 import { UserRole } from "../user/user.domain";
 

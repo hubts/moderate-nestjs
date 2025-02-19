@@ -1,6 +1,6 @@
 import { Get, Post } from "@nestjs/common";
 import { ApiOperation } from "@nestjs/swagger";
-import { ApiRouteOptions, ErrorName } from "src/shared";
+import { ApiRouteOptions, ErrorName } from "@sdk";
 import { JwtRolesAuth } from "../auth/jwt-roles-auth.decorator";
 import { ApiResErrors } from "./api-res-errors.decorator";
 import {

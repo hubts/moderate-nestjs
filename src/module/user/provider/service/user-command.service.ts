@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { UserModel } from "src/shared";
+import { UserModel } from "@sdk";
 import { userMapper } from "../../domain/mapper/user.mapper";
 import {
     hashUserPassword,

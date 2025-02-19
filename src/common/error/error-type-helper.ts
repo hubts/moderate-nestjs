@@ -1,5 +1,5 @@
-import { ERROR } from "src/shared/constant";
-import { ErrorName } from "src/shared/type";
+import { ERROR } from "@sdk";
+import { ErrorName } from "@sdk";
 
 // 에러 이름 배열
 export const ErrorNames = Object.keys(ERROR) as ErrorName[];

@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { UserInfo } from "src/shared/api/user/user.api";
-import { UserRole, UserRoles } from "src/shared/api/user/user.domain";
+import { UserInfo, UserRole, UserRoles } from "@sdk";
 import { Random } from "src/common/util/random";
 
 export class UserInfoDto implements UserInfo {

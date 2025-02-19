@@ -1,5 +1,5 @@
 import { Profile, User, UserLoginHistory } from "@prisma/client";
-import { UserModel } from "src/shared/api/user/user.domain";
+import { UserModel } from "@sdk";
 import { userLoginHistoryMapper } from "./user-login-history.mapper";
 import { userProfileMapper } from "./user-profile.mapper";
 

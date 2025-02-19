@@ -34,5 +34,11 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
+.npmrc
 .env
 uploads/
+
+# SDK
+sdk/node_modules
+sdk/yarn.lock
+sdk/dist

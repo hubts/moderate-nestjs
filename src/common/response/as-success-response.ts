@@ -1,5 +1,5 @@
-import { SuccessCode, SuccessName } from "src/shared/constant";
-import { CommonResponse } from "src/shared/type";
+import { SuccessCode, SuccessName } from "@sdk";
+import { CommonResponse } from "@sdk";
 
 /**
  * @description

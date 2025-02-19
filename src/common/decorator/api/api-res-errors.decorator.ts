@@ -1,7 +1,6 @@
 import { ApiResponse } from "@nestjs/swagger";
+import { CommonResponse, ERROR, ErrorName } from "@sdk";
 import { asErrorResponse } from "src/common/response/as-error-response";
-import { ERROR } from "src/shared/constant";
-import { CommonResponse, ErrorName } from "src/shared/type";
 
 /**
  * Group errors by status.

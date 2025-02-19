@@ -4,8 +4,8 @@ import { ConfigType } from "@nestjs/config";
 import { ExtractJwt, Strategy } from "passport-jwt";
 
 import { JwtConfig } from "src/config/internal/jwt.config";
-import { JwtPayload } from "src/shared/type/jwt-payload.interface";
-import { UserModel } from "src/shared/api/user/user.domain";
+import { JwtPayload } from "@sdk";
+import { UserModel } from "@sdk";
 import { isError } from "src/common/error/error-type-helper";
 import { ExpectedErrorException } from "src/common/error/expected-error.exception";
 import { UserQueryService } from "src/module/user/provider/service/user-query.service";

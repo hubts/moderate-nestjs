@@ -1,13 +1,10 @@
 import { ApiTags } from "@nestjs/swagger";
 import { Body, Controller, Param } from "@nestjs/common";
+import { UserRoute, UserApi, UserModel, SUCCESS_MESSAGE } from "@sdk";
 
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 import { UserInfoDto } from "./dto/response/user-info.dto";
 import { Requestor } from "src/common/decorator/auth/requestor.decorator";
-import { UserRoute } from "src/shared/api/user/user.route";
-import { UserApi } from "src/shared/api/user/user.api";
-import { UserModel } from "src/shared/api/user/user.domain";
-import { SUCCESS_MESSAGE } from "src/shared/constant";
 import { UserIdParamsDto } from "./dto/param/user-id-params.dto";
 import { UserEmailParamsDto } from "./dto/param/user-email-params.dto";
 import { UserInfoWithProfileDto } from "./dto/response/user-info-with-profile.dto";

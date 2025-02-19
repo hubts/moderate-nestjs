@@ -1,5 +1,5 @@
 import { Profile } from "@prisma/client";
-import { UserProfileModel } from "src/shared/api/user/user.domain";
+import { UserProfileModel } from "@sdk";
 
 export function userProfileMapper(entity: Profile): UserProfileModel {
     return {
