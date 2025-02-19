@@ -1,6 +1,6 @@
 {
     "name": "moderate-nestjs",
-    "version": "0.0.26",
+    "version": "0.0.27",
     "description": "REST API Backend using NestJS, Prisma, PostgreSQL, and Docker",
     "author": "hubts",
     "private": false,
@@ -17,7 +17,7 @@
         "start": "nest start",
         "start:dev": "nest start --watch",
         "start:debug": "nest start --debug --watch",
-        "start:prod": "node dist/main",
+        "start:prod": "node dist/src/main",
         "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
         "test": "jest --passWithNoTests",
         "test:watch": "jest --watch",

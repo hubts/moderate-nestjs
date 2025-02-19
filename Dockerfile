@@ -4,6 +4,7 @@ WORKDIR /build
 COPY    package.json yarn.lock ./
 COPY    nest-cli.json tsconfig.build.json tsconfig.json ./
 COPY    prisma ./prisma
+COPY    sdk ./sdk
 COPY    src ./src
 
 # Dependencies
@@ -24,6 +25,7 @@ COPY    --from=builder /build/dist          ./dist
 COPY    --from=builder /build/package.json  ./package.json
 COPY    --from=builder /build/node_modules  ./node_modules
 COPY    --from=builder /build/prisma        ./prisma
+RUN     yarn prisma generate
 
 # Run
 CMD ["yarn", "start:prod"]
