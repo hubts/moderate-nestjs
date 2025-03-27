@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hightlight color
+# Highlight color
 GREEN="\e[0;32m"
 # No Color (END)
 NC="\e[0m"
@@ -130,7 +130,7 @@ if [ ! -z $answer ] && ( [ $answer = "Y" ] || [ $answer = "y" ] ); then
     clean_image 
 fi
 
-# (Optinal) Prune images
+# (Optional) Prune images
 read -p "> 🙋 Do you want to prune images? (y/N): " answer
 if [ ! -z $answer ] && ( [ $answer = "Y" ] || [ $answer = "y" ] ); then
     docker image prune -f

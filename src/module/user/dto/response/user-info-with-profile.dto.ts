@@ -1,4 +1,4 @@
-import { UserInfoWithProfile } from "src/shared/api/user/user.api";
+import { UserInfoWithProfile } from "@sdk";
 import { UserInfoDto } from "./user-info.dto";
 import { ApiProperty } from "@nestjs/swagger";
 import { Random } from "src/common/util/random";

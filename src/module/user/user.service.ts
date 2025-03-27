@@ -8,7 +8,7 @@ import {
     UserInfoWithProfile,
     UserModel,
     UserUpdate,
-} from "src/shared";
+} from "@sdk";
 import { ExpectedErrorException } from "src/common/error/expected-error.exception";
 import { isError } from "src/common/error/error-type-helper";
 import { UserQueryService } from "./provider/service/user-query.service";

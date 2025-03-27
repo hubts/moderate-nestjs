@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { UserModel } from "src/shared";
+import { UserModel } from "@sdk";
 import { userProfileMapper } from "../../domain/mapper/user-profile.mapper";
 import { userMapper } from "../../domain/mapper/user.mapper";
 import { ProfileRepository } from "../repository/profile.repository";

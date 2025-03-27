@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { AuthToken } from "src/shared/api/auth/auth.api";
+import { AuthToken } from "@sdk";
 import { Random } from "src/common/util/random";
 
 export class AuthTokenDto implements AuthToken {

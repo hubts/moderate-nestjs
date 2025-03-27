@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ExpectedErrorException } from "src/common/error/expected-error.exception";
 import { UserCommandService } from "src/module/user/provider/service/user-command.service";
 import { UserQueryService } from "src/module/user/provider/service/user-query.service";
-import { UserModel } from "src/shared";
+import { UserModel } from "@sdk";
 
 @Injectable()
 export class AuthUserService {

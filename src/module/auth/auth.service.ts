@@ -6,7 +6,7 @@ import {
     TokenRefresh,
     UserJoin,
     UserLogin,
-} from "src/shared";
+} from "@sdk";
 import { AuthTokenService } from "./provider/service/auth-token.service";
 import { AuthUserService } from "./provider/service/auth-user.service";
 

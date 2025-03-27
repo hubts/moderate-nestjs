@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hightlight color
+# Highlight color
 GREEN="\e[0;32m"
 # No Color (END)
 NC="\e[0m"

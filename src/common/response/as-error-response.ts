@@ -1,5 +1,5 @@
-import { ERROR, ERROR_CODE } from "src/shared/constant";
-import { CommonResponse, ErrorCode, ErrorName } from "src/shared/type";
+import { ERROR, ERROR_CODE } from "@sdk";
+import { CommonResponse, ErrorCode, ErrorName } from "@sdk";
 
 /**
  * @description

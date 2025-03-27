@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString, IsUUID } from "class-validator";
-import { TokenRefresh } from "src/shared/api/auth/auth.api";
+import { TokenRefresh } from "@sdk";
 import { Random } from "src/common/util/random";
 
 export class TokenRefreshDto implements TokenRefresh {

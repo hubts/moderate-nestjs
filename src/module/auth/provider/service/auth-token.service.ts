@@ -7,7 +7,7 @@ import {
     REFRESH_TOKEN_KEY_PREFIX,
     REFRESH_TOKEN_LENGTH,
 } from "../../constant/token.constant";
-import { JwtPayload, UserRole } from "src/shared";
+import { JwtPayload, UserRole } from "@sdk";
 import { CryptoExtension } from "src/common/util/crypto-extension";
 import { Random } from "src/common/util/random";
 import { ExpectedErrorException } from "src/common/error/expected-error.exception";

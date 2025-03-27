@@ -1,5 +1,5 @@
 import { UserLoginHistory } from "@prisma/client";
-import { UserLoginHistoryModel } from "src/shared/api/user/user.domain";
+import { UserLoginHistoryModel } from "@sdk";
 
 export function userLoginHistoryMapper(
     entity: UserLoginHistory

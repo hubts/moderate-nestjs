@@ -1,7 +1,7 @@
 import { HttpException } from "@nestjs/common";
 import { asErrorResponse } from "src/common/response/as-error-response";
-import { ERROR } from "src/shared/constant";
-import { ErrorName } from "src/shared/type";
+import { ERROR } from "@sdk";
+import { ErrorName } from "@sdk";
 
 /**
  * [ 예상되는 에러 예외 ]

@@ -1,6 +1,6 @@
 import { ExecutionContext, createParamDecorator } from "@nestjs/common";
 import { ExpectedErrorException } from "src/common/error/expected-error.exception";
-import { UserModel } from "src/shared/api/user/user.domain";
+import { UserModel } from "@sdk";
 
 /**
  * Decorator used to specify who is granted access.

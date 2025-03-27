@@ -9,7 +9,7 @@ import {
     IsOptional,
     Min,
 } from "class-validator";
-import { Paginated, PaginationOptions } from "src/shared/type";
+import { Paginated, PaginationOptions } from "@sdk";
 
 export class PaginationOptionsDto implements PaginationOptions {
     @IsOptional()

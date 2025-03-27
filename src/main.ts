@@ -28,7 +28,7 @@ async function run() {
             }
         );
         const serverConfig = app.get<IServerConfig>(ServerConfig.KEY);
-        const packageJson = require("../package.json");
+        const packageJson = require("../../package.json");
 
         // Custom logger (with database saving)
         app.useLogger(app.get(CustomLogger));
@@ -92,7 +92,9 @@ async function run() {
             logger.verbose(log);
         });
     } catch (error) {
-        logger.error(`Failed to start the application: ${error}`);
+        logger.error(
+            `Failed to start the application: ${JSON.stringify(error)}`
+        );
         process.exit(1);
     }
 }

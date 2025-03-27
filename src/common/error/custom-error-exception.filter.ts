@@ -7,7 +7,7 @@ import {
 import { Request, Response } from "express";
 import { CustomLogger } from "../logger/custom.logger";
 import { ExpectedErrorException } from "./expected-error.exception";
-import { ErrorCode, ERROR_CODE, ErrorName, CommonResponse } from "src/shared";
+import { ErrorCode, ERROR_CODE, ErrorName, CommonResponse } from "@sdk";
 
 /**
  * [ 에러 처리 필터 ]
