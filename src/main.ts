@@ -92,7 +92,9 @@ async function run() {
             logger.verbose(log);
         });
     } catch (error) {
-        logger.error(`Failed to start the application: ${error}`);
+        logger.error(
+            `Failed to start the application: ${JSON.stringify(error)}`
+        );
         process.exit(1);
     }
 }
