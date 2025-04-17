@@ -5,20 +5,18 @@
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
-# Moderate REST API Backend
+# Moderate Backend Template
 
 ## 👀 Overview
 
-`moderate-nestjs` 는 [NestJS](https://github.com/nestjs/nest) 프레임워크를 기반으로 하여 [여러 기능](#-features)들을 구현한 **백엔드 템플릿(Template)** 입니다. 이미 우리가 사용할 수 있는 유명하고 다양한 템플릿들이 있지만, 이 템플릿은 좀더 가볍고 직관적인 기능들을 추구하여 누구나 자신의 입맛대로 수정 및 보완할 수 있도록 하였습니다. 특히, NestJS를 일반적으로 이해한 수준의 개발자를 대상으로, 너무 비약적인 레벨업보다는 적당한(Moderate) 수준으로 개선된 기능들을 통하여, 백엔드 구축에 대한 약간의 불편함들을 해소하는 데에 그 목적이 있습니다. 결론적으로, 이 템플릿을 통해 좀더 쉽고 빠르게 NestJS 백엔드 시스템을 구축하는 것이 주된 목표입니다.
+`moderate-nestjs` 는 [NestJS](https://github.com/nestjs/nest) 프레임워크를 기반으로 하여 [여러 기능](#-features)들을 구현한 **백엔드 템플릿(Template)** 입니다. 이미 우리가 사용할 수 있는 유명하고 다양한 템플릿들이 있지만, 본 템플릿은 좀더 가볍고 직관적인 기능들을 추구하여 누구나 자신의 입맛대로 수정 및 보완할 수 있도록 하였습니다. 특히, NestJS를 일반적으로 이해한 수준의 개발자를 대상으로 구현하였으며, 너무 비약적인 레벨업보다는 적당한(Moderate) 수준으로 개선된 기능들을 통해, 백엔드 구축 시 편의성을 증가시키는 데에 그 목적이 있습니다.
 
 이 템플릿에서는,
 
--   NestJS(이하 Nest) 프레임워크를 이용하여 API 서버를 구성합니다.
--   PostgreSQL(이하 Postgres) 데이터베이스를 구축합니다.
--   데이터베이스와 연결하는 ORM으로써, Prisma 를 이용합니다.
+-   NestJS(이하 Nest) 프레임워크를 이용하여 REST API 서버를 구성/배포합니다.
+-   PostgreSQL(이하 Postgres) 데이터베이스를 배포하고 이용합니다.
+-   Prisma ORM 을 이용합니다.
 -   구현된 Nest 및 Postgres 는 Docker Container 로 실행, 배포됩니다.
-
-> _TBD: Postgres 데이터베이스를 관찰하기 위한 일종의 PG Admin으로써, Hasura (GraphQL Engine)를 연동하는 것에 대한 문서가 업데이트될 예정입니다._
 
 _**여러분은 이 템플릿을 통해, 여러분만의 백엔드 시스템을 보다 간결하고 쉽게 시작, 구현, 배포할 수 있습니다.**_
 
@@ -32,7 +30,7 @@ _**여러분은 이 템플릿을 통해, 여러분만의 백엔드 시스템을 
 
 ### NestJS
 
-Nest 는 기존 JavaScript로 구현하는 Node.js를, TypeScript 서버로 구현할 수 있도록 개발된 프레임워크입니다. Type을 명시함으로써 좀더 안전하고 견고한 코딩을 할 수 있다는 장점부터, OOP (Object Oriented Programming), FP (Functional Programming) 등, 기존 백엔드 프레임워크로 유명한 JAVA SpringBoot의 기능들을 유사하게 구현한 장점들이 존재하는 프레임워크입니다. Nest 에 대하여 좀더 자세히 알고 싶다면 [공식문서](https://nestjs.com/)를 참고하세요.
+Nest 는 TypeScript 기반의 Node.js 로써 여러 기능들을 포함하여, 백엔드를 편리하게 구현할 수 있는 프레임워크입니다. Type을 명시함으로써 좀더 안전하고 견고한 코딩을 할 수 있다는 장점부터, OOP (Object Oriented Programming), FP (Functional Programming) 등, 기존 백엔드 프레임워크로 유명한 JAVA SpringBoot의 기능들을 유사하게 구현한 장점들이 존재하는 프레임워크입니다. Nest 에 대하여 좀더 자세히 알고 싶다면 [공식문서](https://nestjs.com/)를 참고하세요.
 
 이 템플릿에서 Nest 는 다음과 같은 역할을 수행합니다.
 
@@ -56,19 +54,19 @@ Postgres 는 오픈소스 기반의 관계형 데이터베이스 시스템(RDBMS
 | Framework       | NestJS                            |
 | Language        | TypeScript                        |
 | Package Manager | yarn                              |
-| Architecture    | Monolith, CQRS                    |
+| Architecture    | Monolith, BFF with SDK            |
 | Documentation   | Swagger                           |
 | ORM             | Prisma                            |
 | Database        | Postgres                          |
-| Deployment      | Dockerlized                       |
+| Deployment      | Dockerlized, Github Actions       |
 
 ## 😎 Implementation Features
 
--   [x] Architecture from CQRS Pattern (but, not event-driven)
+-   [x] Interfaces to generate SDK (Github Package)
 -   [x] Focusing on Code Sharing for Collaboration
 -   [x] Swagger Documentation
 -   [x] Health Checker & Throttler
--   [x] Cache on Database
+-   [x] Cache on Database (Previously used Redis, but simplified)
 -   [x] Custom Logging System
 -   [x] JWT Authentication
 -   [x] User/Auth Examples
