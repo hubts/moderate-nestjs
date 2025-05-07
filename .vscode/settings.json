@@ -7,6 +7,8 @@
         "Dockerlized",
         "EFGH",
         "fieldname",
+        "INITDB",
+        "mongosh",
         "ossp",
         "pgcrypto",
         "PGDATA",

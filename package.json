@@ -1,6 +1,6 @@
 {
     "name": "moderate-nestjs",
-    "version": "0.0.29",
+    "version": "0.0.30-0",
     "description": "REST API Backend using NestJS, Prisma, PostgreSQL, and Docker",
     "author": "hubts",
     "private": false,
@@ -45,6 +45,7 @@
         "@nestjs/config": "^3.1.1",
         "@nestjs/core": "^10.2.7",
         "@nestjs/jwt": "^10.2.0",
+        "@nestjs/mongoose": "^11.0.3",
         "@nestjs/passport": "^10.0.3",
         "@nestjs/platform-express": "^10.2.7",
         "@nestjs/schedule": "^4.0.0",
@@ -61,6 +62,7 @@
         "compression": "^1.7.4",
         "dayjs": "^1.11.13",
         "helmet": "^7.0.0",
+        "mongoose": "^8.14.1",
         "morgan": "^1.10.0",
         "passport": "^0.7.0",
         "passport-jwt": "^4.0.1",
