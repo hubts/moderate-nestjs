@@ -34,3 +34,7 @@ export interface IThrottlerConfig {
     ttl: number;
     limit: number;
 }
+
+export interface IMongooseConfig {
+    uri: string;
+}
