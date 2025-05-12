@@ -21,7 +21,7 @@ import { ServeStaticModule } from "@nestjs/serve-static";
 import { ServeStaticConfigService } from "./config/internal/server-static.config.service";
 import { AttachmentModule } from "./infrastructure/_attachment/attachment.module";
 import { MongooseModule } from "@nestjs/mongoose";
-import { MongoConfigService } from "./config/internal/mongoose.config.service";
+import { MongooseConfigService } from "./config/internal/mongoose.config.service";
 
 const DomainModules = [
     /**
@@ -53,7 +53,7 @@ const DomainModules = [
             useClass: ServeStaticConfigService,
         }), // Serve static files module
         MongooseModule.forRootAsync({
-            useClass: MongoConfigService,
+            useClass: MongooseConfigService,
         }), // Mongoose module
         ...DomainModules,
     ],

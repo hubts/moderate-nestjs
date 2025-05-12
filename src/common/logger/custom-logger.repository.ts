@@ -1,14 +1,21 @@
 import { Injectable } from "@nestjs/common";
-import { ConsoleLog, Prisma } from "@prisma/client";
-import { PrismaService } from "src/infrastructure/_prisma/prisma.service";
+import { InjectModel } from "@nestjs/mongoose";
+import { Logging, LoggingCreateInput, LoggingDocument } from "./logging.schema";
+import { Model } from "mongoose";
 
 @Injectable()
 export class CustomLoggerRepository {
-    constructor(private prisma: PrismaService) {}
+    constructor(
+        @InjectModel(Logging.name)
+        private readonly loggingModel: Model<LoggingDocument>
+    ) {}
 
-    async save(data: Prisma.ConsoleLogCreateInput): Promise<ConsoleLog> {
-        return await this.prisma.consoleLog.create({
-            data,
-        });
+    async create(data: LoggingCreateInput): Promise<LoggingDocument> {
+        const createdLogging = new this.loggingModel(data);
+        return await createdLogging.save();
+    }
+
+    async findAll(): Promise<LoggingDocument[]> {
+        return await this.loggingModel.find().exec();
     }
 }

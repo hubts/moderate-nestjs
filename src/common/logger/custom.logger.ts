@@ -8,25 +8,21 @@ import {
 import { ServerEnv } from "src/config/config.interface";
 import { Random } from "src/common/util/random";
 import { CustomLoggerRepository } from "./custom-logger.repository";
-import { PrismaService } from "src/infrastructure/_prisma/prisma.service";
-import { LogOptions } from "./interface/log-options.interface";
-
-dotenv.config();
+import { LogOptions } from "./custom-logger.interface";
+import { LoggingCreateInput } from "./logging.schema";
 
 @Injectable()
 export class CustomLogger extends ConsoleLogger implements LoggerService {
-    private database: CustomLoggerRepository;
-
-    constructor(context: string) {
+    constructor(
+        private readonly database: CustomLoggerRepository,
+        context: string
+    ) {
         super(context, {
             timestamp: true,
         });
-        // Set database
-        const prisma = new PrismaService({
-            log: false,
-        });
-        this.database = new CustomLoggerRepository(prisma);
+
         // Set log levels
+        dotenv.config();
         const environment = process.env.ENV;
         if (!environment) {
             throw new Error(`Logger environment is not set: ${environment}`);
@@ -34,6 +30,7 @@ export class CustomLogger extends ConsoleLogger implements LoggerService {
         this.setLogLevels(this.getLogLevels(environment as ServerEnv));
     }
 
+    // Get log levels
     private getLogLevels(environment: ServerEnv): LogLevel[] {
         const defaults: LogLevel[] = ["log", "error"];
         switch (environment) {
@@ -50,28 +47,15 @@ export class CustomLogger extends ConsoleLogger implements LoggerService {
         }
     }
 
+    // Get context
     private getContext(context?: string): string {
         return context ?? this.context ?? "unknown";
     }
 
-    private async save(input: {
-        level: LogLevel;
-        message: string;
-        id?: string;
-        request?: object;
-        response?: object;
-        cause?: object;
-    }): Promise<void> {
-        const { id, level, message, request, response, cause } = input;
+    // Save log to database
+    private async save(input: LoggingCreateInput): Promise<void> {
         try {
-            await this.database.save({
-                level,
-                message,
-                ...(id && { id }),
-                ...(request && { request }),
-                ...(response && { response }),
-                ...(cause && { cause }),
-            });
+            await this.database.create(input);
         } catch (error) {
             console.error(`Logging Error: ${error}`);
         }

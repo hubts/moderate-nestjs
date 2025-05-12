@@ -5,9 +5,10 @@ import {
     HttpException,
 } from "@nestjs/common";
 import { Request, Response } from "express";
-import { CustomLogger } from "../logger/custom.logger";
 import { ExpectedErrorException } from "./expected-error.exception";
 import { ErrorCode, ERROR_CODE, ErrorName, CommonResponse } from "@sdk";
+import { Logger } from "../logger/custom-logger.decorator";
+import { CustomLogger } from "../logger/custom.logger";
 
 /**
  * [ 에러 처리 필터 ]
@@ -15,9 +16,8 @@ import { ErrorCode, ERROR_CODE, ErrorName, CommonResponse } from "@sdk";
  */
 @Catch()
 export class CustomErrorExceptionFilter implements ExceptionFilter {
-    constructor(private logger: CustomLogger) {
-        logger.setContext(CustomErrorExceptionFilter.name);
-    }
+    @Logger(CustomErrorExceptionFilter.name)
+    private logger: CustomLogger;
 
     catch(error: Error, host: ArgumentsHost) {
         const ctx = host.switchToHttp();

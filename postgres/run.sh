@@ -15,6 +15,7 @@ main()
     log.info "Postgres 컨테이너(설정된 이름: $CONTAINER_NAME)를 시작하기에 앞서, 이전 컨테이너를 제거합니다."
 
     # 동일한 이름의 컨테이너가 실행 중이라면, 중지하고 제거합니다.
+    # 만약 DB 같은 컨테이너이고 데이터를 유지하고 싶다면, docker rm 볼륨(-v) 옵션을 넣지 않도록 제외합니다.
     # docker ps -qa --filter "name=$CONTAINER_NAME" | grep -q . && docker stop $CONTAINER_NAME && docker rm -fv $CONTAINER_NAME
     docker-compose up -d
 
