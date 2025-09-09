@@ -1,6 +1,6 @@
 {
     "name": "@hubts/moderate-nestjs-sdk",
-    "version": "0.0.3",
+    "version": "0.0.3-a",
     "description": "SDK for moderate-nestjs",
     "author": "@hubts",
     "private": false,
@@ -25,5 +25,9 @@
     },
     "devDependencies": {
         "typescript": "^5.9.2"
+    },
+    "dependencies": {
+        "@nestjs/common": "^11.1.6",
+        "axios": "^1.11.0"
     }
 }
