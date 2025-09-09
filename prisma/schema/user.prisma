@@ -1,19 +1,19 @@
-// /// User
-// model User {
-//     // Audit
-//     id                 String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-//     createdAt          DateTime           @default(now()) @db.Timestamptz(6)
-//     updatedAt          DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
-//     deletedAt          DateTime?          @db.Timestamptz(6)
-//     // Property
-//     email              String             @unique @db.VarChar
-//     nickname           String             @unique @db.VarChar
-//     role               Role               @default(USER)
-//     password           String             @db.VarChar
-//     // Relation
-//     Profile            Profile?
-//     UserLoginHistories UserLoginHistory[]
-// }
+/// User
+model User {
+    // Audit
+    id                 String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    createdAt          DateTime           @default(now()) @db.Timestamptz(6)
+    updatedAt          DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
+    deletedAt          DateTime?          @db.Timestamptz(6)
+    // Property
+    email              String             @unique @db.VarChar
+    nickname           String             @unique @db.VarChar
+    role               Role               @default(USER)
+    password           String             @db.VarChar
+    // Relation
+    Profile            Profile?
+    UserLoginHistories UserLoginHistory[]
+}
 
 enum Role {
     USER
