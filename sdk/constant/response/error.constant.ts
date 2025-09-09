@@ -1,4 +1,4 @@
-import { ErrorName } from "../type";
+import { ErrorName } from "../../type";
 
 /**
  * @description

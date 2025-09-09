@@ -1,38 +1,24 @@
-import { CommonResponse } from "../../type";
-import { UserModel, UserProfileModel } from "../user/user.domain";
+import { AxiosInstance } from "axios";
+import { UserApi } from "./user.signature";
+import { UserRoute } from "./user.route";
+import { createApiWrapper } from "../../util";
 
-export interface UserApi<R extends UserModel> {
-    // Get user info by ID
-    getUserInfoById(params: UserIdParams): Promise<CommonResponse<UserInfo>>;
-    // Get user info by email
-    getUserInfoByEmail(
-        params: UserEmailParams
-    ): Promise<CommonResponse<UserInfo>>;
-    // Get my info
-    getMyInfo(requestor: R): Promise<CommonResponse<UserInfoWithProfile>>;
-    // Update my info
-    updateMyInfo(
-        requestor: R,
-        input: UserUpdate
-    ): Promise<CommonResponse<null>>;
-}
+export const createUserApi = (client: AxiosInstance): UserApi => {
+    const api = createApiWrapper(client, UserRoute);
 
-export interface UserIdParams {
-    id: string;
-}
-
-export interface UserEmailParams {
-    email: string;
-}
-
-export type UserInfo = Pick<
-    UserModel,
-    "id" | "joinedAt" | "email" | "nickname" | "role"
->;
-
-export type UserInfoWithProfile = UserInfo &
-    Pick<UserProfileModel, "id" | "name" | "address" | "mobile">;
-
-export type UserUpdate = Partial<
-    Pick<UserModel, "nickname"> & Pick<UserProfileModel, "address" | "mobile">
->;
+    return {
+        getMyInfo: options => api.get("getMyInfo", options),
+        updateMyInfo: (body, options) =>
+            api.patch("updateMyInfo", body, options),
+        getUserInfoById: (id, options) =>
+            api.get("getUserInfoById", {
+                ...options,
+                pathParams: { id },
+            }),
+        getUserInfoByEmail: (email, options) =>
+            api.get("getUserInfoByEmail", {
+                ...options,
+                pathParams: { email },
+            }),
+    };
+};

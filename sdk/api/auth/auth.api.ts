@@ -1,33 +1,15 @@
-import { CommonResponse } from "../../type";
-import { UserModel, UserProfileModel } from "../user/user.domain";
+import { AxiosInstance } from "axios";
+import { createApiWrapper } from "../../util";
+import { AuthRoute } from "./auth.route";
+import { AuthApi } from "./auth.signature";
 
-export interface AuthApi {
-    // Join
-    joinUser(input: UserJoin): Promise<CommonResponse<AuthToken>>;
-    // Login
-    loginUser(input: UserLogin): Promise<CommonResponse<AuthToken>>;
-    // Refresh tokens
-    refreshUser(input: TokenRefresh): Promise<CommonResponse<AuthToken>>;
-    // Deactivate user
-    deactivateUser(input: UserLogin): Promise<CommonResponse<null>>;
-}
+export const createAuthApi = (client: AxiosInstance): AuthApi => {
+    const api = createApiWrapper(client, AuthRoute);
 
-export type UserLogin = Pick<UserModel, "email"> & {
-    password: string;
-};
-
-export type UserJoin = UserLogin &
-    Pick<UserModel, "nickname"> &
-    Pick<UserProfileModel, "name" | "mobile" | "address"> & {
-        profileImage?: Express.Multer.File;
+    return {
+        joinUser: input => api.post("joinUser", input),
+        loginUser: input => api.post("loginUser", input),
+        refreshUser: input => api.post("refreshUser", input),
+        deactivateUser: input => api.post("deactivateUser", input),
     };
-
-export type TokenRefresh = {
-    userId: string;
-    refreshToken: string;
 };
-
-export interface AuthToken {
-    accessToken: string;
-    refreshToken: string;
-}

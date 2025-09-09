@@ -1,40 +1,33 @@
-import { ApiRoute } from "../../type";
-import { UserApi } from "./user.api";
-import { UserModel, UserRole } from "./user.domain";
+import { RequestMethod } from "@nestjs/common";
+import { ApiSetting } from "../../type";
+import { UserSignature } from "./user.signature";
+import { Enum } from "../../constant";
 
-export const UserRoute: ApiRoute<UserApi<UserModel>, UserRole> = {
+export const UserRoute: ApiSetting<UserSignature, Enum.UserRole> = {
     apiTags: "User",
-    pathPrefix: "users",
-    getUserInfoById: {
-        method: "GET",
-        subRoute: "id/:id",
-        roles: [],
-        description: [
-            "You can get the public information of user by ID.",
-            "If the user ID does not exist, you will receive the failure message.",
-        ],
-    },
-    getUserInfoByEmail: {
-        method: "GET",
-        subRoute: "email/:email",
-        roles: [],
-        description: [
-            "You can get the public information of user by email.",
-            "If the user email does not exist, you will receive the failure message.",
-        ],
-    },
+    context: "users",
+
     getMyInfo: {
-        method: "GET",
-        subRoute: "me",
+        method: RequestMethod.GET,
+        path: "me",
         roles: ["USER"],
-        description: ["You can get your own information by login information."],
     },
+
     updateMyInfo: {
-        method: "POST",
-        subRoute: "me",
+        method: RequestMethod.PATCH,
+        path: "me",
         roles: ["USER"],
-        description: [
-            "You can update your own information by login information.",
-        ],
+    },
+
+    getUserInfoById: {
+        method: RequestMethod.GET,
+        path: "id/:id",
+        roles: [],
+    },
+
+    getUserInfoByEmail: {
+        method: RequestMethod.GET,
+        path: "email/:email",
+        roles: [],
     },
 };
