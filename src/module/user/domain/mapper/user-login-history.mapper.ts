@@ -1,4 +1,4 @@
-import { UserLoginHistory } from "@prisma/client";
+import { UserLoginHistory } from "@sdk";
 import { UserLoginHistoryModel } from "@sdk";
 
 export function userLoginHistoryMapper(

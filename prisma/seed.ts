@@ -5,7 +5,7 @@
  *
  * Reference: https://www.prisma.io/docs/orm/prisma-migrate/workflows/seeding
  */
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@sdk";
 
 const prisma = new PrismaClient();
 

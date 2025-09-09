@@ -1,4 +1,4 @@
-import { compareSync, genSaltSync, hashSync } from "bcrypt";
+import { compareSync, genSaltSync, hashSync } from "bcryptjs";
 import { createHash } from "crypto";
 
 /**
@@ -12,7 +12,7 @@ export class CryptoExtension {
      * @param {string | Buffer} data - Input ingredient to hash.
      * @returns {string} Hashed result in SHA-256 (32 bytes).
      */
-    static sha256(data: string | Buffer): string {
+    static sha256(data: string): string {
         return createHash("sha256").update(data).digest("hex");
     }
 

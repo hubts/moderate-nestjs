@@ -1,4 +1,4 @@
-import { Attachment } from "@prisma/client";
+import { Attachment } from "@sdk";
 
 export interface AttachmentModel {
     id: string;

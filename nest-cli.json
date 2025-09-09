@@ -4,11 +4,38 @@
     "sourceRoot": "src",
     "compilerOptions": {
         "deleteOutDir": true,
+        "tsConfigPath": "tsconfig.build.json",
         "assets": [
             {
                 "include": "./common/swagger/theme/*.css",
                 "watchAssets": true
+            },
+            {
+                "include": "../sdk/prisma/**/*",
+                "outDir": "dist/sdk",
+                "watchAssets": true
             }
         ]
+    },
+    "monorepo": true,
+    "projects": {
+        "src": {
+            "type": "application",
+            "root": ".",
+            "entryFile": "main",
+            "sourceRoot": "src",
+            "compilerOptions": {
+                "tsConfigPath": "tsconfig.build.json"
+            }
+        },
+        "sdk": {
+            "type": "library",
+            "root": "sdk",
+            "entryFile": "index",
+            "sourceRoot": "sdk",
+            "compilerOptions": {
+                "tsConfigPath": "sdk/tsconfig.build.json"
+            }
+        }
     }
 }

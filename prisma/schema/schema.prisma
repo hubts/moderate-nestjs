@@ -1,11 +1,35 @@
 generator client {
     provider        = "prisma-client-js"
-    previewFeatures = ["postgresqlExtensions", "prismaSchemaFolder"]
+    previewFeatures = ["postgresqlExtensions"]
     binaryTargets   = ["native", "linux-musl-openssl-3.0.x", "linux-musl-arm64-openssl-3.0.x"]
+    output          = "../../sdk/prisma/generated"
+
+    // Optional
+    runtime                = "nodejs"
+    moduleFormat           = "esm"
+    generatedFileExtension = "ts"
+    importFileExtension    = "ts"
 }
 
 datasource db {
     provider   = "postgresql"
     url        = env("DATABASE_URL")
     extensions = [pgcrypto, uuid_ossp(map: "uuid-ossp", schema: "public")]
+}
+
+/// User
+model User {
+    // Audit
+    id                 String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    createdAt          DateTime           @default(now()) @db.Timestamptz(6)
+    updatedAt          DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
+    deletedAt          DateTime?          @db.Timestamptz(6)
+    // Property
+    email              String             @unique @db.VarChar
+    nickname           String             @unique @db.VarChar
+    role               Role               @default(USER)
+    password           String             @db.VarChar
+    // Relation
+    Profile            Profile?
+    UserLoginHistories UserLoginHistory[]
 }

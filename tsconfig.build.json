@@ -7,7 +7,6 @@
         "**/*spec.ts",
         "prisma",
         "postgres",
-        "script",
-        "sdk"
+        "script"
     ]
 }

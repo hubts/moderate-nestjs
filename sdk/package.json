@@ -2,7 +2,7 @@
     "name": "@hubts/moderate-nestjs-sdk",
     "version": "0.0.3",
     "description": "SDK for moderate-nestjs",
-    "author": "hubts",
+    "author": "@hubts",
     "private": false,
     "license": "MIT",
     "repository": {
@@ -10,7 +10,8 @@
         "url": "https://github.com/hubts/moderate-nestjs.git"
     },
     "files": [
-        "dist/**/*"
+        "dist",
+        "prisma"
     ],
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -18,10 +19,11 @@
         "registry": "https://npm.pkg.github.com"
     },
     "scripts": {
-        "build": "tsc",
+        "prisma:generate": "cd .. && yarn prisma:generate",
+        "build": "yarn prisma:generate && tsc -p tsconfig.build.json && cp -r prisma/generated dist/prisma",
         "prepublishOnly": "yarn build"
     },
     "devDependencies": {
-        "typescript": "^5.7.3"
+        "typescript": "^5.9.2"
     }
 }
