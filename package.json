@@ -1,6 +1,6 @@
 {
     "name": "moderate-nestjs",
-    "version": "0.0.30-2",
+    "version": "0.0.30-3",
     "description": "REST API Backend using NestJS, Prisma, PostgreSQL, and Docker",
     "author": "@hubts",
     "private": false,
