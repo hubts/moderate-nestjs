@@ -1,6 +1,6 @@
 {
     "name": "moderate-nestjs",
-    "version": "0.0.30-3",
+    "version": "0.0.30-4",
     "description": "REST API Backend using NestJS, Prisma, PostgreSQL, and Docker",
     "author": "@hubts",
     "private": false,
@@ -86,8 +86,8 @@
         "@types/passport-jwt": "^4.0.0",
         "@types/supertest": "^2.0.11",
         "@types/uuid": "^9.0.0",
-        "@typescript-eslint/eslint-plugin": "^5.0.0",
-        "@typescript-eslint/parser": "^5.0.0",
+        "@typescript-eslint/eslint-plugin": "^8.43.0",
+        "@typescript-eslint/parser": "^8.43.0",
         "commitizen": "^4.2.6",
         "cz-emoji-conventional": "^1.0.1",
         "eslint": "^8.0.1",

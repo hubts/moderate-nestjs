@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import { Logger } from "@nestjs/common";
 import { ClassConstructor, plainToInstance } from "class-transformer";
 import { ValidationError, validateSync } from "class-validator";

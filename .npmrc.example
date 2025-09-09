@@ -1,4 +1,4 @@
-registry=https://registry.yarnpkg.com/
-@NAMESPACE:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=TOKEN
+node-options=--experimental-require-module
+@commitnow-dev:registry=https://npm.pkg.github.com/
 always-auth=true
+//npm.pkg.github.com/:_authToken={AUTH_TOKEN}
