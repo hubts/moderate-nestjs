@@ -1,16 +1,17 @@
+import { Email, Password, Nickname } from "api/validation";
 import { Enum } from "../../constant";
 
 // 유저 회원가입
 export interface UserJoin {
-    email: string;
-    password: string;
-    nickname: string;
+    email: Email;
+    password: Password;
+    nickname: Nickname;
 }
 
 // 유저 로그인
 export interface UserLogin {
-    email: string;
-    password: string;
+    email: Email;
+    password: Password;
 }
 
 // 유저 JWT Payload

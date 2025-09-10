@@ -1,3 +1,5 @@
+import { Address, Email, Nickname, PhoneNumber } from "api/validation";
+
 // 유저 공개 정보
 export interface UserPublicInfo {
     id: string;
@@ -20,12 +22,12 @@ export interface UserProfile {
 
 // 유저 이메일
 export interface UserEmail {
-    email: string;
+    email: Email;
 }
 
 // 유저 정보 업데이트
 export interface UserUpdate {
-    nickname?: string;
-    mobile?: string;
-    address?: string;
+    nickname?: Nickname;
+    mobile?: PhoneNumber;
+    address?: Address;
 }
