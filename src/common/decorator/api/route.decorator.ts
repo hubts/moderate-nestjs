@@ -1,4 +1,4 @@
-import { ApiMethodOptions, ApiSetting } from "@sdk";
+import { ApiMethodOptions } from "@sdk";
 import { RequestMethod } from "@nestjs/common";
 import { ApiSpec, ApiSpecOptions } from "./api-spec.decorator";
 

@@ -15,7 +15,7 @@ import { SUCCESS_MESSAGE } from "@sdk";
 export interface ApiResSuccessOptions {
     message: string;
     example?: any;
-    dataGenericType?: any;
+    dataGenericType?: Type | any;
     status?: HttpStatus;
     description?: string;
 }

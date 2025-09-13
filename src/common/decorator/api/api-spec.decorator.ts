@@ -9,8 +9,8 @@ import {
     Put,
     RequestMethod,
 } from "@nestjs/common";
-import { ApiBody, ApiOperation, ApiParam, ApiQuery } from "@nestjs/swagger";
-import { ApiMethodOptions, ApiSetting, ErrorName } from "@sdk";
+import { ApiBody, ApiOperation, ApiQuery } from "@nestjs/swagger";
+import { ApiMethodOptions, ErrorName } from "@sdk";
 import { JwtRolesAuth } from "../auth/jwt-roles-auth.decorator";
 import { ApiResErrors } from "./api-res-errors.decorator";
 import {
