@@ -3,7 +3,7 @@ import { RequestMethod } from "@nestjs/common";
 /**
  * API Route에 대한 속성 정의
  */
-export interface ApiMethodOptions<R> {
+export interface ApiMethodOptions<R = undefined> {
     /**
      * API HTTP Method
      * @example "GET" | "POST"

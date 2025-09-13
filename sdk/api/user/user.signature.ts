@@ -22,9 +22,7 @@ export interface UserSignature {
     getUserInfoById(id: string): Promise<CommonResponse<UserPublicInfo>>;
 
     // 유저 정보 조회 by 이메일
-    getUserInfoByEmail(
-        input: UserEmail
-    ): Promise<CommonResponse<UserPublicInfo>>;
+    getUserInfoByEmail(email: string): Promise<CommonResponse<UserPublicInfo>>;
 }
 
 export type UserInterface = ForBackendInterface<UserSignature>;

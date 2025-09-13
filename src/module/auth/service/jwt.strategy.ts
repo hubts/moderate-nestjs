@@ -4,11 +4,9 @@ import { ConfigType } from "@nestjs/config";
 import { ExtractJwt, Strategy } from "passport-jwt";
 
 import { JwtConfig } from "src/config/internal/jwt.config";
-import { JwtPayload } from "@sdk";
-import { UserModel } from "@sdk";
-import { isError } from "src/common/error/error-type-helper";
 import { ExpectedErrorException } from "src/common/error/expected-error.exception";
-import { UserQueryService } from "src/module/user/provider/service/user-query.service";
+import { User, UserJwtPayload } from "@sdk";
+import { UserService } from "@/module/user/service/user.service";
 
 /**
  * Define a validation strategy for 'JwtAuthGuard'.
@@ -19,7 +17,7 @@ import { UserQueryService } from "src/module/user/provider/service/user-query.se
  * The token is confirmed by secret(public key), and transformed as payload.
  * Then, the valid user would be found, and returned.
  *
- * @param {JwtPayload} payload - The payload relayed from Hasura server (extracted by).
+ * @param {UserJwtPayload} payload - The payload relayed from Hasura server (extracted by).
  * @return {User} The valid user (return is saved at 'user' field of 'Request' as 'request.user').
  */
 @Injectable()
@@ -27,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor(
         @Inject(JwtConfig.KEY)
         jwtConfig: ConfigType<typeof JwtConfig>,
-        private readonly userQueryService: UserQueryService
+        private readonly userService: UserService
     ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -36,7 +34,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         });
     }
 
-    async validate(payload: JwtPayload): Promise<UserModel> {
+    async validate(payload: UserJwtPayload): Promise<User> {
         const { id, role } = payload;
         // Check if the payload is valid
         if (!id || !role) {
@@ -48,14 +46,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         }
 
         // Check if the user exists
-        const user = await this.userQueryService.getUserById(id);
-        if (isError(user)) {
-            throw new ExpectedErrorException(
-                "UNAUTHORIZED",
-                undefined,
-                "Unknown user ID"
-            );
-        }
+        const user = await this.userService.getUserById(id);
         return user;
     }
 }

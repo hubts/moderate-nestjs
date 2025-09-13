@@ -1,8 +1,9 @@
 import { RequestMethod } from "@nestjs/common";
 import { ApiSetting } from "../../type";
+import { Enum } from "../../constant";
 import { AuthSignature } from "./auth.signature";
 
-export const AuthRoute: ApiSetting<AuthSignature> = {
+export const AuthRoute: ApiSetting<AuthSignature, Enum.UserRole> = {
     apiTags: "Authentication",
     context: "auth",
 
@@ -27,6 +28,6 @@ export const AuthRoute: ApiSetting<AuthSignature> = {
     deactivateUser: {
         method: RequestMethod.POST,
         path: "user/deactivate",
-        roles: [],
+        roles: ["USER"],
     },
 };

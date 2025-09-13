@@ -14,7 +14,8 @@ import { SUCCESS_MESSAGE } from "@sdk";
  */
 export interface ApiResSuccessOptions {
     message: string;
-    dataGenericType?: Type | null;
+    example?: any;
+    dataGenericType?: any;
     status?: HttpStatus;
     description?: string;
 }
@@ -29,7 +30,7 @@ export interface ApiResSuccessOptions {
  * @returns
  */
 export const ApiResSuccess = (options: ApiResSuccessOptions) => {
-    const { message, dataGenericType, status, description } = options;
+    const { message, example, dataGenericType, status, description } = options;
     return <T>(
         target: object,
         key: string | symbol,
@@ -79,7 +80,11 @@ export const ApiResSuccess = (options: ApiResSuccessOptions) => {
                                     message: {
                                         example: message,
                                     },
-                                    data: !!dataGenericType
+                                    data: example
+                                        ? {
+                                              example,
+                                          }
+                                        : !!dataGenericType
                                         ? {
                                               $ref: getSchemaPath(
                                                   dataGenericType

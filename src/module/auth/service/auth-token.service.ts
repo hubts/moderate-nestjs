@@ -3,17 +3,16 @@ import { ConfigType } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { JwtConfig } from "src/config/internal/jwt.config";
 import { CacheService } from "src/infrastructure/_cache/cache.service";
-import {
-    REFRESH_TOKEN_KEY_PREFIX,
-    REFRESH_TOKEN_LENGTH,
-} from "../../constant/token.constant";
-import { JwtPayload, UserRole } from "@sdk";
 import { CryptoExtension } from "src/common/util/crypto-extension";
-import { Random } from "src/common/util/random";
 import { ExpectedErrorException } from "src/common/error/expected-error.exception";
+import { Enum, User, UserJwtPayload } from "@sdk";
+import { faker } from "@faker-js/faker";
 
 @Injectable()
 export class AuthTokenService {
+    private readonly REFRESH_TOKEN_KEY_PREFIX = "refresh";
+    private readonly REFRESH_TOKEN_LENGTH = 32;
+
     constructor(
         @Inject(JwtConfig.KEY)
         private readonly jwtConfig: ConfigType<typeof JwtConfig>,
@@ -30,7 +29,15 @@ export class AuthTokenService {
      * @returns The hash of refresh token key.
      */
     private getRefreshTokenKey(refreshToken: string, id: string): string {
-        return `${REFRESH_TOKEN_KEY_PREFIX}:${refreshToken}:${id}`;
+        return `${this.REFRESH_TOKEN_KEY_PREFIX}:${refreshToken}:${id}`;
+    }
+
+    /**
+     * Generate a refresh token.
+     * @returns A new random refresh token.
+     */
+    private generateRefreshToken(): string {
+        return faker.string.hexadecimal({ length: this.REFRESH_TOKEN_LENGTH });
     }
 
     /**
@@ -38,23 +45,22 @@ export class AuthTokenService {
      * @param props - Properties of target(actor) model authenticated.
      * @returns A new access token and refresh token for target.
      */
-    issueAuthTokens(props: { id: string; role: UserRole; nickname: string }): {
+    issueAuthTokens(user: User): {
         accessToken: string;
         refreshToken: string;
     } {
-        const { id, role, nickname } = props;
-
         // Access token
-        const payload: JwtPayload = {
-            id,
-            role,
-            nickname,
+        const payload: UserJwtPayload = {
+            id: user.id,
+            email: user.email,
+            nickname: user.nickname,
+            role: user.role as Enum.UserRole,
         };
         const accessToken = this.jwtService.sign(payload);
 
         // Refresh token
-        const refreshToken = Random.hex(REFRESH_TOKEN_LENGTH);
-        const refreshTokenKey = this.getRefreshTokenKey(refreshToken, id);
+        const refreshToken = this.generateRefreshToken();
+        const refreshTokenKey = this.getRefreshTokenKey(refreshToken, user.id);
         this.cacheService.set(
             refreshToken,
             CryptoExtension.hashPassword(refreshTokenKey),

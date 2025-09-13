@@ -1,6 +1,6 @@
 {
     "name": "moderate-nestjs",
-    "version": "0.0.30-7",
+    "version": "0.0.30-8",
     "description": "REST API Backend using NestJS, Prisma, PostgreSQL, and Docker",
     "author": "@hubts",
     "private": false,
@@ -14,8 +14,7 @@
     },
     "scripts": {
         "prepare": "husky install && yarn prisma:generate",
-        "postinstall": "yarn prisma:generate",
-        "prebuild": "rimraf dist && yarn prisma:generate",
+        "prebuild": "rimraf dist",
         "build": "nest build",
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
         "start": "nest start",
@@ -44,6 +43,7 @@
         "prisma:migrate:apply": "prisma migrate deploy"
     },
     "dependencies": {
+        "@faker-js/faker": "^10.0.0",
         "@nestjs/axios": "^3.0.0",
         "@nestjs/common": "^10.2.7",
         "@nestjs/config": "^3.1.1",
@@ -72,7 +72,7 @@
         "rimraf": "^3.0.2",
         "rxjs": "^7.2.0",
         "swagger-themes": "^1.4.3",
-        "webpack": "^5.0.0"
+        "webpack": "^5.101.3"
     },
     "devDependencies": {
         "@nestjs/cli": "^9.0.0",

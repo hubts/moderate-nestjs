@@ -1,27 +1,17 @@
 import { Module } from "@nestjs/common";
 import { UserController } from "./user.controller";
-import { UserRepository } from "./provider/repository/user.repository";
-import { ProfileRepository } from "./provider/repository/profile.repository";
-import { UserService } from "./user.service";
-import { UserQueryService } from "./provider/service/user-query.service";
-import { UserCommandService } from "./provider/service/user-command.service";
-import { ProfileQueryService } from "./provider/service/profile-query.service";
-import { ProfileCommandService } from "./provider/service/profile-command.service";
-import { UserLoginHistoryRepository } from "./provider/repository/user-login-history.repository";
-import { ProfileAttachmentService } from "./provider/service/profile-attachment.service";
+import { UserRepository } from "./repository/user.repository";
+import { ProfileRepository } from "./repository/profile.repository";
+import { UserService } from "./service/user.service";
+import { ProfileService } from "./service/profile.service";
+import { UserFacade } from "./user.facade";
 
 const providers = [
+    UserFacade,
     UserRepository,
     ProfileRepository,
-    UserLoginHistoryRepository,
-    //
-    UserQueryService,
-    UserCommandService,
-    ProfileQueryService,
-    ProfileCommandService,
-    ProfileAttachmentService,
-    //
     UserService,
+    ProfileService,
 ];
 
 @Module({

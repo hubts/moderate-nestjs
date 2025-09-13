@@ -1,6 +1,16 @@
-import { Get, Post } from "@nestjs/common";
-import { ApiOperation } from "@nestjs/swagger";
-import { ApiRouteOptions, ErrorName } from "@sdk";
+import {
+    All,
+    Delete,
+    Get,
+    Head,
+    Options,
+    Patch,
+    Post,
+    Put,
+    RequestMethod,
+} from "@nestjs/common";
+import { ApiBody, ApiOperation, ApiParam, ApiQuery } from "@nestjs/swagger";
+import { ApiMethodOptions, ApiSetting, ErrorName } from "@sdk";
 import { JwtRolesAuth } from "../auth/jwt-roles-auth.decorator";
 import { ApiResErrors } from "./api-res-errors.decorator";
 import {
@@ -11,19 +21,28 @@ import { ExpectedErrorException } from "src/common/error/expected-error.exceptio
 
 /**
  * Option interface of API specification.
- *
  * @param summary - Summary of the API.
- * @param method - HTTP method of the API (optional).
  * @param deprecated - Whether the API is deprecated (optional).
  * @param success - Options for the successful API response (optional).
  * @param errors - Error names for the API response (optional).
  */
 export interface ApiSpecOptions {
     summary: string;
-    method?: "GET" | "POST";
     deprecated?: boolean;
+    request?: ApiRequestOptions;
     success?: ApiResSuccessOptions;
     errors?: ErrorName[];
+}
+
+/**
+ * Option interface of API request for 'example'.
+ * @param body - Request body example.
+ * @param query - Request query example.
+ * @param param - Request param example.
+ */
+export interface ApiRequestOptions {
+    body?: any;
+    query?: any;
 }
 
 /**
@@ -35,23 +54,20 @@ export interface ApiSpecOptions {
  * See the examples of usage in any controllers.
  *
  * @param options {ApiSpecOptions} - Options for the API specification.
- *
- * Below are the options inherited from 'ApiRouteOptions' which defines API route.
- * @param subRoute - Sub-route of the API.
- * @param roles - Required roles for the API.
- * @param description - Description of the API.
+ * @param options {ApiMethodOptions<R>} - Options for the API method.
  */
 export const ApiSpec = <R>(
-    options: ApiSpecOptions & Partial<ApiRouteOptions<R>>
+    options: ApiSpecOptions & ApiMethodOptions<R>
 ): MethodDecorator => {
     const {
         method,
-        subRoute,
+        path,
         description,
         roles,
         summary,
         deprecated,
         success,
+        request,
     } = options;
     const errors = options.errors ?? [];
 
@@ -61,21 +77,23 @@ export const ApiSpec = <R>(
         descriptor: TypedPropertyDescriptor<T>
     ) => {
         // Set HTTP method.
-        let HttpMethod = Get;
-        switch (method) {
-            case "GET": {
-                HttpMethod = Get;
-                break;
-            }
-            case "POST": {
-                HttpMethod = Post;
-                break;
-            }
-            default: {
-                throw new ExpectedErrorException("NOT_IMPLEMENTED");
-            }
+        const methodToDecorator: {
+            [key: number]: (path?: string | string[]) => MethodDecorator;
+        } = {
+            [RequestMethod.ALL]: All,
+            [RequestMethod.GET]: Get,
+            [RequestMethod.POST]: Post,
+            [RequestMethod.PUT]: Put,
+            [RequestMethod.DELETE]: Delete,
+            [RequestMethod.PATCH]: Patch,
+            [RequestMethod.OPTIONS]: Options,
+            [RequestMethod.HEAD]: Head,
+        };
+        const HttpMethod = methodToDecorator[method];
+        if (!HttpMethod) {
+            throw new ExpectedErrorException("NOT_IMPLEMENTED");
         }
-        HttpMethod(subRoute)(target, key, descriptor);
+        HttpMethod(path)(target, key, descriptor);
 
         // Set JWT roles.
         JwtRolesAuth(roles)(target, key, descriptor);
@@ -96,6 +114,24 @@ export const ApiSpec = <R>(
         // Set pre-defined success response.
         if (success) {
             ApiResSuccess(success)(target, key, descriptor);
+        }
+
+        // Set request body.
+        if (request?.body) {
+            ApiBody({ schema: { example: request.body } })(
+                target,
+                key,
+                descriptor
+            );
+        }
+
+        // Set request query.
+        if (request?.query) {
+            ApiQuery({ schema: { example: request.query } })(
+                target,
+                key,
+                descriptor
+            );
         }
 
         // Set default errors.

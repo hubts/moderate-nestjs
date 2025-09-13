@@ -1,15 +1,15 @@
-import { Address, Email, Nickname, PhoneNumber } from "api/validation";
+import { Enum } from "../../constant";
 
 // 유저 공개 정보
 export interface UserPublicInfo {
     id: string;
-    joinedAt: Date;
-    email: string;
     nickname: string;
+    imageUrl: string | null;
 }
 
 // 유저 개인 정보
 export interface UserPrivateInfo extends UserPublicInfo {
+    role: Enum.UserRole;
     profile: UserProfile;
 }
 
@@ -22,12 +22,12 @@ export interface UserProfile {
 
 // 유저 이메일
 export interface UserEmail {
-    email: Email;
+    email: string;
 }
 
 // 유저 정보 업데이트
 export interface UserUpdate {
-    nickname?: Nickname;
-    mobile?: PhoneNumber;
-    address?: Address;
+    nickname?: string;
+    mobile?: string;
+    address?: string;
 }

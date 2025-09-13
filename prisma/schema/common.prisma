@@ -1,4 +1,4 @@
-/// Redis 대신 이용할 수 있는 DB Cache
+/// DB Cache
 model Cache {
     key       String   @id
     value     String   @db.VarChar
@@ -6,33 +6,31 @@ model Cache {
     expiresAt DateTime @db.Timestamptz(6)
 }
 
-/// 서버에서 발생하는 로그
+/// Server Log
 model ConsoleLog {
     id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     idx       Int      @default(autoincrement())
     createdAt DateTime @default(now()) @db.Timestamptz(6)
-
-    level    String @db.VarChar
-    message  String @db.VarChar
-    request  Json?
-    response Json?
-    cause    Json?
+    level     String   @db.VarChar
+    message   String   @db.VarChar
+    request   Json?
+    response  Json?
+    cause     Json?
 }
 
-/// 첨부파일 관리
+/// Attachment Management
 model Attachment {
     // Audit
-    id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-    createdAt DateTime  @default(now()) @db.Timestamptz(6)
-    updatedAt DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
-    deletedAt DateTime? @db.Timestamptz(6)
-
+    id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    createdAt    DateTime  @default(now()) @db.Timestamptz(6)
+    updatedAt    DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
+    deletedAt    DateTime? @db.Timestamptz(6)
     // Property
-    path         String  @unique @db.VarChar
-    filename     String  @db.VarChar
-    originalName String  @db.VarChar
-    extension    String  @db.VarChar
-    mimeType     String  @db.VarChar
+    path         String    @unique @db.VarChar
+    filename     String    @db.VarChar
+    originalName String    @db.VarChar
+    extension    String    @db.VarChar
+    mimeType     String    @db.VarChar
     size         Int
-    memo         String? @db.VarChar
+    memo         String?   @db.VarChar
 }

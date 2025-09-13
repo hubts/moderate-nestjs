@@ -1,84 +1,84 @@
 import { ApiTags } from "@nestjs/swagger";
 import { Body, Controller, Param } from "@nestjs/common";
-import { UserRoute, UserApi, UserModel, SUCCESS_MESSAGE } from "@sdk";
-
+import {
+    UserRoute,
+    SUCCESS_MESSAGE,
+    UserInterface,
+    User,
+    UserPrivateInfo,
+    UserUpdate,
+    UserPublicInfo,
+} from "@sdk";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
-import { UserInfoDto } from "./dto/response/user-info.dto";
 import { Requestor } from "src/common/decorator/auth/requestor.decorator";
-import { UserIdParamsDto } from "./dto/param/user-id-params.dto";
-import { UserEmailParamsDto } from "./dto/param/user-email-params.dto";
-import { UserInfoWithProfileDto } from "./dto/response/user-info-with-profile.dto";
-import { UserUpdateDto } from "./dto/body/user-update.dto";
 import { Route } from "src/common/decorator/api/route.decorator";
-import { UserService } from "./user.service";
 import { asSuccessResponse } from "src/common/response/as-success-response";
+import { UserFacade } from "./user.facade";
 
 @ApiTags(UserRoute.apiTags)
-@Controller(UserRoute.pathPrefix)
-export class UserController implements UserApi<UserModel> {
-    constructor(private readonly userService: UserService) {}
-
-    @Route.Get(UserRoute.getUserInfoById, {
-        summary: "Get public information of user by ID.",
-        success: {
-            message: SUCCESS_MESSAGE.USER.FOUND,
-            description: "Returns public information of user.",
-            dataGenericType: UserInfoDto,
-        },
-        errors: ["USER_NOT_FOUND"],
-    })
-    async getUserInfoById(
-        @Param() params: UserIdParamsDto
-    ): Promise<SuccessResponseDto<UserInfoDto>> {
-        const result = await this.userService.getUserInfoById(params);
-        return asSuccessResponse(SUCCESS_MESSAGE.USER.FOUND, result);
-    }
-
-    @Route.Get(UserRoute.getUserInfoByEmail, {
-        summary: "Get public information of user by email",
-        success: {
-            message: SUCCESS_MESSAGE.USER.FOUND,
-            description: "Returns public information of user.",
-            dataGenericType: UserInfoDto,
-        },
-        errors: ["USER_NOT_FOUND"],
-    })
-    async getUserInfoByEmail(
-        @Param() params: UserEmailParamsDto
-    ): Promise<SuccessResponseDto<UserInfoDto>> {
-        const result = await this.userService.getUserInfoByEmail(params);
-        return asSuccessResponse(SUCCESS_MESSAGE.USER.FOUND, result);
-    }
+@Controller(UserRoute.context)
+export class UserController implements UserInterface {
+    constructor(private readonly userFacade: UserFacade) {}
 
     @Route.Get(UserRoute.getMyInfo, {
-        summary: "Get user own information.",
+        summary: "내 정보 찾기",
         success: {
             message: SUCCESS_MESSAGE.USER.FOUND,
-            description: "Returns user's own information.",
-            dataGenericType: UserInfoWithProfileDto,
+            description: "내 공개/개인 정보",
         },
         errors: ["USER_NOT_FOUND", "PROFILE_NOT_FOUND"],
     })
     async getMyInfo(
-        @Requestor() requestor: UserModel
-    ): Promise<SuccessResponseDto<UserInfoWithProfileDto>> {
-        const data = await this.userService.getMyInfo(requestor);
+        @Requestor() requestor: User
+    ): Promise<SuccessResponseDto<UserPrivateInfo>> {
+        const data = await this.userFacade.getMyInfo(requestor);
         return asSuccessResponse(SUCCESS_MESSAGE.USER.FOUND, data);
     }
 
-    @Route.Post(UserRoute.updateMyInfo, {
-        summary: "Update user own information.",
+    @Route.Patch(UserRoute.updateMyInfo, {
+        summary: "내 정보 업데이트",
         success: {
             message: SUCCESS_MESSAGE.USER.UPDATED,
-            description: "User's own information will be updated.",
+            description: "내 공개/개인 정보 업데이트",
         },
         errors: ["USER_NICKNAME_DUPLICATED", "USER_MOBILE_DUPLICATED"],
+        request: {},
     })
     async updateMyInfo(
-        @Requestor() requestor: UserModel,
-        @Body() input: UserUpdateDto
+        @Body() input: UserUpdate,
+        @Requestor() requestor: User
     ): Promise<SuccessResponseDto> {
-        await this.userService.updateMyInfo(requestor, input);
+        await this.userFacade.updateMyInfo(requestor, input);
         return asSuccessResponse(SUCCESS_MESSAGE.USER.UPDATED);
+    }
+
+    @Route.Get(UserRoute.getUserInfoById, {
+        summary: "유저 정보 조회 by ID",
+        success: {
+            message: SUCCESS_MESSAGE.USER.FOUND,
+            description: "유저 공개 정보",
+        },
+        errors: ["USER_NOT_FOUND"],
+    })
+    async getUserInfoById(
+        @Param("id") id: string
+    ): Promise<SuccessResponseDto<UserPublicInfo>> {
+        const result = await this.userFacade.getUserInfoById(id);
+        return asSuccessResponse(SUCCESS_MESSAGE.USER.FOUND, result);
+    }
+
+    @Route.Get(UserRoute.getUserInfoByEmail, {
+        summary: "유저 정보 조회 by 이메일",
+        success: {
+            message: SUCCESS_MESSAGE.USER.FOUND,
+            description: "유저 공개 정보",
+        },
+        errors: ["USER_NOT_FOUND"],
+    })
+    async getUserInfoByEmail(
+        @Param("email") email: string
+    ): Promise<SuccessResponseDto<UserPublicInfo>> {
+        const result = await this.userFacade.getUserInfoByEmail(email);
+        return asSuccessResponse(SUCCESS_MESSAGE.USER.FOUND, result);
     }
 }

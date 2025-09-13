@@ -1,101 +1,104 @@
-import { ApiTags } from "@nestjs/swagger";
-import { Body, Controller, UploadedFile } from "@nestjs/common";
-import { UserJoinDto } from "./dto/body/user-join.dto";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
+import { Body, Controller } from "@nestjs/common";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
-import { AuthTokenDto } from "./dto/response/auth-token.dto";
-import { UserLoginDto } from "./dto/body/user-login.dto";
-import { TokenRefreshDto } from "./dto/body/token-refresh.dto";
-import { AuthRoute } from "@sdk";
-import { AuthApi } from "@sdk";
+import {
+    AuthInterface,
+    AuthRoute,
+    TokenRefresh,
+    User,
+    UserJoin,
+    UserLogin,
+    UserAuthToken,
+} from "@sdk";
 import { SUCCESS_MESSAGE } from "@sdk";
 import { Route } from "src/common/decorator/api/route.decorator";
-import { AuthService } from "./auth.service";
 import { asSuccessResponse } from "src/common/response/as-success-response";
 import { Ipv4 } from "src/common/decorator/api/ipv4.decorator";
-import { FileUploadInterceptor } from "src/common/decorator/interceptor/file-upload.interceptor";
-import { imageFileFilter } from "src/infrastructure/_attachment/attachment.util";
+import { Requestor } from "@/common/decorator/auth/requestor.decorator";
+import { AuthFacade } from "./auth.facade";
+import { UserAgent } from "@/common/decorator/api/user-agent.decorator";
 
 @ApiTags(AuthRoute.apiTags)
-@Controller(AuthRoute.pathPrefix)
-export class AuthController implements AuthApi {
-    constructor(private readonly service: AuthService) {}
+@Controller(AuthRoute.context)
+export class AuthController implements AuthInterface {
+    constructor(private readonly facade: AuthFacade) {}
 
     @Route.Post(AuthRoute.joinUser, {
-        summary: "Anyone can join as a new user.",
+        summary: "이메일 기반으로 회원가입합니다.",
         success: {
             message: SUCCESS_MESSAGE.AUTH.JOIN_USER,
-            description:
-                "Creates a new user and returns access and refresh tokens.",
-            dataGenericType: AuthTokenDto,
+            description: "새로운 유저를 생성하고, 토큰을 발급합니다.",
         },
         errors: [
             "USER_EMAIL_DUPLICATED",
             "USER_NICKNAME_DUPLICATED",
             "USER_MOBILE_DUPLICATED",
         ],
+        request: {},
     })
-    @FileUploadInterceptor({
-        fieldname: "profileImage",
-        filesCountLimit: 1,
-        eachFileSizeLimit: 10 * 1024 * 1024,
-        eachFileFilter: imageFileFilter,
+    @ApiBody({
+        schema: {
+            type: "object",
+            example: {
+                email: "test@test.com",
+                password: "12345678",
+            },
+        },
     })
     async joinUser(
-        @Body() body: UserJoinDto,
-        @UploadedFile() profileImage?: Express.Multer.File
-    ): Promise<SuccessResponseDto<AuthTokenDto>> {
-        if (profileImage) {
-            body.profileImage = profileImage;
-        }
-        const result = await this.service.joinUser(body);
+        @Body() body: UserJoin
+    ): Promise<SuccessResponseDto<UserAuthToken>> {
+        const result = await this.facade.joinUser(body);
         return asSuccessResponse(SUCCESS_MESSAGE.AUTH.JOIN_USER, result);
     }
 
     @Route.Post(AuthRoute.loginUser, {
-        summary: "After you joined, you can login as the user.",
+        summary: "이메일 기반으로 로그인합니다.",
         success: {
             message: SUCCESS_MESSAGE.AUTH.LOGIN_USER,
-            description: "Returns access and refresh tokens.",
-            dataGenericType: AuthTokenDto,
+            description: "로그인에 성공하면, 토큰을 발급합니다.",
         },
         errors: ["USER_NOT_FOUND", "WRONG_PASSWORD"],
+        request: {},
     })
     async loginUser(
-        @Body() body: UserLoginDto,
-        @Ipv4() ipAddress?: string
-    ): Promise<SuccessResponseDto<AuthTokenDto>> {
-        const result = await this.service.loginUser(body, ipAddress);
+        @Body() body: UserLogin,
+        @Ipv4() ipAddress?: string,
+        @UserAgent() userAgent?: string
+    ): Promise<SuccessResponseDto<UserAuthToken>> {
+        const result = await this.facade.loginUser(body, {
+            ...(ipAddress && { ipAddress }),
+            ...(userAgent && { userAgent }),
+        });
         return asSuccessResponse(SUCCESS_MESSAGE.AUTH.LOGIN_USER, result);
     }
 
     @Route.Post(AuthRoute.refreshUser, {
-        summary: "Refresh your tokens as new ones to continue.",
+        summary: "토큰을 갱신합니다.",
         success: {
             message: SUCCESS_MESSAGE.AUTH.LOGIN_USER,
-            description: "Returns new access and refresh tokens.",
-            dataGenericType: AuthTokenDto,
+            description: "새로운 토큰으로 갱신하여 발급합니다.",
         },
         errors: ["USER_NOT_FOUND", "INVALID_REFRESH_TOKEN"],
+        request: {},
     })
     async refreshUser(
-        @Body() body: TokenRefreshDto
-    ): Promise<SuccessResponseDto<AuthTokenDto>> {
-        const result = await this.service.refreshUser(body);
+        @Body() body: TokenRefresh
+    ): Promise<SuccessResponseDto<UserAuthToken>> {
+        const result = await this.facade.refreshUser(body);
         return asSuccessResponse(SUCCESS_MESSAGE.AUTH.LOGIN_USER, result);
     }
 
     @Route.Post(AuthRoute.deactivateUser, {
-        summary: "Deactivate user for test to soft-delete the user.",
+        summary: "회원탈퇴합니다.",
         success: {
             message: SUCCESS_MESSAGE.AUTH.USER_DEACTIVATED,
-            description: "User will be deactivated.",
+            description: "더 이상 유저를 사용할 수 없게 됩니다.",
         },
         errors: ["USER_NOT_FOUND", "WRONG_PASSWORD"],
     })
-    async deactivateUser(
-        @Body() body: UserLoginDto
-    ): Promise<SuccessResponseDto> {
-        await this.service.deactivateUser(body);
+    async deactivateUser(@Requestor() user: User): Promise<SuccessResponseDto> {
+        await this.facade.deactivateUser(user);
         return asSuccessResponse(SUCCESS_MESSAGE.AUTH.USER_DEACTIVATED);
     }
 }

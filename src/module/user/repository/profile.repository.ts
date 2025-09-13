@@ -7,29 +7,34 @@ export class ProfileRepository {
     constructor(private readonly prisma: PrismaService) {}
 
     // Create
-    async createProfile(input: Prisma.ProfileCreateInput) {
+    async create(input: Prisma.ProfileCreateInput) {
         return await this.prisma
             .getTransaction()
             .profile.create({ data: input });
     }
 
-    // Find
-    async findProfileByUnique(where: Prisma.ProfileWhereUniqueInput) {
+    // Find one
+    async findOne(where: Prisma.ProfileWhereUniqueInput) {
+        where.deletedAt = null;
         return await this.prisma.getTransaction().profile.findUnique({ where });
     }
 
+    // Find one by user ID
+    async findOneByUserId(userId: string) {
+        return await this.prisma
+            .getTransaction()
+            .profile.findUnique({ where: { userId, deletedAt: null } });
+    }
+
     // Update
-    async updateProfileById(id: string, input: Prisma.ProfileUpdateInput) {
+    async update(id: string, input: Prisma.ProfileUpdateInput) {
         return await this.prisma
             .getTransaction()
             .profile.update({ where: { id }, data: input });
     }
 
-    // Update
-    async updateProfileByUserId(
-        userId: string,
-        input: Prisma.ProfileUpdateInput
-    ) {
+    // Update by user ID
+    async updateByUserId(userId: string, input: Prisma.ProfileUpdateInput) {
         return await this.prisma
             .getTransaction()
             .profile.update({ where: { userId }, data: input });

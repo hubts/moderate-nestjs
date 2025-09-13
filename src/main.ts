@@ -41,7 +41,7 @@ async function run() {
             allowedHeaders: ["Content-Type", "Authorization"],
             methods: "GET, POST",
             credentials: true,
-            origin: "*",
+            origin: true,
         });
 
         // Swagger
@@ -75,6 +75,7 @@ async function run() {
          */
         const healthCheckController = app.get(HealthCheckController);
         const status = await healthCheckController.getStatus();
+
         await app.listen(serverConfig.port, async () => {
             let log = `Application [ ${packageJson.name}:${packageJson.version} ] is successfully started\n`;
             log += `< Information >\n`;
@@ -92,7 +93,6 @@ async function run() {
             logger.verbose(log);
         });
     } catch (error) {
-        console.error(error);
         logger.error(
             `Failed to start the application: ${JSON.stringify(error)}`
         );
