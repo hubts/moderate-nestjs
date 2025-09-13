@@ -18,7 +18,6 @@ import { Requestor } from "@/common/decorator/auth/requestor.decorator";
 import { AuthFacade } from "./auth.facade";
 import { UserAgent } from "@/common/decorator/api/user-agent.decorator";
 import typia from "typia";
-import { ExpectedErrorException } from "@/common/error/expected-error.exception";
 
 @ApiTags(AuthRoute.apiTags)
 @Controller(AuthRoute.context)
