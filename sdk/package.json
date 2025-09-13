@@ -1,6 +1,6 @@
 {
     "name": "@hubts/moderate-nestjs-sdk",
-    "version": "0.0.3-a",
+    "version": "0.0.3-b",
     "description": "SDK for moderate-nestjs",
     "author": "@hubts",
     "private": false,
