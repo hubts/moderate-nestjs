@@ -21,13 +21,17 @@
     "scripts": {
         "prebuild": "cd .. && yarn prisma:generate",
         "build": "tsc -p tsconfig.build.json && cp -r prisma/generated dist/prisma",
-        "prepublishOnly": "yarn build"
+        "prepublishOnly": "yarn build",
+        "postpublish": "rm -rf dist",
+        "prepare": "ts-patch install"
     },
     "devDependencies": {
-        "typescript": "^5.9.2"
+        "ts-patch": "^3.3.0",
+        "typescript": "~5.9.2"
     },
     "dependencies": {
         "@nestjs/common": "^11.1.6",
-        "axios": "^1.11.0"
+        "axios": "^1.11.0",
+        "typia": "^9.7.2"
     }
 }

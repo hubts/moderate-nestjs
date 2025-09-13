@@ -1,4 +1,4 @@
-import { ApiBody, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { Body, Controller } from "@nestjs/common";
 import { SuccessResponseDto } from "src/common/dto/success-response.dto";
 import {
@@ -17,6 +17,8 @@ import { Ipv4 } from "src/common/decorator/api/ipv4.decorator";
 import { Requestor } from "@/common/decorator/auth/requestor.decorator";
 import { AuthFacade } from "./auth.facade";
 import { UserAgent } from "@/common/decorator/api/user-agent.decorator";
+import typia from "typia";
+import { ExpectedErrorException } from "@/common/error/expected-error.exception";
 
 @ApiTags(AuthRoute.apiTags)
 @Controller(AuthRoute.context)
@@ -28,26 +30,21 @@ export class AuthController implements AuthInterface {
         success: {
             message: SUCCESS_MESSAGE.AUTH.JOIN_USER,
             description: "새로운 유저를 생성하고, 토큰을 발급합니다.",
+            example: typia.random<UserAuthToken>(),
         },
         errors: [
             "USER_EMAIL_DUPLICATED",
             "USER_NICKNAME_DUPLICATED",
             "USER_MOBILE_DUPLICATED",
         ],
-        request: {},
-    })
-    @ApiBody({
-        schema: {
-            type: "object",
-            example: {
-                email: "test@test.com",
-                password: "12345678",
-            },
+        request: {
+            body: typia.random<UserJoin>(),
         },
     })
     async joinUser(
         @Body() body: UserJoin
     ): Promise<SuccessResponseDto<UserAuthToken>> {
+        typia.assert<UserJoin>(body);
         const result = await this.facade.joinUser(body);
         return asSuccessResponse(SUCCESS_MESSAGE.AUTH.JOIN_USER, result);
     }
@@ -57,15 +54,19 @@ export class AuthController implements AuthInterface {
         success: {
             message: SUCCESS_MESSAGE.AUTH.LOGIN_USER,
             description: "로그인에 성공하면, 토큰을 발급합니다.",
+            example: typia.random<UserAuthToken>(),
         },
         errors: ["USER_NOT_FOUND", "WRONG_PASSWORD"],
-        request: {},
+        request: {
+            body: typia.random<UserLogin>(),
+        },
     })
     async loginUser(
         @Body() body: UserLogin,
         @Ipv4() ipAddress?: string,
         @UserAgent() userAgent?: string
     ): Promise<SuccessResponseDto<UserAuthToken>> {
+        typia.assert<UserLogin>(body);
         const result = await this.facade.loginUser(body, {
             ...(ipAddress && { ipAddress }),
             ...(userAgent && { userAgent }),
@@ -78,13 +79,17 @@ export class AuthController implements AuthInterface {
         success: {
             message: SUCCESS_MESSAGE.AUTH.LOGIN_USER,
             description: "새로운 토큰으로 갱신하여 발급합니다.",
+            example: typia.random<UserAuthToken>(),
         },
         errors: ["USER_NOT_FOUND", "INVALID_REFRESH_TOKEN"],
-        request: {},
+        request: {
+            body: typia.random<TokenRefresh>(),
+        },
     })
     async refreshUser(
         @Body() body: TokenRefresh
     ): Promise<SuccessResponseDto<UserAuthToken>> {
+        typia.assert<TokenRefresh>(body);
         const result = await this.facade.refreshUser(body);
         return asSuccessResponse(SUCCESS_MESSAGE.AUTH.LOGIN_USER, result);
     }

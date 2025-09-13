@@ -14,6 +14,7 @@ import { Requestor } from "src/common/decorator/auth/requestor.decorator";
 import { Route } from "src/common/decorator/api/route.decorator";
 import { asSuccessResponse } from "src/common/response/as-success-response";
 import { UserFacade } from "./user.facade";
+import typia from "typia";
 
 @ApiTags(UserRoute.apiTags)
 @Controller(UserRoute.context)
@@ -25,6 +26,7 @@ export class UserController implements UserInterface {
         success: {
             message: SUCCESS_MESSAGE.USER.FOUND,
             description: "내 공개/개인 정보",
+            example: typia.random<UserPrivateInfo>(),
         },
         errors: ["USER_NOT_FOUND", "PROFILE_NOT_FOUND"],
     })
@@ -42,12 +44,15 @@ export class UserController implements UserInterface {
             description: "내 공개/개인 정보 업데이트",
         },
         errors: ["USER_NICKNAME_DUPLICATED", "USER_MOBILE_DUPLICATED"],
-        request: {},
+        request: {
+            body: typia.random<UserUpdate>(),
+        },
     })
     async updateMyInfo(
         @Body() input: UserUpdate,
         @Requestor() requestor: User
     ): Promise<SuccessResponseDto> {
+        typia.assert<UserUpdate>(input);
         await this.userFacade.updateMyInfo(requestor, input);
         return asSuccessResponse(SUCCESS_MESSAGE.USER.UPDATED);
     }
@@ -57,6 +62,7 @@ export class UserController implements UserInterface {
         success: {
             message: SUCCESS_MESSAGE.USER.FOUND,
             description: "유저 공개 정보",
+            example: typia.random<UserPublicInfo>(),
         },
         errors: ["USER_NOT_FOUND"],
     })
@@ -72,6 +78,7 @@ export class UserController implements UserInterface {
         success: {
             message: SUCCESS_MESSAGE.USER.FOUND,
             description: "유저 공개 정보",
+            example: typia.random<UserPublicInfo>(),
         },
         errors: ["USER_NOT_FOUND"],
     })

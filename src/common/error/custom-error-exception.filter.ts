@@ -8,6 +8,7 @@ import { Request, Response } from "express";
 import { CustomLogger } from "../logger/custom.logger";
 import { ExpectedErrorException } from "./expected-error.exception";
 import { ErrorCode, ERROR_CODE, ErrorName, CommonResponse } from "@sdk";
+import { TypeGuardError } from "typia";
 
 /**
  * [ 에러 처리 필터 ]
@@ -46,6 +47,12 @@ export class CustomErrorExceptionFilter implements ExceptionFilter {
                         error.message
                     );
                 }
+            } else if (error instanceof TypeGuardError) {
+                error = new ExpectedErrorException(
+                    "BAD_REQUEST",
+                    error,
+                    `'${error.path}' must be ${error.expected}`
+                );
             } else {
                 error = new ExpectedErrorException(
                     "INTERNAL_SERVER_ERROR",

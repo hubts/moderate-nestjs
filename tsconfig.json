@@ -20,6 +20,12 @@
             "@/*": ["src/*"],
             "@sdk": ["sdk"],
             "@sdk/*": ["sdk/*"]
-        }
+        },
+        "plugins": [
+            {
+                "transform": "typia/lib/transform"
+            }
+        ],
+        "strictNullChecks": true
     }
 }

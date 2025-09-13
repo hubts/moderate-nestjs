@@ -1,6 +1,6 @@
 {
     "name": "moderate-nestjs",
-    "version": "0.0.30-9",
+    "version": "0.0.30-10",
     "description": "REST API Backend using NestJS, Prisma, PostgreSQL, and Docker",
     "author": "@hubts",
     "private": false,
@@ -13,7 +13,8 @@
         "node": ">=20"
     },
     "scripts": {
-        "prepare": "husky install && yarn prisma:generate",
+        "prepare": "ts-patch install && husky install",
+        "postinstall": "yarn prisma:generate",
         "prebuild": "rimraf dist",
         "build": "nest build",
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -72,6 +73,7 @@
         "rimraf": "^3.0.2",
         "rxjs": "^7.2.0",
         "swagger-themes": "^1.4.3",
+        "typia": "^9.7.2",
         "webpack": "^5.101.3"
     },
     "devDependencies": {
@@ -103,8 +105,9 @@
         "ts-jest": "28.0.8",
         "ts-loader": "^9.2.3",
         "ts-node": "^10.0.0",
+        "ts-patch": "^3.3.0",
         "tsconfig-paths": "4.1.0",
-        "typescript": "^5.9.2"
+        "typescript": "~5.9.2"
     },
     "config": {
         "commitizen": {

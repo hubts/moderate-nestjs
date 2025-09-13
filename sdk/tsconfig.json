@@ -15,6 +15,12 @@
         "baseUrl": "./",
         "outDir": "./dist",
         "incremental": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "plugins": [
+            {
+                "transform": "typia/lib/transform"
+            }
+        ],
+        "strictNullChecks": true
     }
 }

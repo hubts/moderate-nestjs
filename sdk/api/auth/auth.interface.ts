@@ -1,33 +1,34 @@
+import { ValidationTag } from "../validation";
 import { Enum } from "../../constant";
 
 // 유저 회원가입
 export interface UserJoin {
-    email: string;
-    password: string;
+    email: ValidationTag.Email;
+    password: ValidationTag.Password;
 }
 
 // 유저 로그인
 export interface UserLogin {
-    email: string;
-    password: string;
+    email: ValidationTag.Email;
+    password: ValidationTag.Password;
 }
 
 // 유저 JWT Payload
 export interface UserJwtPayload {
-    id: string;
-    email: string;
-    nickname: string;
+    id: ValidationTag.UUID;
+    email: ValidationTag.Email;
+    nickname: ValidationTag.Nickname;
     role: Enum.UserRole;
 }
 
 // 유저 토큰
 export interface UserAuthToken {
-    accessToken: string;
-    refreshToken: string;
+    accessToken: ValidationTag.HexadecimalToken;
+    refreshToken: ValidationTag.HexadecimalToken;
 }
 
 // 토큰 갱신
 export interface TokenRefresh {
-    userId: string;
-    refreshToken: string;
+    userId: ValidationTag.UUID;
+    refreshToken: ValidationTag.HexadecimalToken;
 }
